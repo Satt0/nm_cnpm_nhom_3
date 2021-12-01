@@ -1,48 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-var cookieParser = require('cookie-parser');
-const path=require('path')
-var logger = require('morgan');
-const {formatError}=require('./bin/format/json')
+const { ApolloServer } = require("apollo-server-express");
+const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
+const express = require("express");
+const http = require("http");
 
-
-
-const loadServer=async(root=__dirname)=>{
+async function startApolloServer(typeDefs, resolvers) {
   const app = express();
-  console.log(root);
-  
-  // middlewares
-  app.use(logger('dev'));
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
-  app.use(cookieParser());
-  // public folder for medias.
-   app.use(express.static(path.join(root, 'public')));
-  
-  // routes declaration.
-
-
-
-  // catch 404 and forward to error handler
-  app.use(function(req, res, next) {
-    next(createError(404));
+  const httpServer = http.createServer(app);
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
-  
-  // error handler
-  app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-  
-    // render the error page
-    res.status(err.status || 500);
-    res.json(formatError(err));
-  });
-
-  const PORT=process.env.PORT || 4000;
-  app.listen(PORT,()=>{
-    console.log('🚀 listening on port: ',PORT);
-  })
+  await server.start();
+  server.applyMiddleware({ app });
+  await new Promise((resolve) => httpServer.listen({ port: 5000 }, resolve));
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }
-
-module.exports = loadServer;
+module.exports = startApolloServer;

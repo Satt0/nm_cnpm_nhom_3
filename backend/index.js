@@ -1,5 +1,4 @@
 const loadServer=require('./src/app')
-
-loadServer(__dirname).catch(e=>{
-    console.log(e.message);
-});
+const typeDefs=require('./src/configs/graphql/TypeDef')
+const resolvers=require('./src/configs/graphql/resolver')
+loadServer(typeDefs,resolvers)
