@@ -109,7 +109,7 @@ class UserQuery {
     try {
       const text = `
       select * from ${process.env.PG_NHAN_KHAU} nk
-      where nk."ID"=$1
+      where nk."ID"=$1 and nk."daXoa"=false
       limit 1;
       `;
       const {rows}=await DB.query(text,[ID])
@@ -123,7 +123,7 @@ class UserQuery {
     try{
       const text=`
       select * from nm_ccnpm.nhan_khau nk
-      where nk."hoTen" like $3
+      where nk."hoTen" like $3 and nk."daXoa"=false
       limit $1
       offset $2;
       `
@@ -169,7 +169,6 @@ class UserUpdate{
       
     } = updatedUser;
     this.values = [
-
       hoTen,
       bietDanh,
       namSinh,
@@ -195,16 +194,17 @@ class UserUpdate{
       lyDoChuyenDi,
       diaChiMoi,
       ID
+     
     ];
   }
-  async CREATE() {
+  async UPDATE() {
     return await this._init();
   }
   async _init() {
     this.client = await DB.connect();
     try {
       await this.client.query("BEGIN");
-      await this._insertNhanKhau();
+      await this._updateNhanKhau();
       await this.client.query("COMMIT");
 
       return this.nhan_khau;
@@ -216,14 +216,68 @@ class UserUpdate{
       await this.client.release();
     }
   }
-  async _insertNhanKhau() {
+  async _updateNhanKhau() {
     const text = `
-      
+    UPDATE ${process.env.PG_NHAN_KHAU} nk
+    SET "hoTen"=$1, "bietDanh"=$2, "namSinh"=$3, "gioiTinh"=$4,
+    "noiSinh"=$5, "nguyenQuan"=$6, "danToc"=$7, "tonGiao"=$8, "quocTich"=$9,
+    "soHoChieu"=$10,"noiThuongTru"=$11, "diaChiHienNay"=$12, "trinhDoHocVan"=$13, "trinhDoChuyenMon"=$14,
+    "bietTiengDanToc"=$15, "trinhDoNgoaiNgu"=$16, "ngheNghiep"=$17, "noiLamViec"=$18,
+    "tienAn"=$19, "ngayChuyenDen"=$20, "lyDoChuyenDen"=$21, "ngayChuyenDi"=$22, 
+    "lyDoChuyenDi"=$23, "diaChiMoi"=$24
+    WHERE nk."ID"=$25
+    
+    RETURNING *;
       `;
+
     const values = this.values;
+    console.log(this.values.length);
     const { rows } = await this.client.query(text, values);
 
     this.nhan_khau = rows[0];
   }
 }
-module.exports = { UserCreation ,UserQuery};
+class UserDelete{
+  async deleteOnePerson({ID,idNguoiXoa}){
+    try{
+      const text=`
+      UPDATE ${process.env.PG_NHAN_KHAU} nk
+      SET
+        "daXoa"=true,
+        "idNguoiXoa"=$1,
+        "ngayXoa"=now()
+      where nk."ID"=$2
+      RETURNING *;
+      `
+      const values=[idNguoiXoa,ID]
+      
+      const {rowCount}=await DB.query(text,values)
+      if(rowCount>0)return true;
+      return false;
+    }catch(e){
+      console.log(e.message);
+      throw new Error("không thể xóa nhân khẩu!")
+    }
+  }
+  async restoreOnePerson({ID}){
+    try{
+      const text=`
+      UPDATE ${process.env.PG_NHAN_KHAU} nk
+      SET
+        "daXoa"=false,
+        "idNguoiXoa"=null,
+        "ngayXoa"=null
+      where nk."ID"=$1
+      RETURNING *;
+      `
+      const values=[ID]
+      const {rowCount}=await DB.query(text,values)
+      if(rowCount>0)return true;
+      return false;
+    }catch(e){
+      console.log(e.message);
+      throw new Error("Không thể khôi phục nhân khẩu!")
+    }
+  }
+}
+module.exports = { UserCreation ,UserQuery,UserUpdate,UserDelete};

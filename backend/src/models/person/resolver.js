@@ -1,33 +1,53 @@
-const {UserCreation,UserQuery}=require('./data')
-
+const {UserCreation,UserQuery,UserUpdate,UserDelete}=require('./data')
+const {authenticate}=require('../../helpers/authen/authenResolver')
 
 const root={
 
 }
 const Query={
-    thongTinNhanKhau:async(_,{input},__,___)=>{
+    thongTinNhanKhau:authenticate(1,async(_,{input},__,___)=>{
+       
         const process=new UserQuery()
         return await process.getOnePerson({ID:input});
     
     
-        },
-    timNhanKhau:async(_,{input},__,___)=>{
+        }),
+    timNhanKhau:authenticate(1,async(_,{input},__,___)=>{
         const process=new UserQuery()
         return await process.getManyPerson(input);
     
     
-        },
+        },)
 }
 const Mutation={
-    taoNhanKhau:async(_,{input},__,context)=>{
-    const idNguoiTao=context.ID??2;
+    taoNhanKhau:async(_,{input},context,__)=>{
+    const idNguoiTao=context.token??2;
     const process=new UserCreation({...input,idNguoiTao})
     return await process.CREATE();
 
 
     },
-    capNhatNhanKhau:()=>{},
-    xoaNhanKHau:()=>{return false},
+    capNhatNhanKhau:async(_,{input},__,___)=>{
+        
+        const process=new UserUpdate(input)
+        return await process.UPDATE();
+    
+    
+        },
+    xoaNhanKHau:async(_,{input},context,__)=>{
+        
+        const idNguoiXoa=context.user.ID
+        const process=new UserDelete()
+        return await process.deleteOnePerson({ID:input,idNguoiXoa});
+    
+    
+        },
+    khoiPhucNhanKhau:async(_,{input},__,___)=>{
+
+        const process=new UserDelete()
+        return await process.restoreOnePerson({ID:input});
+    },
+
 }
 
 module.exports={root,Query,Mutation}

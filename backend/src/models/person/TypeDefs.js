@@ -113,5 +113,6 @@ extend type Mutation{
     taoNhanKhau(input:inputTaoNhanKhau!):NhanKhau!
     capNhatNhanKhau(input:inputCapNhatNhanKhau!):NhanKhau!
     xoaNhanKHau(input:Int!):Boolean!
+    khoiPhucNhanKhau(input:Int!):Boolean!
 }
 `
