@@ -1,4 +1,4 @@
-
+const NhanKhauResolver=require('../../models/person/resolver')
 
 
 const defaultQuery={
@@ -11,12 +11,14 @@ const defaultMutation={
 
 module.exports={
     // Field resolvers here.
-
+    ...NhanKhauResolver.root,
 
     Query:{
-        ...defaultQuery
+        ...defaultQuery,
+        ...NhanKhauResolver.Query
     },
     Mutation:{
-        ...defaultMutation
+        ...defaultMutation,
+        ...NhanKhauResolver.Mutation
     }
 }
