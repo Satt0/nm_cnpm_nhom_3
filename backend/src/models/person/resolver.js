@@ -21,7 +21,7 @@ const Query={
 }
 const Mutation={
     taoNhanKhau:async(_,{input},context,__)=>{
-    const idNguoiTao=context.token??2;
+    const idNguoiTao=context.user.ID
     const process=new UserCreation({...input,idNguoiTao})
     return await process.CREATE();
 
