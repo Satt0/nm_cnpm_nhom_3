@@ -1,7 +1,20 @@
-const { UserCreation, UserQuery, UserUpdate, UserDelete } = require("./data");
+const {
+  UserCreation,
+  UserQuery,
+  UserUpdate,
+  UserDelete,
+  TieuSu,
+} = require("./data");
 const { authenticate } = require("../../helpers/authen/authenResolver");
 
-const root = {};
+const root = {
+  NhanKhau: {
+    tieuSu: async (person,_,__,___) => {
+      const lyLich = new TieuSu();
+      return await lyLich.timTieuSu({ idNhanKhau: person.ID });
+    },
+  },
+};
 const Query = {
   thongTinNhanKhau: authenticate(1, async (_, { input }, __, ___) => {
     const process = new UserQuery();
@@ -13,11 +26,13 @@ const Query = {
   }),
 };
 const Mutation = {
-  taoNhanKhau: async (_, { input }, context, __) => {
+  taoNhanKhau: authenticate(1,async (_, { input }, context, __) => {
+    
     const idNguoiTao = context.user.ID;
+
     const process = new UserCreation({ ...input, idNguoiTao });
     return await process.CREATE();
-  },
+  }),
   capNhatNhanKhau: async (_, { input }, __, ___) => {
     const process = new UserUpdate(input);
     return await process.UPDATE();
@@ -30,6 +45,14 @@ const Mutation = {
   khoiPhucNhanKhau: async (_, { input }, __, ___) => {
     const process = new UserDelete();
     return await process.restoreOnePerson({ ID: input });
+  },
+  taoTieuSu: async (_, { input }, __, ___) => {
+    const lyLich = new TieuSu();
+    return await lyLich.taoTieuSu(input);
+  },
+  xoaTieuSu: async (_, { input }, __, ___) => {
+    const lyLich = new TieuSu();
+    return await lyLich.xoaTieuSu({ ID: input });
   },
 };
 

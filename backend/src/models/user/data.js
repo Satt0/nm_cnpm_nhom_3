@@ -43,4 +43,24 @@ class UserManagement{
         }
     }
 }
-module.exports={UserManagement}
+class AccountQuery{
+    constructor() {
+        
+    }
+    async getAccountInfor({ID}){
+        try{
+            const texts=`
+        SELECT * FROM ${process.env.PG_USER_TABLE} u
+        WHERE u."ID"=$1 
+        limit 1;
+        `
+        const {rows,rowCount}=await DB.query(texts,[ID])
+        if(rowCount>0)return rows[0];
+        throw new Error("no account found!")
+        }catch(e){
+            console.log(e.message);
+            throw new Error(e.message)
+        }
+    }   
+}
+module.exports={UserManagement,AccountQuery}

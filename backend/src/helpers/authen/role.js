@@ -4,7 +4,7 @@ class AuthenUser {
   constructor(token = "") {
     const jwt = new TokenManagement();
     const user = jwt.verifyToken(token.substring("Bearer ".length));
-    if (user.ID) {
+    if (typeof user==='object') {
       this.user = user;
       return;
     }

@@ -36,8 +36,26 @@ type NhanKhau{
     lyDoXoa:String
     ghichu:String
     daXoa:Boolean!
+    tieuSu:[TieuSu!]!
+    maNhanKhau:String!
 }
 
+type TieuSu{
+    ID:Int!
+    tuNgay:String!
+    denNgay:String!
+    diaChi:String!
+    ngheNghiep:String!
+    noiLamViec:String!
+}
+input inputTieuSu{
+    idNhanKhau:Int!
+    tuNgay:String!
+    denNgay:String!
+    diaChi:String!
+    ngheNghiep:String!
+    noiLamViec:String!
+}
 input inputTaoNhanKhau{
     hoTen:String!
     bietDanh:String!
@@ -65,6 +83,7 @@ input inputTaoNhanKhau{
     diaChiMoi:String!
     ngayTao:String!
     idNguoiTao:Int!
+    maNhanKhau:String!
 }
 input inputCapNhatNhanKhau{
     ID:Int!
@@ -92,7 +111,7 @@ input inputCapNhatNhanKhau{
     ngayChuyenDi:String!
     lyDoChuyenDi:String!
     diaChiMoi:String!
-   
+    maNhanKhau:String!
    
     ngayXoa:String
     idNguoiXoa:Int
@@ -101,8 +120,8 @@ input inputCapNhatNhanKhau{
   
 }
 input inputTimNhanKhau{
-    limit:Int
-    offset:Int
+    limit:Int!
+    offset:Int!
     name:String!
 }
 extend type Query {
@@ -114,5 +133,7 @@ extend type Mutation{
     capNhatNhanKhau(input:inputCapNhatNhanKhau!):NhanKhau!
     xoaNhanKHau(input:Int!):Boolean!
     khoiPhucNhanKhau(input:Int!):Boolean!
+    taoTieuSu(input:inputTieuSu!):TieuSu!
+    xoaTieuSu(input:Int!):Boolean!
 }
 `
