@@ -11,6 +11,10 @@ const root={
         chuHo:async({idChuHo})=>{
             const nhanKhau=new UserQuery();
             return nhanKhau.getOnePerson({ID:idChuHo})
+        },
+        thanhVien:async({ID})=>{
+            const nhanKhau=new UserQuery()
+            return await nhanKhau.getFamilyMember({idHoKhau:ID})
         }
     },
     DinhChinh:{

@@ -12,7 +12,7 @@ class AuthenUser {
   }
   checkRole(role = 0) {
     if (typeof role !== "number") throw new Error("lỗi role!");
-    return role >= this.user.role;
+    return role <= this.user.role;
   }
 }
 

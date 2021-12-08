@@ -4,7 +4,7 @@ module.exports=gql`
 type HoKhau{
     ID:Int!
     maHoKhau:String!
-    chuHo:NhanKhau!
+    chuHo:NhanKhau
     maKhuVuc:String!
     diaChi:String!
     ngayChuyenDi:String!
@@ -41,11 +41,14 @@ input inputTaoHoKhau{
     
     idChuHo:Int!
     maKhuVuc:String!
+   
     diaChi:String!
     ngayChuyenDi:String!
     maHoKhau:String!
-    
+    nhanKhau:[inputNhapKhau!]!
 }
+
+
 input inputNhapKhau{
     idNhanKhau:Int!
     idHoKhau:Int!

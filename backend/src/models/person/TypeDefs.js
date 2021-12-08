@@ -38,6 +38,7 @@ type NhanKhau{
     daXoa:Boolean!
     tieuSu:[TieuSu!]!
     maNhanKhau:String!
+    quanHeVoiChuHo:String
 }
 
 type TieuSu{

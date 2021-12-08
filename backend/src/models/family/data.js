@@ -35,25 +35,80 @@ class timHoKhau {
 }
 class taoHoKhau {
   constructor(hoKhauMoi) {
-    const { maHoKhau, idChuHo, maKhuVuc, diaChi, ngayChuyenDi } = hoKhauMoi;
-  
-    this.hoKhauMoi = [idChuHo, maKhuVuc, diaChi, ngayChuyenDi, maHoKhau];
+    
+    const {
+      maHoKhau,
+      idChuHo,
+      maKhuVuc,
+      diaChi,
+      ngayChuyenDi,
+      nhanKhau = [],
+    } = hoKhauMoi;
+
+    this.hoKhauMoi = [maKhuVuc, diaChi, ngayChuyenDi, maHoKhau];
+    this.idChuHo=idChuHo;
+    this.nhanKhau = nhanKhau;
     return;
   }
   async CREATE() {
+    this.client = await DB.connect();
     try {
-      const text = `
-            INSERT INTO ${process.env.PG_HO_KHAU_TABLE}(
-            "idChuHo", "maKhuVuc", "diaChi", "ngayChuyenDi", "maHoKhau")
-            VALUES ($1,$2,$3,$4,$5)
-            RETURNING *;
-            `;
-      const { rows } = await DB.query(text, this.hoKhauMoi);
-      return rows[0];
+      await this.client.query("BEGIN");
+      await this.createBasic()
+      await this.insertNhanKhau()
+      await this.insertChuHo()
+      await this.client.query("COMMIT");
+      return this.hoKhau;
     } catch (e) {
       console.log(e.message);
+      await this.client.query("ROLLBACK");
       throw new Error("không thể tạo hộ khẩu mới, kiểm tra lại đầu vào.");
+    } finally {
+      await this.client.release();
     }
+  }
+
+  async createBasic() {
+    const text = `
+    INSERT INTO ${process.env.PG_HO_KHAU_TABLE}(
+      "maKhuVuc", "diaChi", "ngayChuyenDi", "maHoKhau")
+      VALUES ($1,$2,$3,$4)
+      RETURNING *;
+      `;
+    const { rows } = await this.client.query(text, this.hoKhauMoi);
+    this.hoKhau = rows[0];
+  }
+  async insertNhanKhau() {
+     await Promise.all(
+      this.nhanKhau.map(({idNhanKhau,quanHeVoiChuHo}) => {
+        const text = `
+        INSERT INTO ${process.env.PG_THANH_VIEN_CUA_HO}
+        ("idHoKhau","idNhanKhau","quanHeVoiChuHo")
+      VALUES($1,$2,$3) RETURNING *;
+        
+        `;
+        const values = [this.hoKhau.ID,idNhanKhau,quanHeVoiChuHo];
+        return this.client.query(text,values);
+      })
+    );
+    
+  }
+  async insertChuHo() {
+    const text=`
+    UPDATE ${process.env.PG_HO_KHAU_TABLE} hk
+    SET "idChuHo"=$1
+    WHERE hk."ID"=$2
+      RETURNING *;
+    
+    `
+    const values=[this.idChuHo,this.hoKhau.ID]
+    const {rows,rowsCount}=await this.client.query(text,values);
+
+    if(rowsCount<1) throw new Error()
+    
+    this.hoKhau={...rows[0]};
+
+    
   }
 }
 class capNhatHoKhau {
@@ -101,12 +156,17 @@ class capNhatHoKhau {
 	    SET "idChuHo"=$1, "maKhuVuc"=$2, "diaChi"=$3, "ngayChuyenDi"=$4, "maHoKhau"=$5
 	    WHERE hk."ID"=$6
         RETURNING *;`;
-    const { rows } = await this.client.query(text, [...this.hoKhauMoi,this.ID]);
+    const { rows } = await this.client.query(text, [
+      ...this.hoKhauMoi,
+      this.ID,
+    ]);
     this.newDiff = rows[0];
   }
   async _createLog() {
     this.compareLogs = diffHoKhau(this.oldHoKhau, this.newDiff);
-    await Promise.all(this.compareLogs.map((_, index) => this.__insertOneLog(index)));
+    await Promise.all(
+      this.compareLogs.map((_, index) => this.__insertOneLog(index))
+    );
   }
   async __insertOneLog(index) {
     const { thongTinThayDoi, thayDoiTu, doiThanh } = this.compareLogs[index];
@@ -125,28 +185,24 @@ class capNhatHoKhau {
       this.nguoiThayDoi,
     ];
     const { rowCount } = await this.client.query(text, values);
-    
-    if(rowCount<1) throw new Error()
+
+    if (rowCount < 1) throw new Error();
   }
 }
 
-class dinhChinh{
-  constructor(){
-
-  }
-  async xoaDinhChinh({ID}){
-
-  }
-  async timDinhChinh({idHoKhau,limit=20,offset=0}){
-    const text=`
+class dinhChinh {
+  constructor() {}
+  async xoaDinhChinh({ ID }) {}
+  async timDinhChinh({ idHoKhau, limit = 20, offset = 0 }) {
+    const text = `
     SELEcT * FROM ${process.env.PG_DINH_CHINH_TABLE} dc
     WHERE dc."idHoKhau"=$1
     limit $2
     offset $3;
-    `
-    const {rows}=await DB.query(text,[idHoKhau,limit,offset])
-    return rows
+    `;
+    const { rows } = await DB.query(text, [idHoKhau, limit, offset]);
+    return rows;
   }
 }
 
-module.exports={timHoKhau,taoHoKhau,capNhatHoKhau,dinhChinh}
+module.exports = { timHoKhau, taoHoKhau, capNhatHoKhau, dinhChinh };

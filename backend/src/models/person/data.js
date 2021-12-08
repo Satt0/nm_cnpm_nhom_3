@@ -138,6 +138,17 @@ class UserQuery {
       throw new Error("khong the tim danh sach phu hop");
     }
   }
+  async getFamilyMember({ idHoKhau }) {
+    const text = `
+   select * from nm_ccnpm.thanh_vien_cua_ho tv
+   join nm_ccnpm.nhan_khau nk
+   on nk."ID"=tv."idNhanKhau"
+   where tv."idHoKhau"=$1;
+    `;
+    const values=[idHoKhau]
+    const {rows}=await DB.query(text,values)
+    return rows
+  }
 }
 class UserUpdate {
   constructor(updatedUser) {
