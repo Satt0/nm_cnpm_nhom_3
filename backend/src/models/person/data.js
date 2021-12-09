@@ -258,7 +258,7 @@ class UserDelete {
         "daXoa"=true,
         "idNguoiXoa"=$1,
         "ngayXoa"=now()
-      where nk."ID"=$2
+      where nk."ID"=$2 and nk."daXoa"=false
       RETURNING *;
       `;
       const values = [idNguoiXoa, ID];
@@ -278,7 +278,7 @@ class UserDelete {
         "daXoa"=false,
         "idNguoiXoa"=null,
         "ngayXoa"=null
-      where nk."ID"=$1
+      where nk."ID"=$1 and nk."daXoa"=true
       RETURNING *;
       `;
       const values = [ID];
