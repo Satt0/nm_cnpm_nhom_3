@@ -1,5 +1,5 @@
 const DB = require("../../helpers/database/postgres");
-
+const { QuanLyNhanKhau, UserQuery } = require("../person/data");
 const { diff } = require("deep-object-diff");
 
 const diffHoKhau = (o, n) => {
@@ -34,8 +34,7 @@ class timHoKhau {
   async findMany({ limit = 20, offset = 0 }) {}
 }
 class taoHoKhau {
-  constructor(hoKhauMoi) {
-    
+  constructor(hoKhauMoi, type = "new") {
     const {
       maHoKhau,
       idChuHo,
@@ -46,7 +45,7 @@ class taoHoKhau {
     } = hoKhauMoi;
 
     this.hoKhauMoi = [maKhuVuc, diaChi, ngayChuyenDi, maHoKhau];
-    this.idChuHo=idChuHo;
+    this.idChuHo = idChuHo;
     this.nhanKhau = nhanKhau;
     return;
   }
@@ -54,9 +53,9 @@ class taoHoKhau {
     this.client = await DB.connect();
     try {
       await this.client.query("BEGIN");
-      await this.createBasic()
-      await this.insertNhanKhau()
-      await this.insertChuHo()
+      await this.createBasic();
+      await this.insertNhanKhau();
+      await this.insertChuHo();
       await this.client.query("COMMIT");
       return this.hoKhau;
     } catch (e) {
@@ -79,37 +78,35 @@ class taoHoKhau {
     this.hoKhau = rows[0];
   }
   async insertNhanKhau() {
-     await Promise.all(
-      this.nhanKhau.map(({idNhanKhau,quanHeVoiChuHo}) => {
+    await Promise.all(
+      this.nhanKhau.map(({ idNhanKhau, quanHeVoiChuHo }) => {
         const text = `
         INSERT INTO ${process.env.PG_THANH_VIEN_CUA_HO}
         ("idHoKhau","idNhanKhau","quanHeVoiChuHo")
       VALUES($1,$2,$3) RETURNING *;
         
         `;
-        const values = [this.hoKhau.ID,idNhanKhau,quanHeVoiChuHo];
-        return this.client.query(text,values);
+        const values = [this.hoKhau.ID, idNhanKhau, quanHeVoiChuHo];
+        return this.client.query(text, values);
       })
     );
-    
   }
   async insertChuHo() {
-    const text=`
+    const text = `
     UPDATE ${process.env.PG_HO_KHAU_TABLE} hk
     SET "idChuHo"=$1
     WHERE hk."ID"=$2
       RETURNING *;
     
-    `
-    const values=[this.idChuHo,this.hoKhau.ID]
-    const {rows,rowsCount}=await this.client.query(text,values);
+    `;
+    const values = [this.idChuHo, this.hoKhau.ID];
+    const { rows, rowsCount } = await this.client.query(text, values);
 
-    if(rowsCount<1) throw new Error()
-    
-    this.hoKhau={...rows[0]};
+    if (rowsCount < 1) throw new Error();
 
-    
+    this.hoKhau = { ...rows[0] };
   }
+  async tachHo() {}
 }
 class capNhatHoKhau {
   constructor(hoKhauMoi) {
@@ -205,4 +202,143 @@ class dinhChinh {
   }
 }
 
-module.exports = { timHoKhau, taoHoKhau, capNhatHoKhau, dinhChinh };
+class QuanLyHoKhau {
+  constructor(instance) {
+    if (typeof instance === "object") {
+      this.client = instance;
+    }
+  }
+  async nhapKhanKhau(newNhanKhau) {
+    this.client = await DB.connect();
+    this.nguoiThayDoi = newNhanKhau.nguoiThayDoi;
+
+    try {
+      await this.client.query("BEGIN");
+      
+    
+      
+      const worker = new QuanLyNhanKhau(this.client);
+      const result = await worker.nhapKhauMotNguoi(newNhanKhau);
+      
+      const { idHoKhau, idNhanKhau, quanHeVoiChuHo } = result;
+      const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
+      this.idHoKhau=idHoKhau;
+      this.S2="thêm nhân khẩu"
+      this.S3="không có"
+      this.S4=`thêm ${Nhan_Khau.hoTen} là ${quanHeVoiChuHo}`
+      await this.saveHistory();
+      await this.client.query("COMMIT");
+      return result;
+    } catch (e) {
+      console.log(e.message);
+      await this.client.query("ROllBACK");
+      throw new Error("khong the nhap khau");
+    } finally {
+      await this.client.release();
+    }
+  }
+
+  async saveHistory() {
+   
+    const text = `
+      INSERT INTO ${process.env.PG_DINH_CHINH_TABLE}(
+      "idHoKhau", "thongTinThayDoi", "thayDoiTu", "doiThanh","nguoiThayDoi", "ngayThayDoi")
+      VALUES ($1,$2,$3,$4,$5,now())
+      RETURNING *;
+    `;
+    const values = [
+      this.idHoKhau,
+      this.S2,
+      this.S3,
+      this.S4,
+      this.nguoiThayDoi,
+    ];
+    const { rowCount } = await this.client.query(text, values);
+    if (rowCount < 1)
+      throw new Error("không thể lưu lịch sử thay đổi nhân khẩu.");
+  }
+  async xoaNhanKhau({idNhanKhau,idHoKhau,nguoiThayDoi}){
+    console.log(idNhanKhau,idHoKhau);
+    this.client=await DB.connect()
+    try{
+      await this.client.query("BEGIN");
+
+      const text=`
+      DELETE FROM ${process.env.PG_THANH_VIEN_CUA_HO}
+	WHERE "idNhanKhau"=$1 and "idHoKhau"=$2 returning *;
+      `
+      const values=[idNhanKhau,idHoKhau]
+      const {rows,rowCount}=await this.client.query(text,values)
+      if(rowCount<1) throw new Error();
+      
+      const { quanHeVoiChuHo } = rows[0];
+      const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
+      this.idHoKhau=idHoKhau;
+      this.S2="xóa nhân khẩu"
+      this.S3="không có"
+      this.S4=`xóa ${Nhan_Khau.hoTen} là ${quanHeVoiChuHo}`
+      this.nguoiThayDoi=nguoiThayDoi;
+      await this.saveHistory();
+
+
+
+      await this.client.query("COMMIT");
+      return true;
+
+    }catch(e){
+      console.log(e.message);
+      await this.client.query("ROLLBACK");
+    }finally{
+      await this.client.release()
+    }
+  }
+  async capNhatNhanKhau({idNhanKhau,idHoKhau,nguoiThayDoi,quanHeVoiChuHo}){
+    this.client=await DB.connect();
+    try{
+      await this.client.query("BEGIN");
+
+
+
+
+      const text=`
+      UPDATE ${process.env.PG_THANH_VIEN_CUA_HO} tvch
+      SET  tvch."quanHeVoiChuHo"=$1
+      WHERE tvch."idNhanKhau"=$2 and tvch."idHoKhau"=$3
+      RETURING *;
+      `
+      const values=[quanHeVoiChuHo,idNhanKhau,idHoKhau];
+      const {rows,rowCount}=await this.client.query(text,values);
+
+      if(rowCount<1) throw new Error()
+      const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
+      this.idHoKhau=idHoKhau;
+      this.S2="sửa nhân khẩu "
+      this.S3=""
+      this.S4=`sửa thành ${quanHeVoiChuHo}`
+      this.nguoiThayDoi=nguoiThayDoi;
+      await this.saveHistory();
+
+
+
+      await this.client.query("COMMIT");
+      return rows[0];
+
+    }catch(e){
+      console.log(e.message);
+      await this.client.query("ROLLBACK");
+    }finally{
+      await this.client.release();
+    }
+
+
+
+  }
+
+}
+module.exports = {
+  timHoKhau,
+  taoHoKhau,
+  capNhatHoKhau,
+  dinhChinh,
+  QuanLyHoKhau,
+};

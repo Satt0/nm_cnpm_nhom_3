@@ -357,14 +357,14 @@ class TieuSu {
     }
   }
 }
-class UserManament {
+class QuanLyNhanKhau {
   constructor(instance) {
     this.client = instance;
   }
 
   async nhapKhauMotNguoi({ idHoKhau, idNhanKhau, quanHeVoiChuHo }) {
     const text = `
-      INSERT INTO THANH_VIEN("idNhanKhau","idHoKhau","quanHeVoiChuHo")
+      INSERT INTO ${process.env.PG_THANH_VIEN_CUA_HO}("idNhanKhau","idHoKhau","quanHeVoiChuHo")
       VALUES($1,$2,$3) RETURNING *;
       `;
     const values = [idNhanKhau, idHoKhau, quanHeVoiChuHo];
@@ -380,4 +380,4 @@ class UserManament {
     return result;
   }
 }
-module.exports = { UserCreation, UserQuery, UserUpdate, UserDelete, TieuSu };
+module.exports = { UserCreation, UserQuery, UserUpdate, UserDelete, TieuSu ,QuanLyNhanKhau};

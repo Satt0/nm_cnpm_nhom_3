@@ -54,15 +54,33 @@ input inputNhapKhau{
     idHoKhau:Int!
     quanHeVoiChuHo:String!
 }
+input inputXoaKhau {
+    idNhanKhau:Int!
+    idHoKhau:Int!
+}
+input inputSuaKhau{
+    idNhanKhau:Int!
+    quanHeVoiChuHo:String!
+    idHoKhau:Int!
+}
 extend type Query{
     thongTinHoKhau(input:Int!):HoKhau!
     danhSachHoKhau(input:inputLocHoKhau!):[HoKhau!]!
+}
+
+type ThanhVienGiaDinh{
+    nhanKhau:NhanKhau!
+    hoKhau:HoKhau!
+    quanHeVoiChuHo:String!
 }
 
 extend type Mutation{
     capNhatHoKhau(input:inputCapNhatHoKhau!):HoKhau!
     taoHoKhau(input:inputTaoHoKhau!):HoKhau!
     xoaHoKhau(input:Int!):Boolean!
-    nhapKhau(input:[inputNhapKhau!]!):[NhanKhau!]!
+    # nhan khau
+    nhapKhau(input:inputNhapKhau!):ThanhVienGiaDinh!
+    xoaThanhVienGiaDinh(input:inputXoaKhau!):Boolean!
+    capNhatThanhVien(input:inputSuaKhau!):ThanhVienGiaDinh!
 }
 `
