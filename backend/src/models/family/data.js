@@ -31,7 +31,22 @@ class timHoKhau {
       throw new Error("không thể tìm nhân khẩu!");
     }
   }
-  async findMany({ limit = 20, offset = 0 }) {}
+  async findMany({ limit = 20, offset = 0 }) {
+
+    try {
+      const text = `
+            SELECT * FROM ${process.env.PG_HO_KHAU_TABLE} hk
+            LIMIT $1
+            OFFSET $2;
+            `;
+      const { rows } = await DB.query(text, [limit,offset]);
+      return rows;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("không thể tìm nhân khẩu!");
+    }
+
+  }
 }
 class taoHoKhau {
   constructor(hoKhauMoi, type = "new") {
@@ -312,7 +327,7 @@ class QuanLyHoKhau {
       if(rowCount<1) throw new Error()
       const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
       this.idHoKhau=idHoKhau;
-      this.S2="sửa nhân khẩu "
+      this.S2=`sửa nhân khẩu ${Nhan_Khau.hoTen}`
       this.S3=""
       this.S4=`sửa thành ${quanHeVoiChuHo}`
       this.nguoiThayDoi=nguoiThayDoi;

@@ -41,7 +41,11 @@ const Query={
     thongTinHoKhau:async(_,{input})=>{
         const hoKhau=new timHoKhau();
         return hoKhau.findOne({ID:input})
-    }
+    },
+    danhSachHoKhau: async(_,{input})=>{
+        const hoKhau=new timHoKhau();
+        return hoKhau.findMany(input)
+    },
 }
 const Mutation={
     taoHoKhau:authenticate(1,async(_,{input},context)=>{
