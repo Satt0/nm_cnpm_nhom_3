@@ -1,9 +1,9 @@
 import React from "react";
-import { gql } from "graphql";
+import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 import Form from "../../../components/Form";
 
-const DANG_NHAP = gql`
+export const DANG_NHAP = gql`
 query LogIn($input: inputLogin!) {
   logIn(input: $input) {
     ID
