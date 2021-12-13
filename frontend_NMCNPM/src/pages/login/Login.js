@@ -10,7 +10,7 @@ import {
   Fade,
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
-import classnames from "classnames";
+//import classnames from "classnames";
 
 // styles
 import useStyles from "./styles";
@@ -18,16 +18,15 @@ import useStyles from "./styles";
 // logo
 
 import admin from "./admin.svg";
-import google from "../../images/google.svg";
 
 // context
 import { useUserDispatch, loginUser } from "../../context/UserContext";
-import { useLazyQuery } from "@apollo/client";
-import { DANG_NHAP } from "../../api/graphql/query/dang_nhap";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { DANG_NHAP, DANG_KY } from "../../api/graphql/query/dang_nhap";
 function Login(props) {
   var classes = useStyles();
   const [callLogin, loginData] = useLazyQuery(DANG_NHAP);
-
+  const [callSignUp, signUpData] = useMutation(DANG_KY);
   // global
   var userDispatch = useUserDispatch();
 
@@ -41,20 +40,39 @@ function Login(props) {
 
   useEffect(() => {
     const { loading, error, data } = loginData;
-
-    if (loading) return setIsLoading(true);;
-    if (error) return setError(true);
-    const {logIn}=data;
-    const {token,username,ID,role}=logIn;
-    loginUser(
-      userDispatch,
-      props.history,
-      setIsLoading,
-      setError,
-    );
-    
-  }, [loginData.data, loginData.error, loginData.loading,userDispatch,loginUser]);
   
+    if (loading) return setIsLoading(true);
+    if (error) {
+      setIsLoading(false);
+      return setError(true);
+    }
+    if (!data) return;
+    const { logIn } = data;
+    loginUser(userDispatch, logIn, props.history, setIsLoading, setError);
+  }, [
+    loginData,
+    // loginData.error,
+    // loginData.loading,
+    userDispatch,
+    props.history
+  ]);
+
+  useEffect(() => {
+    const { loading, error, data } = signUpData;
+
+    if (loading) return setIsLoading(true);
+    if (error) {
+      setIsLoading(false);
+      return setError(true);
+    }
+    if (!data) return;
+    const { signUp } = data;
+    loginUser(userDispatch, signUp, props.history, setIsLoading, setError);
+  }, [
+    signUpData,
+    userDispatch,
+    props.history
+  ]);
 
   return (
     <Grid container className={classes.container}>
@@ -213,16 +231,20 @@ function Login(props) {
                   <CircularProgress size={26} />
                 ) : (
                   <Button
-                    onClick={() =>
-                      loginUser(
-                        userDispatch,
-                        loginValue,
-                        passwordValue,
-                        props.history,
-                        setIsLoading,
-                        setError,
-                      )
-                    }
+                    onClick={() => {
+                      if (passwordValue !== rePassword)
+                        return alert("password not match!");
+
+                      callSignUp({
+                        variables: {
+                          input: {
+                            username: loginValue,
+                            password: passwordValue,
+                            role: 3,
+                          },
+                        },
+                      });
+                    }}
                     disabled={
                       loginValue.length === 0 ||
                       passwordValue.length === 0 ||

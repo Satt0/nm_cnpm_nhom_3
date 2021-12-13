@@ -2,13 +2,17 @@ import React from "react";
 
 var UserStateContext = React.createContext();
 var UserDispatchContext = React.createContext();
-
+const defaultState = {
+  username: null,
+  role: null,
+  token: null,
+};
 function userReducer(state, action) {
   switch (action.type) {
     case "LOGIN_SUCCESS":
-      return { ...state, isAuthenticated: true };
+      return { ...state, ...action.payload, isAuthenticated: true };
     case "SIGN_OUT_SUCCESS":
-      return { ...state, isAuthenticated: false };
+      return { ...state, ...defaultState, isAuthenticated: false };
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -49,28 +53,20 @@ export { UserProvider, useUserState, useUserDispatch, loginUser, signOut };
 
 // ###########################################################
 
-function loginUser(dispatch, login, password, history, setIsLoading, setError) {
+function loginUser(dispatch, logIn, history, setIsLoading, setError) {
   setError(false);
-  
 
-  if (!!login && !!password) {
-    setTimeout(() => {
-      localStorage.setItem('id_token', 1)
-      setError(null)
-      setIsLoading(false)
-      dispatch({ type: 'LOGIN_SUCCESS' })
+  const { username, role, token } = logIn;
 
-      history.push('/app/dashboard')
-    }, 2000);
-  } else {
-    dispatch({ type: "LOGIN_FAILURE" });
-    setError(true);
-    setIsLoading(false);
-  }
+  localStorage.setItem("token", token);
+  setError(null);
+  setIsLoading(false);
+  dispatch({ type: "LOGIN_SUCCESS", payload: { username, role, token } });
+  history.push("/app/dashboard");
 }
 
 function signOut(dispatch, history) {
-  localStorage.removeItem("id_token");
+  localStorage.removeItem("token");
   dispatch({ type: "SIGN_OUT_SUCCESS" });
   history.push("/login");
 }
