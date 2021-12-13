@@ -24,8 +24,6 @@ mutation SignUp($input: inputSignup!){
     __typename
   }
 }
-
-
 `
 // function DangNhap(){
 //     const listInput=[
