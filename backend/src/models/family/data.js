@@ -32,20 +32,18 @@ class timHoKhau {
     }
   }
   async findMany({ limit = 20, offset = 0 }) {
-
     try {
       const text = `
             SELECT * FROM ${process.env.PG_HO_KHAU_TABLE} hk
             LIMIT $1
             OFFSET $2;
             `;
-      const { rows } = await DB.query(text, [limit,offset]);
+      const { rows } = await DB.query(text, [limit, offset]);
       return rows;
     } catch (e) {
       console.log(e.message);
       throw new Error("không thể tìm nhân khẩu!");
     }
-
   }
 }
 class taoHoKhau {
@@ -121,7 +119,10 @@ class taoHoKhau {
 
     this.hoKhau = { ...rows[0] };
   }
-  async tachHo() {}
+  async tachHo() {
+    const QLNK = new QuanLyHoKhau(this.client);
+    await Promise.all(this.nhanKhau.map((nk) => QLNK.xoaNhanKhau(nk)));
+  }
 }
 class capNhatHoKhau {
   constructor(hoKhauMoi) {
@@ -209,8 +210,10 @@ class dinhChinh {
     const text = `
     SELEcT * FROM ${process.env.PG_DINH_CHINH_TABLE} dc
     WHERE dc."idHoKhau"=$1
+    order by dc."ID" desc
     limit $2
-    offset $3;
+    offset $3
+    ;
     `;
     const { rows } = await DB.query(text, [idHoKhau, limit, offset]);
     return rows;
@@ -229,18 +232,16 @@ class QuanLyHoKhau {
 
     try {
       await this.client.query("BEGIN");
-      
-    
-      
+
       const worker = new QuanLyNhanKhau(this.client);
       const result = await worker.nhapKhauMotNguoi(newNhanKhau);
-      
+
       const { idHoKhau, idNhanKhau, quanHeVoiChuHo } = result;
       const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
-      this.idHoKhau=idHoKhau;
-      this.S2="thêm nhân khẩu"
-      this.S3="không có"
-      this.S4=`thêm ${Nhan_Khau.hoTen} là ${quanHeVoiChuHo}`
+      this.idHoKhau = idHoKhau;
+      this.S2 = "thêm nhân khẩu";
+      this.S3 = "không có";
+      this.S4 = `thêm ${Nhan_Khau.hoTen} là ${quanHeVoiChuHo}`;
       await this.saveHistory();
       await this.client.query("COMMIT");
       return result;
@@ -254,7 +255,6 @@ class QuanLyHoKhau {
   }
 
   async saveHistory() {
-   
     const text = `
       INSERT INTO ${process.env.PG_DINH_CHINH_TABLE}(
       "idHoKhau", "thongTinThayDoi", "thayDoiTu", "doiThanh","nguoiThayDoi", "ngayThayDoi")
@@ -272,83 +272,76 @@ class QuanLyHoKhau {
     if (rowCount < 1)
       throw new Error("không thể lưu lịch sử thay đổi nhân khẩu.");
   }
-  async xoaNhanKhau({idNhanKhau,idHoKhau,nguoiThayDoi}){
-    console.log(idNhanKhau,idHoKhau);
-    this.client=await DB.connect()
-    try{
+  async xoaNhanKhau(input) {
+    this.client = await DB.connect();
+    try {
       await this.client.query("BEGIN");
-
-      const text=`
-      DELETE FROM ${process.env.PG_THANH_VIEN_CUA_HO}
-	WHERE "idNhanKhau"=$1 and "idHoKhau"=$2 returning *;
-      `
-      const values=[idNhanKhau,idHoKhau]
-      const {rows,rowCount}=await this.client.query(text,values)
-      if(rowCount<1) throw new Error();
-      
-      const { quanHeVoiChuHo } = rows[0];
-      const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
-      this.idHoKhau=idHoKhau;
-      this.S2="xóa nhân khẩu"
-      this.S3="không có"
-      this.S4=`xóa ${Nhan_Khau.hoTen} là ${quanHeVoiChuHo}`
-      this.nguoiThayDoi=nguoiThayDoi;
-      await this.saveHistory();
-
-
-
+      await this._queryXoaNhanKhau(input);
       await this.client.query("COMMIT");
       return true;
-
-    }catch(e){
+    } catch (e) {
       console.log(e.message);
       await this.client.query("ROLLBACK");
-    }finally{
-      await this.client.release()
+    } finally {
+      await this.client.release();
     }
   }
-  async capNhatNhanKhau({idNhanKhau,idHoKhau,nguoiThayDoi,quanHeVoiChuHo}){
-    this.client=await DB.connect();
-    try{
+  async _queryXoaNhanKhau({ idNhanKhau, idHoKhau, nguoiThayDoi }) {
+    const text = `
+    DELETE FROM ${process.env.PG_THANH_VIEN_CUA_HO}
+    WHERE "idNhanKhau"=$1 and "idHoKhau"=$2 returning *;
+    `;
+    const values = [idNhanKhau, idHoKhau];
+    const { rows, rowCount } = await this.client.query(text, values);
+    if (rowCount < 1) throw new Error();
+
+    const { quanHeVoiChuHo } = rows[0];
+    const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
+    this.idHoKhau = idHoKhau;
+    this.S2 = "xóa nhân khẩu";
+    this.S3 = "không có";
+    this.S4 = `xóa ${Nhan_Khau.hoTen} là ${quanHeVoiChuHo}`;
+    this.nguoiThayDoi = nguoiThayDoi;
+    await this.saveHistory();
+    return;
+  }
+  async capNhatNhanKhau({
+    idNhanKhau,
+    idHoKhau,
+    nguoiThayDoi,
+    quanHeVoiChuHo,
+  }) {
+    this.client = await DB.connect();
+    try {
       await this.client.query("BEGIN");
 
-
-
-
-      const text=`
+      const text = `
       UPDATE ${process.env.PG_THANH_VIEN_CUA_HO} tvch
       SET  tvch."quanHeVoiChuHo"=$1
       WHERE tvch."idNhanKhau"=$2 and tvch."idHoKhau"=$3
       RETURING *;
-      `
-      const values=[quanHeVoiChuHo,idNhanKhau,idHoKhau];
-      const {rows,rowCount}=await this.client.query(text,values);
+      `;
+      const values = [quanHeVoiChuHo, idNhanKhau, idHoKhau];
+      const { rows, rowCount } = await this.client.query(text, values);
 
-      if(rowCount<1) throw new Error()
+      if (rowCount < 1) throw new Error();
       const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
-      this.idHoKhau=idHoKhau;
-      this.S2=`sửa nhân khẩu ${Nhan_Khau.hoTen}`
-      this.S3=""
-      this.S4=`sửa thành ${quanHeVoiChuHo}`
-      this.nguoiThayDoi=nguoiThayDoi;
+      this.idHoKhau = idHoKhau;
+      this.S2 = `sửa nhân khẩu ${Nhan_Khau.hoTen}`;
+      this.S3 = "";
+      this.S4 = `sửa thành ${quanHeVoiChuHo}`;
+      this.nguoiThayDoi = nguoiThayDoi;
       await this.saveHistory();
-
-
 
       await this.client.query("COMMIT");
       return rows[0];
-
-    }catch(e){
+    } catch (e) {
       console.log(e.message);
       await this.client.query("ROLLBACK");
-    }finally{
+    } finally {
       await this.client.release();
     }
-
-
-
   }
-
 }
 module.exports = {
   timHoKhau,
