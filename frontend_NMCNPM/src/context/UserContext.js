@@ -55,10 +55,6 @@ export { UserProvider, useUserState, useUserDispatch, loginUser, signOut };
 
 function loginUser(dispatch, logIn, history, setIsLoading, setError) {
   setError(false);
-<<<<<<< HEAD
-  
-=======
->>>>>>> c82aadc244f07950e0cc455784cc570e6b60dd21
 
   const { username, role, token } = logIn;
 
