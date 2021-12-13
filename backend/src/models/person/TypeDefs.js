@@ -83,7 +83,7 @@ input inputTaoNhanKhau{
     lyDoChuyenDi:String!
     diaChiMoi:String!
     ngayTao:String!
-    idNguoiTao:Int!
+   
     maNhanKhau:String!
 }
 input inputCapNhatNhanKhau{

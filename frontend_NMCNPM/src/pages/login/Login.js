@@ -51,8 +51,6 @@ function Login(props) {
     loginUser(userDispatch, logIn, props.history, setIsLoading, setError);
   }, [
     loginData,
-    // loginData.error,
-    // loginData.loading,
     userDispatch,
     props.history
   ]);
