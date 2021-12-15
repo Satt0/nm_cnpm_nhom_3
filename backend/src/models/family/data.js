@@ -48,6 +48,7 @@ class timHoKhau {
 }
 class taoHoKhau {
   constructor(hoKhauMoi, type = "new") {
+    
     const {
       maHoKhau,
       idChuHo,
@@ -60,12 +61,17 @@ class taoHoKhau {
     this.hoKhauMoi = [maKhuVuc, diaChi, ngayChuyenDi, maHoKhau];
     this.idChuHo = idChuHo;
     this.nhanKhau = nhanKhau;
+    this.type=type;
     return;
   }
-  async CREATE() {
+  async CREATE({nguoiThayDoi}) {
     this.client = await DB.connect();
+    this.nguoiThayDoi=nguoiThayDoi
     try {
       await this.client.query("BEGIN");
+      if(this.type==='exist'){
+        await this.tachHo()
+      }
       await this.createBasic();
       await this.insertNhanKhau();
       await this.insertChuHo();
@@ -121,7 +127,9 @@ class taoHoKhau {
   }
   async tachHo() {
     const QLNK = new QuanLyHoKhau(this.client);
-    await Promise.all(this.nhanKhau.map((nk) => QLNK.xoaNhanKhau(nk)));
+    
+    const {rowCount}=await Promise.all(this.nhanKhau.map((nk) => QLNK._queryXoaNhanKhau({...nk,nguoiThayDoi:this.nguoiThayDoi})));
+    if(rowCount < this.nhanKhau.length) throw new Error()
   }
 }
 class capNhatHoKhau {
@@ -193,10 +201,11 @@ class capNhatHoKhau {
     const values = [
       this.ID,
       thongTinThayDoi,
-      thayDoiTu,
+      thayDoiTu+"",
       doiThanh,
       this.nguoiThayDoi,
     ];
+    console.log(values);
     const { rowCount } = await this.client.query(text, values);
 
     if (rowCount < 1) throw new Error();
@@ -288,13 +297,17 @@ class QuanLyHoKhau {
   }
   async _queryXoaNhanKhau({ idNhanKhau, idHoKhau, nguoiThayDoi }) {
     const text = `
-    DELETE FROM ${process.env.PG_THANH_VIEN_CUA_HO}
-    WHERE "idNhanKhau"=$1 and "idHoKhau"=$2 returning *;
+    DELETE FROM ${process.env.PG_THANH_VIEN_CUA_HO} tv
+    WHERE tv."idNhanKhau"=$1 and tv."idHoKhau"=$2 returning *;
     `;
     const values = [idNhanKhau, idHoKhau];
+    
     const { rows, rowCount } = await this.client.query(text, values);
+    console.log(rows);
     if (rowCount < 1) throw new Error();
 
+
+    // logs
     const { quanHeVoiChuHo } = rows[0];
     const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
     this.idHoKhau = idHoKhau;
@@ -328,7 +341,7 @@ class QuanLyHoKhau {
       const Nhan_Khau = await new UserQuery().getOnePerson({ ID: idNhanKhau });
       this.idHoKhau = idHoKhau;
       this.S2 = `sửa nhân khẩu ${Nhan_Khau.hoTen}`;
-      this.S3 = "";
+      this.S3 = "không có";
       this.S4 = `sửa thành ${quanHeVoiChuHo}`;
       this.nguoiThayDoi = nguoiThayDoi;
       await this.saveHistory();
