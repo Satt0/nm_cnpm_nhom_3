@@ -15,8 +15,13 @@ const root = {
       return await DC.timDinhChinh({ idHoKhau: ID });
     },
     chuHo: async ({ idChuHo }) => {
+     try{
       const nhanKhau = new UserQuery();
-      return nhanKhau.getOnePerson({ ID: idChuHo });
+      return await nhanKhau.getOnePerson({ ID: idChuHo });
+     }catch(e){
+      
+      return null
+     }
     },
     thanhVien: async ({ ID }) => {
       const nhanKhau = new UserQuery();
@@ -77,6 +82,11 @@ const Mutation = {
   capNhatThanhVien: authenticate(1, async (_, { input }) => {
     // const hoKhau=new capNhatHoKhau(input)
     // return await hoKhau.UPDATE({nguoiThayDoi})
+  }),
+  tachHoKhau:authenticate(1, async (_, { input },context) => {
+    const nguoiThayDoi=context.user.ID;
+    const hoKhau=new taoHoKhau(input,type="exist")
+    return await hoKhau.CREATE({nguoiThayDoi})
   }),
 };
 
