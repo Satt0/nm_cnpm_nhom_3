@@ -3,6 +3,7 @@ const { gql } = require("apollo-server-express");
 const NhanKhauTypeDef = require("../../models/person/TypeDefs");
 const UserTypeDef = require("../../models/user/TypeDef");
 const HoKhauTypeDef = require("../../models/family/TypeDefs");
+const DongGopTypeDef=require('../../models/donation/TypeDefs')
 const defaultTypeDef = gql`
   type Query {
     test: String!
@@ -17,4 +18,5 @@ module.exports = [
   NhanKhauTypeDef,
   UserTypeDef,
   HoKhauTypeDef,
+  DongGopTypeDef
 ];

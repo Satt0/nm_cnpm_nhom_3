@@ -1,6 +1,8 @@
 const NhanKhauResolver=require('../../models/person/resolver')
 const UserResolver=require('../../models/user/resolver')
 const HoKhauResolver=require('../../models/family/resolver')
+const DongGopResolver=require('../../models/donation/resolver')
+
 const defaultQuery={
     test:()=>"query works."
 }
@@ -14,17 +16,20 @@ module.exports={
     ...NhanKhauResolver.root,
     ...UserResolver.root,
     ...HoKhauResolver.root,
+    ...DongGopResolver.root,
 
     Query:{
         ...defaultQuery,
         ...NhanKhauResolver.Query,
         ...UserResolver.Query,
-        ...HoKhauResolver.Query
+        ...HoKhauResolver.Query,
+        ...DongGopResolver.Query,
     },
     Mutation:{
         ...defaultMutation,
         ...NhanKhauResolver.Mutation,
         ...UserResolver.Mutation,
-        ...HoKhauResolver.Mutation
+        ...HoKhauResolver.Mutation,
+        ...DongGopResolver.Mutation
     }
 }
