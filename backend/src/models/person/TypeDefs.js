@@ -136,5 +136,13 @@ extend type Mutation{
     khoiPhucNhanKhau(input:Int!):Boolean!
     taoTieuSu(input:inputTieuSu!):TieuSu!
     xoaTieuSu(input:Int!):Boolean!
+    # 
+    #khaiBaoTamVang:Boolean!
+    #khaiBaoTamTru:Boolean!
+   # khaiTu:Boolean!
+    
+   # taoTheDinhDanh:Boolean!
+   # capNhatTheDinhDanh:Boolean!
+   # xoaTheDinhDanh:Boolean!
 }
 `
