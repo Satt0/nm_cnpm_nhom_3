@@ -145,9 +145,74 @@ class UserQuery {
    on nk."ID"=tv."idNhanKhau"
    where tv."idHoKhau"=$1;
     `;
-    const values=[idHoKhau]
-    const {rows}=await DB.query(text,values)
-    return rows
+    const values = [idHoKhau];
+    const { rows } = await DB.query(text, values);
+    return rows;
+  }
+  async getKhaiBaoTamVang({ ID }) {
+    try {
+      const text = `
+      SELECT "ID", "idNhanKhau", "maGiayTamVang", "noiTamTru", "tuNgay", "denNgay", "lyDo"
+    	FROM ${process.env.PG_TAM_VANG}
+      where "idNhanKhau"=$1;
+
+      `;
+      const { rows, rowCount } = await DB.query(text, [ID]);
+
+      if (rowCount < 1) return null;
+      return rows[0];
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("loi khi query tam vang");
+    }
+  }
+  async getKhaiBaoTamTru({ ID }) {
+    try {
+      const text = `
+      SELECT *
+    	FROM ${process.env.PG_TAM_TRU}
+      where "idNhanKhau"=$1;
+      `;
+      const { rows, rowCount } = await DB.query(text, [ID]);
+
+      if (rowCount < 1) return null;
+      return rows[0];
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("loi khi query tam tru");
+    }
+  }
+  async getKhaiTu({ID}){
+    try {
+      const text = `
+      SELECT *
+    	FROM ${process.env.PG_KHAI_TU}
+      where "idNguoiChet"=$1;
+      `;
+      const { rows, rowCount } = await DB.query(text, [ID]);
+
+      if (rowCount < 1) return null;
+      return rows[0];
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("loi khi query tam tru");
+    }
+  }
+  async getDinhDanh({ID}){
+    try {
+      const text = `
+      SELECT *
+    	FROM ${process.env.PG_DINH_DANH}
+      where "idNhanKhau"=$1;
+      `;
+      const { rows, rowCount } = await DB.query(text, [ID]);
+
+      if (rowCount < 1) return null;
+      return rows[0];
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("loi khi query dinh danh");
+    }
   }
 }
 class UserUpdate {
@@ -373,11 +438,173 @@ class QuanLyNhanKhau {
 
     throw new Error();
   }
-  async nhapKhauNhieuNguoi(danhSach = []) {
-    const result = await Promise.all(
-      danhSach.map((nhan_khau) => this.nhapKhauMotNguoi(nhan_khau))
-    );
-    return result;
+  async khaiBaoTamTru(thongTinTamTru) {
+    try {
+      const {
+        maGiayTamTru,
+        soDienThoaiNguoiDangKy,
+        tuNgay,
+        denNgay,
+        lyDo,
+        idNhanKhau,
+      } = thongTinTamTru;
+      const text = `
+      INSERT INTO ${process.env.PG_TAM_TRU}(
+      "maGiayTamTru", "soDienThoaiNguoiDangKy", "tuNgay", "denNgay", "lyDo", "idNhanKhau")
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;
+      `;
+      const values = [
+        maGiayTamTru,
+        soDienThoaiNguoiDangKy,
+        tuNgay,
+        denNgay,
+        lyDo,
+        idNhanKhau,
+      ];
+
+      const { rows, rowCount } = await DB.query(text, values);
+
+      if (rowCount < 1) throw new Error();
+      return rows[0];
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("không thể thêm thông tin tạm trú!");
+    }
+  }
+  async khaiBaoTamVang(thongTinTamVang) {
+    try {
+      const { maGiayTamVang, tuNgay, noiTamTru, denNgay, lyDo, idNhanKhau } =
+        thongTinTamVang;
+      const text = `
+    INSERT INTO ${process.env.PG_TAM_VANG}(
+       "idNhanKhau", "maGiayTamVang", "noiTamTru", "tuNgay", "denNgay", "lyDo")
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;
+    `;
+      const values = [
+        idNhanKhau,
+        maGiayTamVang,
+        noiTamTru,
+        tuNgay,
+        denNgay,
+        lyDo,
+      ];
+      const { rows, rowCount } = await DB.query(text, values);
+      if (rowCount < 1) throw new Error();
+
+      console.log(rows[0]);
+      return rows[0];
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("không thể thêm thông tin tạm vắng!");
+    }
+  }
+  async khaiTu(thongTinKhaiTu) {
+    try {
+      const {
+        soGiayKhaiTu,
+        idNguoiKhai,
+        idNguoiChet,
+        ngayKhai,
+        ngayChet,
+        lyDoChet,
+      } = thongTinKhaiTu;
+      const text = `
+      INSERT INTO ${process.env.PG_KHAI_TU}(
+      "soGiayKhaiTu", "idNguoiKhai", "idNguoiChet", "ngayKhai", "ngayChet", "lyDoChet")
+      VALUES ( $1, $2, $3, $4, $5, $6) RETURNING *;
+      `;
+      const values = [soGiayKhaiTu,idNguoiKhai,idNguoiChet,ngayKhai,ngayChet,lyDoChet];
+      const { rows, rowCount } = await DB.query(text, values);
+      if (rowCount < 1) throw new Error();
+      return rows[0];
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("khong the khai tu!");
+    }
+  }
+  async dinhDanh(thongTinDinhDanh) {{
+    try{  
+      const {idNhanKhau,soDinhDanh,ngayCap,noiCap,type}=thongTinDinhDanh;
+      const text=`
+      INSERT INTO ${process.env.PG_DINH_DANH}(
+      "idNhanKhau", "soDinhDanh", "ngayCap", "noiCap", type)
+      VALUES ($1, $2, $3, $4, $5) RETURNING *;
+      ` 
+      const values=[idNhanKhau,soDinhDanh,ngayCap,noiCap,type];
+        const {rows,rowCount}=await DB.query(text,values);
+        if(rowCount<1) throw new Error()
+        return rows[0]
+
+    }catch(e){
+      console.log(e.message);
+      throw new Error("loi tao dinh danh!")
+    }
+  }}
+
+  // delete above
+  async xoaTamVang({ ID }) {
+    try {
+      const text = `
+      delete from ${process.env.PG_TAM_VANG} tv
+      where tv."idNhanKhau"=$1 returning *;
+      `;
+      const { rowCount } = await DB.query(text, [ID]);
+
+      return rowCount > 0;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("khong the xoa!");
+    }
+  }
+  async xoaTamTru({ ID }) {
+    try {
+      const text = `
+      delete from ${process.env.PG_TAM_TRU} tt
+      where tt."idNhanKhau"=$1 returning *;
+      `;
+      const { rowCount } = await DB.query(text, [ID]);
+
+      return rowCount > 0;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("khong the xoa!");
+    }
+  }
+  async xoaKhaiTu({ ID }) {
+
+    try {
+      const text = `
+      delete from ${process.env.PG_KHAI_TU} tt
+      where tt."idNguoiChet"=$1 returning *;
+      `;
+      const { rowCount } = await DB.query(text, [ID]);
+
+      return rowCount > 0;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("khong the xoa!");
+    }
+  }
+  async xoaDinhDanh({ ID }) {
+    try {
+      const text = `
+      delete from ${process.env.PG_DINH_DANH} tv
+      where tv."idNhanKhau"=$1 returning *;
+      `;
+      const { rowCount } = await DB.query(text, [ID]);
+
+      return rowCount > 0;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("khong the xoa!");
+    }
   }
 }
-module.exports = { UserCreation, UserQuery, UserUpdate, UserDelete, TieuSu ,QuanLyNhanKhau};
+module.exports = {
+  UserCreation,
+  UserQuery,
+  UserUpdate,
+  UserDelete,
+  TieuSu,
+  QuanLyNhanKhau,
+};
