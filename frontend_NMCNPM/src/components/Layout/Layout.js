@@ -32,7 +32,7 @@ import Tables from "../../pages/tables";
 import Icons from "../../pages/icons";
 import Charts from "../../pages/charts";
 import CapNhatNhanKhau from "../../pages/sua-nhan-khau";
-
+import EditOne from "../../pages/sua-nhan-khau/subs/sua-nhan-khau";
 // context
 import { useLayoutState } from "../../context/LayoutContext";
 
@@ -55,18 +55,14 @@ function Layout(props) {
             <div className={classes.fakeToolbar} />
             <Switch>
               <Route path="/app/dashboard" component={Dashboard} />
-              <Route path="/app/typography" component={Typography} />
-              <Route path="/app/tables" component={Tables} />
+  
+              {/* <Route path="/app/tables" component={Tables} /> */}
               <Route path="/app/notifications" component={Notifications} />
-              <Route
-                exact
-                path="/app/ui"
-                render={() => <Redirect to="/app/ui/icons" />}
-              />
-              <Route path="/app/ui/maps" component={TaoNhanKhau} />
-              <Route path="/app/ui/icons" component={Icons} />
-              <Route path="/app/ui/charts" component={Charts} />
-              <Route path="/app/ui/cap_nhat_nhan khau" component={CapNhatNhanKhau} />
+              
+              <Route path="/app/create-nk" component={TaoNhanKhau} />
+             
+              <Route exact path="/app/edit-nk" component={CapNhatNhanKhau} />
+              <Route exact path="/app/edit-nk/:ID" component={EditOne} />
             </Switch>
             <Box
               mt={5}

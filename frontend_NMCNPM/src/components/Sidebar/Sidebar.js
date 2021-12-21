@@ -30,57 +30,65 @@ import {
 } from "../../context/LayoutContext";
 
 const structure = [
-  { id: 0, label: "Dashboard", link: "/app/dashboard", icon: <HomeIcon /> },
-  {
-    id: 1,
-    label: "Typography",
-    link: "/app/typography",
-    icon: <TypographyIcon />,
-  },
-  { id: 2, label: "Tables", link: "/app/tables", icon: <TableIcon /> },
-  {
-    id: 3,
-    label: "Notifications",
-    link: "/app/notifications",
-    icon: <NotificationsIcon />,
-  },
+  { id: 0, label: "Trang chủ", link: "/app/dashboard", icon: <HomeIcon /> },
+  
+  // { id: 2, label: "Tables", link: "/app/tables", icon: <TableIcon /> },
+
   {
     id: 4,
-    label: "UI Elements",
+    label: "Quản lý nhân khẩu",
     link: "/app/ui",
     icon: <UIElementsIcon />,
     children: [
-      { label: "Icons", link: "/app/ui/icons" },
-      { label: "Charts", link: "/app/ui/charts" },
-      { label: "Create User", link: "/app/ui/maps" },
-      { label: "Update User", link: "/app/ui/cap_nhat_nhan_khau" }
+      { label: "Tạo", link: "/app/create-nk" },
+      { label: "Cập nhật", link: "/app/edit-nk" }
     ],
   },
-  { id: 5, type: "divider" },
-  { id: 6, type: "title", label: "HELP" },
-  { id: 7, label: "Library", link: "https://flatlogic.com/templates", icon: <LibraryIcon /> },
-  { id: 8, label: "Support", link: "https://flatlogic.com/forum", icon: <SupportIcon /> },
-  { id: 9, label: "FAQ", link: "https://flatlogic.com/forum", icon: <FAQIcon /> },
-  { id: 10, type: "divider" },
-  { id: 11, type: "title", label: "PROJECTS" },
   {
-    id: 12,
-    label: "My recent",
-    link: "",
-    icon: <Dot size="small" color="warning" />,
+    id: 3,
+    label: "Quản lý hộ khẩu",
+    link: "/app/ui",
+    icon: <UIElementsIcon />,
+    children: [
+      { label: "Tạo", link: "/app/create-nk" },
+      { label: "Cập nhật", link: "/app/edit-nk" }
+    ],
   },
   {
-    id: 13,
-    label: "Starred",
-    link: "",
-    icon: <Dot size="small" color="primary" />,
+    id: 6,
+    label: "Quản lý đóng góp",
+    link: "/app/dong-gop",
+    icon: <UIElementsIcon />,
+    children: [
+      { label: "Danh sách", link: "/app/create-nk" },
+      { label: "Tạo mới", link: "/app/edit-nk" }
+    ],
   },
-  {
-    id: 14,
-    label: "Background",
-    link: "",
-    icon: <Dot size="small" color="secondary" />,
-  },
+  // { id: 5, type: "divider" },
+  // { id: 6, type: "title", label: "HELP" },
+  // { id: 7, label: "Library", link: "https://flatlogic.com/templates", icon: <LibraryIcon /> },
+  // { id: 8, label: "Support", link: "https://flatlogic.com/forum", icon: <SupportIcon /> },
+  // { id: 9, label: "FAQ", link: "https://flatlogic.com/forum", icon: <FAQIcon /> },
+  // { id: 10, type: "divider" },
+  // { id: 11, type: "title", label: "PROJECTS" },
+  // {
+  //   id: 12,
+  //   label: "My recent",
+  //   link: "",
+  //   icon: <Dot size="small" color="warning" />,
+  // },
+  // {
+  //   id: 13,
+  //   label: "Starred",
+  //   link: "",
+  //   icon: <Dot size="small" color="primary" />,
+  // },
+  // {
+  //   id: 14,
+  //   label: "Background",
+  //   link: "",
+  //   icon: <Dot size="small" color="secondary" />,
+  // },
 ];
 
 function Sidebar({ location }) {

@@ -1,42 +1,45 @@
 import './Form.css'
-import {TextField,MenuItem} from "@material-ui/core"
+import {TextField} from "@material-ui/core"
 import React from "react";
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const Form = ({ listInput, handleChange, state }) => {
   return (
     <form className="form">
       {listInput.map((item) => (
         <div>
+         <Autocomplete
+  
+  options={item?.options?.map(e=>({title:e})) ?? []}
+  getOptionLabel={(option) => option.title}
+  type={item.type}
+  isRequired={item.isRequired}
+  value={state[item.name]}
+  
+  renderInput={(params) => <TextField {...params}
+  onChange={handleChange(item.name)}
+  label={item.label} variant="outlined" />}
+/>
          
-          {/* <input
-            list={`dropdown-${item.name}`}
-            onChange={handleChange(item.name)}
-            placeHolder={item.placeHolder}
-            type={item.type}
-            isRequired={item.isRequired}
-            value={state[item.name]}
-          /> */}
-          <TextField list={`dropdown-${item.name}`}
+          {/* <TextField list={`dropdown-${item.name}`}
            onChange={handleChange(item.name)}
+          
            placeholder={item.placeHolder}
            type={item.type}
            isRequired={item.isRequired}
            value={state[item.name]}
           label={item.label} variant="outlined" >
-          {/* {item?.options?.map((option) => (
-            <MenuItem key={option} value={option}>
-              {option.label}
-            </MenuItem>
-          ))} */}
+          {item?.options?.map((option) => {
+            console.log(option);
+            return (
+              <MenuItem key={option} value={option}>
+                {option.label}
+              </MenuItem>
+            )
+          })}
             
-            </TextField>
-          {/* {item.options && (
-            <datalist id={`dropdown-${item.name}`}>
-              {item.options.map((e) => (
-                <option value={e} />
-              ))}
-            </datalist>
-          )} */}
+            </TextField> */}
+         
         </div>
       ))}
     </form>

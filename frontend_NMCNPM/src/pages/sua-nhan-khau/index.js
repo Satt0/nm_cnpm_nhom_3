@@ -1,6 +1,9 @@
 import React, {useState} from 'react'
 import {useLazyQuery,useMutation} from '@apollo/client'
+import {Table,TableHead,TableRow,TableCell,TableBody,} from '@material-ui/core'
 import {TIM_NHAN_KHAU} from '../../api/graphql/query/tim_nhan_khau'
+import moment from 'moment'
+import {Link} from 'react-router-dom'
 export default function CapNhatNhanKhau() {
 
     // const nhanKhau=useQuery(TIM_NHAN_KHAU,{variables:{
@@ -12,14 +15,14 @@ export default function CapNhatNhanKhau() {
         fetchInfor,
         { data: InforSearchedData, error: InforError },
       ] = useLazyQuery(TIM_NHAN_KHAU);
-    const[limit, setLimit] = useState("");  
-    const[offset, setOffset] = useState("0");
+    const[limit, setLimit] = useState(500);  
+    const[offset, setOffset] = useState(0);
     const[name, setName] = useState("")
 
     return(
         <div>
             
-            <input
+            {/* <input
           type="text"
           placeholder="Giới hạn"
           onChange={(event) => {
@@ -32,7 +35,7 @@ export default function CapNhatNhanKhau() {
           onChange={(event) => {
             setOffset(event.target.value);
           }}
-        />
+        /> */}
         <input
           type="text"
           placeholder="Nhập tên"
@@ -53,38 +56,28 @@ export default function CapNhatNhanKhau() {
         </button>
 
         <div>
-          {InforSearchedData && (
-            <div>
-              <h1>ID: {InforSearchedData.timNhanKhau.ID}</h1>
-              <h1>
-                Họ và tên: {InforSearchedData.timNhanKhau.hoTen}
-              </h1>
-              <h1>
-                  Biệt danh: {InforSearchedData.timNhanKhau.bietDanh}
-              </h1>
-              <h1>
-                  Năm sinh: {InforSearchedData.timNhanKhau.namSinh}
-              </h1>
-              <h1>
-                  Giới tính: {InforSearchedData.timNhanKhau.gioiTinh}
-              </h1>
-              <h1>
-                  Dân tộc: {InforSearchedData.timNhanKhau.danToc}
-              </h1>
-              <h1>
-                  Tôn giáo: {InforSearchedData.timNhanKhau.tonGiao}
-              </h1>
-              <h1>
-                  Quốc tịch: {InforSearchedData.timNhanKhau.quocTich}
-              </h1>
-              <h1>
-                  Nguyên quán: {InforSearchedData.timNhanKhau.nguyenQuan}
-              </h1>
-              <h1>
-                  Mã nhân khẩu: {InforSearchedData.timNhanKhau.maNhanKhau}
-              </h1>
-            </div>
-          )}
+        
+<Table className="mb-0">
+      <TableHead>
+        <TableRow>
+        <TableCell> ID</TableCell>
+        <TableCell> HoTen</TableCell>
+        <TableCell> ngay sinh</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {InforSearchedData?.timNhanKhau?.map(({ ID,hoTen,namSinh}) => (
+          <TableRow key={ID}>
+            <TableCell className="pl-3 fw-normal">{ID}</TableCell>
+            <TableCell><Link to={`/app/edit-nk/${ID}`}>
+            {hoTen}
+            </Link></TableCell>
+            <TableCell>{moment(parseInt(namSinh)).format("DD-MM-YYYY")}</TableCell>
+            
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
           {InforError && <h1> There was an error fetching the data</h1>}
         </div>
         </div>
