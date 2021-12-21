@@ -210,18 +210,20 @@ extend type Mutation{
     capNhatNhanKhau(input:inputCapNhatNhanKhau!):NhanKhau!
     xoaNhanKHau(input:Int!):Boolean!
     khoiPhucNhanKhau(input:Int!):Boolean!
+    
     taoTieuSu(input:inputTieuSu!):TieuSu!
     xoaTieuSu(input:Int!):Boolean!
     # 
     khaiBaoTamVang(input:inputTamVang!):TamVang!
     xoaTamVang(input:Int!):Boolean!
+
     khaiBaoTamTru(input:inputTamTru!):TamTru!
     xoaTamTru(input:Int!):Boolean!
-   khaiTu(input:inputKhaiTu!):KhaiTu!
+
+    khaiTu(input:inputKhaiTu!):KhaiTu!
     xoaKhaiTu(input:Int!):Boolean!
 
     taoTheDinhDanh(input:inputDinhDanh!):DinhDanh!
-   # capNhatTheDinhDanh:Boolean!
     xoaTheDinhDanh(input:Int!):Boolean!
 }
 `

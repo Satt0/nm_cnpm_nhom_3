@@ -66,6 +66,7 @@ input inputSuaKhau{
 extend type Query{
     thongTinHoKhau(input:Int!):HoKhau!
     danhSachHoKhau(input:inputLocHoKhau!):[HoKhau!]!
+    danhSachNhanKhauKhongCoHoKhau:[NhanKhau!]!
 }
 
 type ThanhVienGiaDinh{

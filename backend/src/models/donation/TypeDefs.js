@@ -18,7 +18,7 @@ module.exports=gql`
         daDong:Int!
         ngayDong:String!
         hoKhau:HoKhau!
-        dongGop:DongGop!
+       
     }
 
 
@@ -37,10 +37,19 @@ module.exports=gql`
         hoanThanh:Boolean!
     }
     # input dong tien
+    input inputCapNhatDaThu{
+        daDong:Int!
+        idHoKhau:Int!
+        idDongGop:Int!
+    }
     input inputKhoanThu{
         idDongGop:Int!
          idHoKhau:Int!
          daDong:Int!
+    }
+    input inputXoaDaDong{
+        idDongGop:Int!
+        idHoKhau:Int
     }
     extend type Mutation{
         taoKhoanDongGop(input:inputTaoKhoanDongGop!):DongGop!
@@ -50,8 +59,8 @@ module.exports=gql`
 
         #
         dongTien(input:inputKhoanThu!):KhoanThu!
-        xoaHoDaDong:Boolean!
-        capNhatKhoanThu:Boolean
+        xoaHoDaDong(input:inputXoaDaDong!):Boolean!
+        capNhatKhoanThu(input:inputCapNhatDaThu):KhoanThu!
     }
     input inputLocKhoanDong{
         offset:Int!

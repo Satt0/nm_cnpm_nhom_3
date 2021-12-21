@@ -58,10 +58,54 @@ class QuanLyDongGop {
       throw new Error("không thể cập nhật!");
     }
   }
-  async capNhanKhoanThu(capNhat) {}
+  async capNhanKhoanThu(capNhat) {
+    try {
+      const { idHoKhau, idDongGop, daDong } = capNhat;
+      const text = `
+      UPDATE ${process.env.PG_HO_KHAU_DONG_GOP}
+	SET  "daDong"=$1, "ngayDong"=now()
+	WHERE  "idHoKhau"=$2 and "idDongGop"=$3 RETURNING *;
+      `;
+      const values = [daDong, idHoKhau, idDongGop];
+      const { rows, rowCount } = await DB.query(text, values);
+      if (rowCount < 1) throw new Error();
+      return rows[0];
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("khong the cap nhat");
+    }
+  }
   // xoa
-  async xoaKhoanDongGop({ ID }) {}
-  async xoaKhoanThu({ idHoKhau, idDongGop }) {}
+  async xoaKhoanDongGop({ ID }) {
+    try {
+      const text = `
+      DELETE FROM ${process.env.PG_DONG_GOP}
+      WHERE "ID"=$1
+      RETURNING *;
+      `;
+      const { rowCount } = await DB.query(text, [ID]);
+
+      return rowCount > 0;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("khong the xoa!");
+    }
+  }
+  async xoaKhoanThu({ idHoKhau, idDongGop }) {
+    try {
+      const text = `
+      DELETE FROM ${process.env.PG_HO_KHAU_DONG_GOP}
+      WHERE "idHoKhau"=$1 and "idDongGop"=$2
+      RETURNING *;
+      `;
+      const { rowCount } = await DB.query(text, [idHoKhau,idDongGop]);
+      return rowCount > 0;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("khong the xoa!");
+    }
+
+  }
 }
 class TruyVanDongGop {
   constructor() {}
@@ -104,7 +148,7 @@ class TruyVanDongGop {
       throw new Error("không có khoản đóng góp!");
     }
   }
-  async danhSachDaThu({idDongGop }) {
+  async danhSachDaThu({ idDongGop }) {
     try {
       const text = `
       SELECT "idHoKhau", "daDong", "ngayDong", "idDongGop"
@@ -120,9 +164,9 @@ class TruyVanDongGop {
       throw new Error("co loi xay ra");
     }
   }
-  async danhSachChuaDong({idDongGop}){
-    try{
-      const text=`
+  async danhSachChuaDong({ idDongGop }) {
+    try {
+      const text = `
       select * from ${process.env.PG_HO_KHAU_TABLE} nk
       EXCEPT
       select nk2.* from ${process.env.PG_HO_KHAU_TABLE} nk2
@@ -130,12 +174,12 @@ class TruyVanDongGop {
       on da_dong."idHoKhau"=nk2."ID"
       where da_dong."idDongGop"=$1;
       `;
-      const values=[idDongGop]
-      const {rows}=await DB.query(text,values)
-      return rows
-    }catch(e){
+      const values = [idDongGop];
+      const { rows } = await DB.query(text, values);
+      return rows;
+    } catch (e) {
       console.log(e.message);
-      throw new Error("khong the tim")
+      throw new Error("khong the tim");
     }
   }
 }

@@ -42,13 +42,28 @@ const Mutation = {
   },
 
 
-  xoaKhoanDongGop: () => {},
+  xoaKhoanDongGop: async(_,{input}) => {
+
+    
+    const khoiTao=new QuanLyDongGop();
+    return await khoiTao.xoaKhoanDongGop({ID:input})
+  },
+
   dongTien: async(_,{input}) => {
     const khoiTao=new QuanLyDongGop();
     return await khoiTao.taoKhoanThu(input)
 
   },
-  xoaHoDaDong: () => {},
+  xoaHoDaDong: async (_,{input}) => {
+
+    const khoiTao=new QuanLyDongGop();
+    return await khoiTao.xoaKhoanThu(input)
+  },
+  capNhatKhoanThu:async(_,{input})=>{
+   
+    const khoiTao=new QuanLyDongGop();
+    return await khoiTao.capNhanKhoanThu(input)
+  }
 };
 
 module.exports = { root, Query, Mutation };
