@@ -1,234 +1,130 @@
-import React, { useState } from "react";
-import { Button, Grid } from "@material-ui/core";
-import { useTheme } from "@material-ui/styles";
-import {
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Sector,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import React, {useState} from 'react'
+import {useLazyQuery,useMutation} from '@apollo/client'
+import {TIM_NHAN_KHAU} from '../../api/graphql/query/tim_nhan_khau'
+import MUIDataTable from "mui-datatables";
+import { Grid } from "@material-ui/core";
+import PageTitle from "../../components/PageTitle";
+import Widget from "../../components/Widget";
+import { makeStyles } from "@material-ui/styles";
+import Table from "../dashboard/components/Table/Table";
+const useStyles = makeStyles(theme => ({
+  tableOverflow: {
+    overflow: 'auto'
+  }
+}))
+export default function CapNhatNhanKhau() {
+  const classes = useStyles();
+    // const nhanKhau=useQuery(TIM_NHAN_KHAU,{variables:{
+    //     input:match.id
+    // }})
 
-// components
-import Widget from "../../components/Widget/Widget";
-import ApexLineChart from "./components/ApexLineChart";
-import ApexHeatmap from "./components/ApexHeatmap";
-import PageTitle from "../../components/PageTitle/PageTitle";
+    // if(nhanKhau.loading) return <h1>loading</h1>
+    const [
+        fetchInfor,
+        { data: InforSearchedData, error: InforError },
+      ] = useLazyQuery(TIM_NHAN_KHAU);
+    const[limit, setLimit] = useState("500");  
+    const[offset, setOffset] = useState("0");
+    const[name, setName] = useState("")
 
-const lineChartData = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
-
-const pieChartData = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
-];
-
-export default function Charts(props) {
-  var theme = useTheme();
-
-  // local
-  var [activeIndex, setActiveIndexId] = useState(0);
-
-  return (
-    <>
-      <PageTitle title="Charts Page - Data Display" button={
-        <Button
-          variant="contained"
-          size="medium"
-          color="secondary"
+    return(
+        <div>
+            
+            <input
+          type="text"
+          placeholder="Giới hạn"
+          onChange={(event) => {
+            setLimit(event.target.value);
+          }}
+          value={limit}
+        />
+        <input
+          type="text"
+          placeholder="Nhập Offset"
+          onChange={(event) => {
+            setOffset(event.target.value);
+          }}
+          value={offset}
+        />
+        <input
+          type="text"
+          placeholder="Nhập tên"
+          onChange={(event) => {
+            setName(event.target.value);
+          }}
+          // value={name}
+        />
+        <button
+          onClick={() => {
+            fetchInfor({
+              variables: {
+                input: {limit: parseInt(limit), offset: parseInt(offset), name: name}
+              },
+            });
+            console.log(InforSearchedData)
+          }
+          
+        }
         >
-          Latest Reports
-        </Button>
-      } />
+          Tìm nhân khẩu
+        </button>
+
+       
+          {/* {InforSearchedData && InforSearchedData.timNhanKhau.map((person)=>{
+            return( */}
+               <div>
+              <PageTitle title="Tables" />
       <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
-          <Widget title="Apex Line Chart" upperTitle noBodyPadding>
-            <ApexLineChart />
-          </Widget>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Widget title="Apex Heatmap" upperTitle noBodyPadding>
-            <ApexHeatmap />
-          </Widget>
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <Widget title="Simple Line Chart" noBodyPadding upperTitle>
-            <ResponsiveContainer width="100%" height={350}>
-              <LineChart
-                width={500}
-                height={300}
-                data={lineChartData}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="pv"
-                  stroke={theme.palette.primary.main}
-                  activeDot={{ r: 8 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="uv"
-                  stroke={theme.palette.secondary.main}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </Widget>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Widget title="Pie Chart with Tooltips" noBodyPadding upperTitle>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart width={200} height={300}>
-                <Pie
-                  activeIndex={activeIndex}
-                  activeShape={renderActiveShape}
-                  data={pieChartData}
-                  innerRadius={60}
-                  outerRadius={80}
-                  fill={theme.palette.primary.main}
-                  dataKey="value"
-                  onMouseEnter={(e, id) => setActiveIndexId(id)}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+        <Grid item xs={12}>
+          <Widget title="Material-UI Table" upperTitle noBodyPadding bodyClass={classes.tableOverflow}>
+            <Table data={InforSearchedData} />
           </Widget>
         </Grid>
       </Grid>
-    </>
-  );
+              {/* <Table striped bordered hover>
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Họ tên</th>
+      <th scope="col">Biệt danh</th>
+      <th scope="col">Năm sinh</th>
+      <th scope="col">Giới tính</th>
+      <th scope="col">Dân tộc</th>
+      <th scope="col">Nguyên quán</th>
+      <th scope="col">Mã nhân khẩu</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{person.ID}</td>
+      <td>{person.hoTen}</td>
+      <td>{person.bietDanh}</td>
+      <td>{person.namSinh}</td>
+      <td>{person.gioiTinh}</td>
+      <td>{person.danToc}</td>
+      <td>{person.nguyenQuan}</td>
+      <td>{person.maNhanKhau}</td>
+    </tr>
+  </tbody>
+  </Table> */}
+  
+  {/* <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <MUIDataTable
+            title="Employee List"
+            data={InforSearchedData}
+            columns={["ID", "Họ tên", "Biệt danh", "Năm sinh", "Giới tính", "Dân tộc", "Nguyên quán", "Mã nhân khẩu"]}
+            options={{
+              filterType: "checkbox",
+            }}
+          />
+        </Grid>
+        </Grid> */}
+            </div>
+          {/* // )}
+          //   )
+          // } */}
+    </div>
+    )
 }
 
-// ################################################################
-
-function renderActiveShape(props) {
-  var RADIAN = Math.PI / 180;
-  var {
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    startAngle,
-    endAngle,
-    fill,
-    payload,
-    percent,
-    value,
-  } = props;
-  var sin = Math.sin(-RADIAN * midAngle);
-  var cos = Math.cos(-RADIAN * midAngle);
-  var sx = cx + (outerRadius + 10) * cos;
-  var sy = cy + (outerRadius + 10) * sin;
-  var mx = cx + (outerRadius + 30) * cos;
-  var my = cy + (outerRadius + 30) * sin;
-  var ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  var ey = my;
-  var textAnchor = cos >= 0 ? "start" : "end";
-
-  return (
-    <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-        {payload.name}
-      </text>
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-      <Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
-        fill={fill}
-      />
-      <path
-        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
-        stroke={fill}
-        fill="none"
-      />
-      <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text
-        x={ex + (cos >= 0 ? 1 : -1) * 12}
-        y={ey}
-        textAnchor={textAnchor}
-        fill="#333"
-      >{`PV ${value}`}</text>
-      <text
-        x={ex + (cos >= 0 ? 1 : -1) * 12}
-        y={ey}
-        dy={18}
-        textAnchor={textAnchor}
-        fill="#999"
-      >
-        {`(Rate ${(percent * 100).toFixed(2)}%)`}
-      </text>
-    </g>
-  );
-}

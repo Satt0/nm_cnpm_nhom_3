@@ -52,7 +52,8 @@ const structure = [
     children: [
       { label: "Icons", link: "/app/ui/icons" },
       { label: "Charts", link: "/app/ui/charts" },
-      { label: "Maps", link: "/app/ui/maps" },
+      { label: "Create User", link: "/app/ui/maps" },
+      { label: "Update User", link: "/app/ui/cap_nhat_nhan_khau" }
     ],
   },
   { id: 5, type: "divider" },
