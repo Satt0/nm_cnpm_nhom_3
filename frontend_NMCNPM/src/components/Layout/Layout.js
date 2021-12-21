@@ -27,10 +27,11 @@ import Sidebar from "../Sidebar";
 import Dashboard from "../../pages/dashboard";
 import Typography from "../../pages/typography";
 import Notifications from "../../pages/notifications";
-import Maps from "../../pages/maps";
+import TaoNhanKhau from "../../pages/maps";
 import Tables from "../../pages/tables";
 import Icons from "../../pages/icons";
 import Charts from "../../pages/charts";
+import CapNhatNhanKhau from "../../pages/sua-nhan-khau";
 
 // context
 import { useLayoutState } from "../../context/LayoutContext";
@@ -62,9 +63,10 @@ function Layout(props) {
                 path="/app/ui"
                 render={() => <Redirect to="/app/ui/icons" />}
               />
-              <Route path="/app/ui/maps" component={Maps} />
+              <Route path="/app/ui/maps" component={TaoNhanKhau} />
               <Route path="/app/ui/icons" component={Icons} />
               <Route path="/app/ui/charts" component={Charts} />
+              <Route path="/app/ui/cap_nhat_nhan khau" component={CapNhatNhanKhau} />
             </Switch>
             <Box
               mt={5}
