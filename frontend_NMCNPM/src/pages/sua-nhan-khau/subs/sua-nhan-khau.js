@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import {useParams } from 'react-router-dom';
 import { THONG_TIN_NHAN_KHAU } from '../../../api/graphql/query/thong_tin_nhan_khau';
-import { useLazyQuery, useQuery } from "@apollo/client";
+import {CAP_NHAT_NHAN_KHAU} from '../../../api/graphql/mutation/cap_nhat_nhan_khau';
+import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
+import { Button } from "@material-ui/core";
 import moment from 'moment'
 import Form from "../../../components/Form";
 export default function EditOne() {
@@ -14,6 +16,7 @@ export default function EditOne() {
           input: parseInt(id),
         },
       });
+      const [updateUser, { loading1, data}] = useMutation(CAP_NHAT_NHAN_KHAU)  
       const listInput=[
         {
         label:"Họ Tên",
@@ -182,13 +185,13 @@ export default function EditOne() {
           placeholder:'điền ngày chuyển đi',
         },
         {
-          label:"Ngày tạo",
-          name:"ngayTao",
-          isRequired:true,
-          type:"text",
-          defaultValue:moment().format('YYYY-MM-DD'),
-          placeholder:'điền ngày tạo',
-        },  
+            label:"Ngày tạo",
+            name:"ngayTao",
+            isRequired:true,
+            type:"text",
+            defaultValue:moment().format('YYYY-MM-DD'),
+            placeholder:'điền ngày tạo',
+          },  
         {
           label:"Nơi làm việc",
           name:"noiLamViec",
@@ -230,6 +233,38 @@ export default function EditOne() {
           defaultValue:"",
           placeholder:'điền trình độ',
         },
+        {
+            label:"ID",
+            name:"ID",
+            isRequired:true,
+            defaultValue:"",
+            type:"text",
+            placeHolder:'điền ID',
+          },
+          {
+            label:"Ngày xóa",
+            name:"ngayXoa",
+            isRequired:true,
+            defaultValue:"",
+            type:"text",
+            placeHolder:'điền ngày xóa',
+          },
+          {
+            label:"Lý do xóa",
+            name:"lyDoXoa",
+            isRequired:true,
+            defaultValue:"",
+            type:"text",
+            placeHolder:'điền lý do xóa',
+          },
+          {
+            label:"Ghi chú",
+            name:"ghiChu",
+            isRequired:true,
+            defaultValue:"",
+            type:"text",
+            placeHolder:'điền ghi chú',
+          },  
         ];
         const [state,setState]=useState(()=>{
             const nhanKhau={};
@@ -249,30 +284,37 @@ export default function EditOne() {
             if(loading) return 
            if(InforSearchedData)
           {
-            
            setState({...InforSearchedData.thongTinNhanKhau})
+        
           }
           
           },[loading,InforSearchedData])
+          useEffect(()=>{
+            if(loading1) return;
+           if(data)
+          {
+           const {ID}=data.capNhatNhanKhau
+           console.log(ID);
+          }
           
+          },[loading1,data])
+        
     return (
         <div>
-           {/* <button
-          onClick={() => {
-            fetchInfor({
-              variables: {
-                input: parseInt(id),
-              },
-            }).catch(e=>{
-                console.log(e.message)
-              });
-            //   console.log(InforSearchedData)
-              
-          }}
-        >
-          Thông tin nhân khẩu
-        </button> */}
         <Form listInput={listInput} state={state}  handleChange={handleChange}/>
+        <Button variant="contained" color="success" onClick={() => {
+                updateUser({
+                  variables: {
+                    input: 
+                      state 
+                    
+                  },
+                }).catch(e=>{
+                  console.log(e.message)
+                });
+                console.log(state);
+               console.log(InforSearchedData.thongTinNhanKhau)
+              }}>Cập nhật nhân khẩu</Button>
         </div>
     )
 }

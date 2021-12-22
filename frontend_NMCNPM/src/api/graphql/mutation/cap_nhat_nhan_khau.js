@@ -1,8 +1,8 @@
 import React from "react";
-import { gql } from "graphql";
+import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 import Form from "../../../components/Form";
-const CAP_NHAT_NHAN_KHAU = gql`
+export const CAP_NHAT_NHAN_KHAU = gql`
   mutation capNhatNhanKhau($input: inputCapNhatNhanKhau!){
 capNhatNhanKhau(input: $input) {
   bietDanh
