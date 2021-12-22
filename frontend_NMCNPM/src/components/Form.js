@@ -9,14 +9,15 @@ const Form = ({ listInput, handleChange, state }) => {
       {listInput.map((item) => (
         <div>
          <Autocomplete
-  
+  freeSolo
   options={item?.options?.map(e=>({title:e})) ?? []}
   getOptionLabel={(option) => option.title}
   type={item.type}
   isRequired={item.isRequired}
-  value={state[item.name]}
+  
   
   renderInput={(params) => <TextField {...params}
+  value={state[item.name]}
   onChange={handleChange(item.name)}
   label={item.label} variant="outlined" />}
 />
