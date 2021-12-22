@@ -48,6 +48,37 @@ type NhanKhau{
 
     
 }
+fragment basicInfor on NhanKhau {
+    bietDanh
+    ID
+    hoTen
+    idNguoiTao
+    maNhanKhau
+    namSinh
+    gioiTinh
+    nguyenQuan
+    danToc
+    tonGiao
+    quocTich
+    soHoChieu
+    noiThuongTru
+    diaChiHienNay
+    trinhDoHocVan
+    trinhDoChuyenMon
+    bietTiengDanToc
+    trinhDoNgoaiNgu
+    ngheNghiep
+    noiLamViec
+    noiSinh
+    tienAn
+    ngayChuyenDen
+    lyDoChuyenDen
+    ngayChuyenDi
+    lyDoChuyenDi
+    diaChiMoi
+    ngayTao
+}
+
 
 type DinhDanh{
 ID:Int!
