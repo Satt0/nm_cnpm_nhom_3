@@ -284,8 +284,34 @@ export default function EditOne() {
             if(loading) return 
            if(InforSearchedData)
           {
-           setState({...InforSearchedData.thongTinNhanKhau})
-        
+        //    setState({...InforSearchedData.thongTinNhanKhau})
+           setState({hoTen: InforSearchedData.thongTinNhanKhau.hoTen,
+             ID: InforSearchedData.thongTinNhanKhau.ID,
+             bietDanh: InforSearchedData.thongTinNhanKhau.bietDanh,
+             namSinh: InforSearchedData.thongTinNhanKhau.namSinh,
+             gioiTinh: InforSearchedData.thongTinNhanKhau.gioiTinh,
+             nguyenQuan: InforSearchedData.thongTinNhanKhau.nguyenQuan,
+             danToc: InforSearchedData.thongTinNhanKhau.danToc,
+             tonGiao: InforSearchedData.thongTinNhanKhau.tonGiao,
+             quocTich: InforSearchedData.thongTinNhanKhau.quocTich,
+             soHoChieu: InforSearchedData.thongTinNhanKhau.soHoChieu,
+             noiThuongTru: InforSearchedData.thongTinNhanKhau.noiThuongTru,
+             diaChiHienNay: InforSearchedData.thongTinNhanKhau.diaChiHienNay,
+             ngheNghiep: InforSearchedData.thongTinNhanKhau.ngheNghiep,
+             maNhanKhau: InforSearchedData.thongTinNhanKhau.maNhanKhau,
+             noiSinh: InforSearchedData.thongTinNhanKhau.noiSinh,
+             bietTiengDanToc: InforSearchedData.thongTinNhanKhau.bietTiengDanToc,
+             diaChiMoi: InforSearchedData.thongTinNhanKhau.diaChiMoi,
+             lyDoChuyenDen: InforSearchedData.thongTinNhanKhau.lyDoChuyenDen,
+             lyDoChuyenDi: InforSearchedData.thongTinNhanKhau.lyDoChuyenDi,
+             ngayChuyenDen: InforSearchedData.thongTinNhanKhau.ngayChuyenDen,
+             ngayChuyenDi: InforSearchedData.thongTinNhanKhau.ngayChuyenDi,
+             noiLamViec: InforSearchedData.thongTinNhanKhau.noiLamViec,
+             tienAn: InforSearchedData.thongTinNhanKhau.tienAn,
+             trinhDoChuyenMon: InforSearchedData.thongTinNhanKhau.trinhDoChuyenMon,
+             trinhDoHocVan: InforSearchedData.thongTinNhanKhau.trinhDoHocVan,
+             trinhDoNgoaiNgu: InforSearchedData.thongTinNhanKhau.trinhDoNgoaiNgu
+            })
           }
           
           },[loading,InforSearchedData])
