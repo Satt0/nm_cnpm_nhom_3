@@ -238,6 +238,7 @@ export default function EditOne() {
             })
              return nhanKhau;
           })
+          
           const handleChange=(key)=>{
             return (e)=>{
               const value=e.target.value;
@@ -248,7 +249,8 @@ export default function EditOne() {
             if(loading) return 
            if(InforSearchedData)
           {
-           setState(old=>({...old,...InforSearchedData.thongTinNhanKhau}))
+            
+           setState({...InforSearchedData.thongTinNhanKhau})
           }
           
           },[loading,InforSearchedData])
