@@ -15,10 +15,9 @@ const Form = ({ listInput, handleChange, state }) => {
   type={item.type}
   isRequired={item.isRequired}
   value={state[item.name]}
-  
   renderInput={(params) => <TextField {...params}
   onChange={handleChange(item.name)}
-  label={item.label} variant="outlined" />}
+  label={item.label} variant="outlined"/>}
 />
          
           {/* <TextField list={`dropdown-${item.name}`}
