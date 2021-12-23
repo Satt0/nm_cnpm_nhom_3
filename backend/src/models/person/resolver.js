@@ -43,7 +43,8 @@ const root = {
 const Query = {
   thongTinNhanKhau: authenticate(1, async (_, { input }, __, ___) => {
     const process = new UserQuery();
-    return await process.getOnePerson({ ID: input });
+    const res= await process.getOnePerson({ ID: input });
+    return res;
   }),
   timNhanKhau: authenticate(1, async (_, { input }, __, ___) => {
     const process = new UserQuery();
