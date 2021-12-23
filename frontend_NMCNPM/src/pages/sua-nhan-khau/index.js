@@ -14,28 +14,13 @@ export default function CapNhatNhanKhau() {
     const [
         fetchInfor,
         { data: InforSearchedData, error: InforError },
-      ] = useLazyQuery(TIM_NHAN_KHAU);
-    const[limit, setLimit] = useState(500);  
-    const[offset, setOffset] = useState(0);
+      ] = useLazyQuery(TIM_NHAN_KHAU,{fetchPolicy: "no-cache"});
+    const[limit] = useState(500);  
+    const[offset] = useState(0);
     const[name, setName] = useState("")
 
     return(
         <div>
-            
-            {/* <input
-          type="text"
-          placeholder="Giới hạn"
-          onChange={(event) => {
-            setLimit(event.target.value);
-          }}
-        />
-        <input
-          type="text"
-          placeholder="Nhập Offset"
-          onChange={(event) => {
-            setOffset(event.target.value);
-          }}
-        /> */}
         <input
           type="text"
           placeholder="Nhập tên"
@@ -68,7 +53,9 @@ export default function CapNhatNhanKhau() {
       <TableBody>
         {InforSearchedData?.timNhanKhau?.map(({ ID,hoTen,namSinh}) => (
           <TableRow key={ID}>
-            <TableCell className="pl-3 fw-normal">{ID}</TableCell>
+            <TableCell className="pl-3 fw-normal"><Link to={`/app/edit-nk/${ID}`}>
+            {ID}
+            </Link></TableCell>
             <TableCell><Link to={`/app/edit-nk/${ID}`}>
             {hoTen}
             </Link></TableCell>
