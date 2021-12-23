@@ -143,7 +143,10 @@ export default function EditOne() {
         lyDoChuyenDi,
         diaChiMoi,
         maNhanKhau,
+        tieuSu,
       } = InforSearchedData.thongTinNhanKhau;
+      console.log(tieuSu);
+      setArrayData(tieuSu)
       setState({
         ID,
         hoTen,
@@ -182,6 +185,13 @@ export default function EditOne() {
       console.log(ID);
     }
   }, [loadingUpdate, data]);
+
+  useEffect(()=>{
+    if(dataTS){
+      setArrayData(arrayData => [...arrayData, dataTS.taoTieuSu])
+     
+    }
+  },[dataTS])
   if (loading && state !== 0) return <h1>please wait</h1>;
 
   
@@ -221,8 +231,8 @@ export default function EditOne() {
         // const mergeState = {...state, ...stateTS}
         // console.log(dataTS)
         // setState(mergeState)
-        setArrayData(arrayData => [...arrayData, dataTS])
-        console.log(arrayData)
+        // setArrayData(arrayData => [...arrayData, dataTS.taoTieuSu])
+        // console.log(arrayData)
         }}
       >
         Tạo tiểu sử
@@ -239,7 +249,7 @@ export default function EditOne() {
         </TableRow>
       </TableHead>
       <TableBody>
-        {arrayData?.taoTieuSu?.map(({ tuNgay, denNgay, diaChi, ngheNghiep, noiLamViec}) => (
+        {arrayData?.map(({ tuNgay, denNgay, diaChi, ngheNghiep, noiLamViec}) => (
           <TableRow key={tuNgay}>
             <TableCell className="pl-3 fw-normal">
             {tuNgay}
