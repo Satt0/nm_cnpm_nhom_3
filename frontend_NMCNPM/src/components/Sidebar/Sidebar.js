@@ -50,7 +50,7 @@ const structure = [
     link: "/app/ui",
     icon: <UIElementsIcon />,
     children: [
-      { label: "Tạo", link: "/app/create-nk" },
+      { label: "Tạo", link: "/app/create-hk" },
       { label: "Cập nhật", link: "/app/edit-nk" }
     ],
   },

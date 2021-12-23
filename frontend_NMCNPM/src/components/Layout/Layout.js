@@ -33,6 +33,8 @@ import Icons from "../../pages/icons";
 import Charts from "../../pages/charts";
 import CapNhatNhanKhau from "../../pages/sua-nhan-khau";
 import EditOne from "../../pages/sua-nhan-khau/subs/sua-nhan-khau";
+
+import TaoHoKhau from "../../pages/ho-khau/tao";
 // context
 import { useLayoutState } from "../../context/LayoutContext";
 
@@ -63,6 +65,7 @@ function Layout(props) {
              
               <Route exact path="/app/edit-nk" component={CapNhatNhanKhau} />
               <Route exact path="/app/edit-nk/:ID" component={EditOne} />
+              <Route exact path="/app/create-hk" component={TaoHoKhau}/>
             </Switch>
             <Box
               mt={5}
