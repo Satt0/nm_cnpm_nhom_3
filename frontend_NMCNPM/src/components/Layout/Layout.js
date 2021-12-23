@@ -63,6 +63,7 @@ function Layout(props) {
              
               <Route exact path="/app/edit-nk" component={CapNhatNhanKhau} />
               <Route exact path="/app/edit-nk/:ID" component={EditOne} />
+              
             </Switch>
             <Box
               mt={5}

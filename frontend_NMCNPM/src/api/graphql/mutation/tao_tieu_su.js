@@ -1,7 +1,7 @@
 import React from "react";
-import { gql } from "graphql";
+import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client";
-const TAO_TIEU_SU = gql`
+export const TAO_TIEU_SU = gql`
 mutation taoTieuSu($input: inputTieuSu!){
   taoTieuSu(input: $input) {
     ID
@@ -72,7 +72,7 @@ function TaoTieuSu(){
         
     
 
-    const [createUser, { loading}] = useMutation(TAO_TIEU_SU)
+    const [createTS, { loading}] = useMutation(TAO_TIEU_SU)
 if (loading) {
     return <h1> DATA IS LOADING...</h1>;
   }
@@ -83,7 +83,7 @@ if (loading) {
           
             <button
               onClick={() => {
-                createUser({
+                createTS({
                   variables: {
                     input: arrayName
                   },

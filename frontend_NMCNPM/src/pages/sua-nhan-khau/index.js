@@ -35,6 +35,7 @@ export default function CapNhatNhanKhau() {
                 input: {limit, offset, name}
               },
             });
+            console.log(InforSearchedData)
           }}
         >
           Tìm nhân khẩu
