@@ -50,6 +50,10 @@ const Query = {
     const process = new UserQuery();
     return await process.getManyPerson(input);
   }),
+  goiYNhanKhau: authenticate(1, async (_, { input }, __, ___) => {
+    const process = new UserQuery();
+    return await process.getSuggestion(input);
+  }),
 };
 const Mutation = {
   taoNhanKhau: authenticate(1,async (_, { input }, context, __) => {

@@ -145,7 +145,7 @@ export default function EditOne() {
         maNhanKhau,
         tieuSu,
       } = InforSearchedData.thongTinNhanKhau;
-      console.log(tieuSu);
+      
       setArrayData(tieuSu)
       setState({
         ID,
