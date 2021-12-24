@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import { gql } from "graphql";
+import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client";
 
-const XOA_TIEU_SU = gql`
+export const XOA_TIEU_SU = gql`
 mutation xoaTieuSu($input: Int!){
   xoaTieuSu(input: $input)
 }
