@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import { TextField,Table,TableRow,TableBody,TableHead,TableCell,Button } from "@material-ui/core";
+import { TextField,Table,TableRow,TableBody,TableHead,TableCell,Button ,FormControl,InputLabel,MenuItem,Select} from "@material-ui/core";
 import styles from './styles.module.css'
 import moment from 'moment'
 import { Link } from "react-router-dom";
@@ -41,6 +41,12 @@ export default function TaoHoKhau() {
         setState(old=>({...old,[key]:e.target.value}))
     }
   }
+  const deleteAdded=(id)=>{
+
+    return ()=>{
+      setNhanKhau(old=>old.filter(E=>E.ID!==id))
+    }
+  }
   return (
     <div>
       <form className={styles.form} >
@@ -52,6 +58,20 @@ export default function TaoHoKhau() {
           variant="outlined"
         />
       ))}
+      <FormControl fullWidth>
+  <InputLabel id="demo-simple-select-label">Chủ Hộ</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={state.idChuHo}
+    label="Age"
+    onChange={handleChange("idChuHo")}
+  >
+    <MenuItem value={-1}>Không có</MenuItem>
+   {nhanKhau.map(nk=><MenuItem value={nk.ID}>{`${nk.ID}-${nk.hoTen}`}</MenuItem>)}
+    
+  </Select>
+</FormControl>
       </form>
       <h2 className={styles.center}>Đã thêm</h2>
       <Table className="mb-0">
@@ -60,6 +80,7 @@ export default function TaoHoKhau() {
         <TableCell> ID</TableCell>
         <TableCell> HoTen</TableCell>
         <TableCell> ngay sinh</TableCell>
+        <TableCell></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -72,13 +93,17 @@ export default function TaoHoKhau() {
             {hoTen}
             </Link></TableCell>
             <TableCell>{moment(parseInt(namSinh)).format("DD-MM-YYYY")}</TableCell>
-            
+            <TableCell>
+              <Button onClick={deleteAdded(ID)} variant="contained" color="secondary">
+                Xóa
+              </Button>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
         <h2 className={styles.center}>Nhân khẩu</h2>
-        <PickNhanKhau setNhanKhau={setNhanKhau}/>
+        <PickNhanKhau setNhanKhau={setNhanKhau} added={nhanKhau}/>
       
     </div>
   );
