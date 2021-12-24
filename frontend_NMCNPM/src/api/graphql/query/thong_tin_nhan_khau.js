@@ -47,6 +47,41 @@ query thongTinNhanKhau($input: Int!){
     }
     maNhanKhau
     quanHeVoiChuHo
+    dinhDanh {
+      ID
+      soDinhDanh
+      ngayCap
+      noiCap
+      type
+    }
+    tamVang {
+      ID
+      maGiayTamVang
+      tuNgay
+      noiTamTru
+      denNgay
+      lyDo
+    }
+    tamTru {
+      ID
+      maGiayTamTru
+      soDienThoaiNguoiDangKy
+      tuNgay
+      denNgay
+      lyDo
+    }
+    khaiTu {
+      ID
+      soGiayKhaiTu
+      nguoiKhai {
+        ID
+        hoTen
+        namSinh
+      }
+      ngayKhai
+      ngayChet
+      lyDoChet
+    }
   }
 }
 `
