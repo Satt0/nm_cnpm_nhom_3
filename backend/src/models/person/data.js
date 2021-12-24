@@ -129,7 +129,7 @@ class UserQuery {
       limit $1
       offset $2;
       `;
-      const value = [limit, offset, `%${name.toLowerCase}%`];
+      const value = [limit, offset, `%${name.toLowerCase()}%`];
       const { rows } = await DB.query(text, value);
 
       return rows;

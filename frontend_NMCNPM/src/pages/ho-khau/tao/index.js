@@ -53,9 +53,7 @@ export default function TaoHoKhau() {
         />
       ))}
       </form>
-        <h2 className={styles.center}>Nhân khẩu</h2>
-        <Button onClick={()=>{setShow(true)}} variant="contained" color="primary">Thêm nhân khẩu</Button>
-        {/* <PickNhanKhau setNhanKhau={setNhanKhau} nhanKhau={nhanKhau}/> */}
+      <h2 className={styles.center}>Đã thêm</h2>
       <Table className="mb-0">
       <TableHead>
         <TableRow>
@@ -65,7 +63,7 @@ export default function TaoHoKhau() {
         </TableRow>
       </TableHead>
       <TableBody>
-        {nhanKhau?.timNhanKhau?.map(({ ID,hoTen,namSinh}) => (
+        {nhanKhau?.map(({ ID,hoTen,namSinh}) => (
           <TableRow key={ID}>
             <TableCell className="pl-3 fw-normal"><Link to={`/app/edit-nk/${ID}`}>
             {ID}
@@ -79,6 +77,9 @@ export default function TaoHoKhau() {
         ))}
       </TableBody>
     </Table>
+        <h2 className={styles.center}>Nhân khẩu</h2>
+        <PickNhanKhau setNhanKhau={setNhanKhau}/>
+      
     </div>
   );
 }
