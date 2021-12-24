@@ -170,6 +170,7 @@ input inputTimNhanKhau{
 extend type Query {
     thongTinNhanKhau(input:Int!):NhanKhau!
     timNhanKhau(input:inputTimNhanKhau!):[NhanKhau!]!
+    goiYNhanKhau(input:inputTimNhanKhau):[NhanKhau!]!
 }
 
 
@@ -200,7 +201,7 @@ ngayChet:String!
 lyDoChet:String!
 }
 input inputDinhDanh{
-    idNhanKhau:Int!
+idNhanKhau:Int!
 soDinhDanh:String!
 ngayCap:String!
 noiCap:String!
