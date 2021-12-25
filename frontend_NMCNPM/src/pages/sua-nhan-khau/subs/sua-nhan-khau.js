@@ -1029,7 +1029,8 @@ export default function EditOne() {
           onClick={() => {
             createKT({
               variables: {
-                input: stateKT,
+                input: {...stateKT,idNguoiKhai:parseInt(stateKT.idNguoiKhai),
+                idNguoiChet:parseInt(stateKT.idNguoiChet)},
               },
             }).catch((e) => {
               console.log(e.message);
