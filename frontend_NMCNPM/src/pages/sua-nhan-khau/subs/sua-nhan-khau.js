@@ -26,7 +26,33 @@ import { KHAI_TU } from "../../../api/graphql/mutation/khai_tu";
 import { XOA_TAM_VANG } from "../../../api/graphql/mutation/xoa_tam_vang";
 import { XOA_TAM_TRU } from "../../../api/graphql/mutation/xoa_tam_tru";
 import { XOA_KHAI_TU } from "../../../api/graphql/mutation/xoa_khai_tu";
+import { makeStyles } from '@material-ui/core/styles';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    flexBasis: '33.33%',
+    flexShrink: 0,
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary,
+  },
+}));
 export default function EditOne() {
+  const classes = useStyles();
+  const [expanded, setExpanded] = useState(false)
+  const handleChanged = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
   const history = useHistory();
   const params = useParams();
   const id = Object.values(params)[0];
@@ -499,7 +525,16 @@ export default function EditOne() {
         maNhanKhau,
       });
       if(dinhDanh){
-        setStateDC({...dinhDanh,ngayCap:moment(parseInt(dinhDanh.ngayCap)).format("YYYY-MM-DD")})
+        setStateDC({...dinhDanh,ngayCap:moment(parseInt(dinhDanh.ngayCap)).format("YYYY-MM-DD"), idNhanKhau: parseInt(id)})
+      }
+      if(tamTru){
+        setStateTT({...tamTru, tuNgay:moment(parseInt(tamTru.tuNgay)).format("YYYY-MM-DD"), denNgay:moment(parseInt(tamTru.denNgay)).format("YYYY-MM-DD")})
+      }
+      if(tamVang){
+        setStateTV({...tamVang, tuNgay:moment(parseInt(tamVang.tuNgay)).format("YYYY-MM-DD"), denNgay:moment(parseInt(tamVang.denNgay)).format("YYYY-MM-DD"), idNhanKhau: parseInt(id)})
+      }
+      if(khaiTu){
+        setStateKT({...khaiTu, ngayKhai: moment(parseInt(khaiTu.ngayKhai)).format("YYYY-MM-DD"), ngayChet: moment(parseInt(khaiTu.ngayChet)).format("YYYY-MM-DD") })
       }
     }
   }, [loading, InforSearchedData]);
@@ -633,20 +668,76 @@ export default function EditOne() {
       <div>
         {InforSearchedData && (
           <div>
-            <h1>
-              Số định danh:{" "}
-              {stateDC.soDinhDanh}
-            </h1>
-            <h1>
-              Ngày cấp:{" "}
-              {
-               stateDC.ngayCap
-              }
-            </h1>{" "}
-            <h1>
-              Nơi cấp: {stateDC.noiCap}
-            </h1>{" "}
-            <h1>Type: {stateDC.type}</h1>{" "}
+            <Accordion expanded={expanded === 'panel1'} onChange={handleChanged('panel1')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography className={classes.heading}>Số định danh</Typography>
+          <Typography className={classes.secondaryHeading}>{stateDC.soDinhDanh}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
+            maximus est, id dignissim quam. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel2'} onChange={handleChanged('panel2')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2bh-content"
+          id="panel2bh-header"
+        >
+          <Typography className={classes.heading}>Ngày cấp</Typography>
+          <Typography className={classes.secondaryHeading}>
+          {stateDC.ngayCap}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
+            diam eros in elit. Pellentesque convallis laoreet laoreet. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel3'} onChange={handleChanged('panel3')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel3bh-content"
+          id="panel3bh-header"
+        >
+          <Typography className={classes.heading}>Nơi cấp</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateDC.noiCap}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel4'} onChange={handleChanged('panel4')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel4bh-content"
+          id="panel4bh-header"
+        >
+          <Typography className={classes.heading}>Type</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateDC.type}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
           </div>
         )}
         {InforError && <h1> There was an error fetching the data</h1>}
@@ -687,29 +778,96 @@ export default function EditOne() {
         >
           Khai báo tạm vắng
         </Button>
-        {/* {InforSearchedData && (
+        {InforSearchedData && (
           <div>
-            <h1>
-              Từ ngày:{" "}
-              {moment(
-                parseInt(InforSearchedData.thongTinNhanKhau.tamVang.tuNgay),
-              ).format("YYYY-MM-DD")}
-            </h1>
-            <h1>
-              Đến ngày:{" "}
-              {moment(
-                parseInt(InforSearchedData.thongTinNhanKhau.tamVang.denNgay),
-              ).format("YYYY-MM-DD")}
-            </h1>{" "}
-            <h1>
-              Nơi tạm trú:{" "}
-              {InforSearchedData.thongTinNhanKhau.tamVang.noiTamTru}
-            </h1>{" "}
-            <h1>
-              Mã giấy tạm vắng:{" "}
-              {InforSearchedData.thongTinNhanKhau.tamVang.maGiayTamVang}
-            </h1>{" "}
-            <h1>Lý do: {InforSearchedData.thongTinNhanKhau.tamVang.lyDo}</h1>{" "}
+            <Accordion expanded={expanded === 'panel1'} onChange={handleChanged('panel1')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography className={classes.heading}>Từ ngày</Typography>
+          <Typography className={classes.secondaryHeading}>{stateTV.tuNgay}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
+            maximus est, id dignissim quam. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel2'} onChange={handleChanged('panel2')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2bh-content"
+          id="panel2bh-header"
+        >
+          <Typography className={classes.heading}>Đến ngày</Typography>
+          <Typography className={classes.secondaryHeading}>
+          {stateTV.denNgay}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
+            diam eros in elit. Pellentesque convallis laoreet laoreet. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel3'} onChange={handleChanged('panel3')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel3bh-content"
+          id="panel3bh-header"
+        >
+          <Typography className={classes.heading}>Nơi tạm trú</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateTV.noiTamTru}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel4'} onChange={handleChanged('panel4')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel4bh-content"
+          id="panel4bh-header"
+        >
+          <Typography className={classes.heading}>Lý do</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateTV.lyDo}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel4'} onChange={handleChanged('panel4')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel4bh-content"
+          id="panel4bh-header"
+        >
+          <Typography className={classes.heading}>Mã giấy tạm vắng</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateTV.maGiayTamVang}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
           </div>
         )}
 
@@ -752,27 +910,94 @@ export default function EditOne() {
         </Button>
         {InforSearchedData && (
           <div>
-            <h1>
-              Từ ngày:{" "}
-              {moment(
-                parseInt(InforSearchedData.thongTinNhanKhau.tamTru.tuNgay),
-              ).format("YYYY-MM-DD")}
-            </h1>
-            <h1>
-              Đến ngày:{" "}
-              {moment(
-                parseInt(InforSearchedData.thongTinNhanKhau.tamTru.denNgay),
-              ).format("YYYY-MM-DD")}
-            </h1>{" "}
-            <h1>
-              Số điện thoại người đăng ký:{" "}
-              {InforSearchedData.thongTinNhanKhau.tamTru.soDienThoaiNguoiDangKy}
-            </h1>{" "}
-            <h1>
-              Mã giấy tạm trú:{" "}
-              {InforSearchedData.thongTinNhanKhau.tamTru.maGiayTamTru}
-            </h1>{" "}
-            <h1>Lý do: {InforSearchedData.thongTinNhanKhau.tamTru.lyDo}</h1>{" "}
+            <Accordion expanded={expanded === 'panel1'} onChange={handleChanged('panel1')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography className={classes.heading}>Từ ngày</Typography>
+          <Typography className={classes.secondaryHeading}>{stateTT.tuNgay}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
+            maximus est, id dignissim quam. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel2'} onChange={handleChanged('panel2')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2bh-content"
+          id="panel2bh-header"
+        >
+          <Typography className={classes.heading}>Đến ngày</Typography>
+          <Typography className={classes.secondaryHeading}>
+          {stateTT.denNgay}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
+            diam eros in elit. Pellentesque convallis laoreet laoreet. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel3'} onChange={handleChanged('panel3')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel3bh-content"
+          id="panel3bh-header"
+        >
+          <Typography className={classes.heading}>Số điện thoại người đăng ký</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateTT.soDienThoaiNguoiDangKy}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel4'} onChange={handleChanged('panel4')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel4bh-content"
+          id="panel4bh-header"
+        >
+          <Typography className={classes.heading}>Lý do</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateTT.lyDo}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel4'} onChange={handleChanged('panel4')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel4bh-content"
+          id="panel4bh-header"
+        >
+          <Typography className={classes.heading}>Mã giấy tạm trú</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateTT.maGiayTamTru}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
           </div>
         )}
         {InforError && <h1> There was an error fetching the data</h1>}
@@ -813,28 +1038,100 @@ export default function EditOne() {
           }}
         >
           Khai tử
-        </Button> */}
-        {/* {InforSearchedData && (
+        </Button>
+        {InforSearchedData && (
             <div>
-              <h1>ID: {InforSearchedData.thongTinNhanKhau.khaiTu.ID}</h1>
-              <h1>
-                Ngày khai: {InforSearchedData.thongTinNhanKhau.khaiTu.ngayKhai}
-              </h1>{" "}
-              <h1>
-                Ngày chết: {InforSearchedData.thongTinNhanKhau.khaiTu.ngayChet}
-              </h1>{" "}
-              <h1>
-                Số giấy khai tử: {InforSearchedData.thongTinNhanKhau.khaiTu.soGiayKhaiTu}
-              </h1>{" "}
-              <h1>
-                Lý do chết: {InforSearchedData.thongTinNhanKhau.khaiTu.lyDoChet}
-              </h1>{" "}
-              <h1>
-                Họ tên người khai: {InforSearchedData.thongTinNhanKhau.khaiTu.nguoiKhai.hoTen}
-              </h1>{" "}
+              <Accordion expanded={expanded === 'panel1'} onChange={handleChanged('panel1')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography className={classes.heading}>Số giấy khai tử</Typography>
+          <Typography className={classes.secondaryHeading}>{stateKT.soGiayKhaiTu}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
+            maximus est, id dignissim quam. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel2'} onChange={handleChanged('panel2')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2bh-content"
+          id="panel2bh-header"
+        >
+          <Typography className={classes.heading}>Ngày khai</Typography>
+          <Typography className={classes.secondaryHeading}>
+          {stateKT.ngayKhai}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
+            diam eros in elit. Pellentesque convallis laoreet laoreet. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel3'} onChange={handleChanged('panel3')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel3bh-content"
+          id="panel3bh-header"
+        >
+          <Typography className={classes.heading}>Ngày chết</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateKT.ngayChet}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion expanded={expanded === 'panel4'} onChange={handleChanged('panel4')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel4bh-content"
+          id="panel4bh-header"
+        >
+          <Typography className={classes.heading}>Lý do chết</Typography>
+          <Typography className={classes.secondaryHeading}>
+            {stateKT.lyDoChet}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
+            vitae egestas augue. Duis vel est augue. */}
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
             </div>
           )}  
-          {InforError && <h1> There was an error fetching the data</h1>}         */}
+          {InforError && <h1> There was an error fetching the data</h1>}    
+          <Button
+          className="btn-update"
+          variant="contained"
+          color="success"
+          onClick={() => {
+            deleteKT({
+              variables: {
+                input: parseInt(id),
+              },
+            }).catch((e) => {
+              console.log(e.message);
+            });
+            // console.log(loadingTV)
+          }}
+        >
+          Xóa khai tử
+        </Button>    
+        
       </div>
     </div>
   );
