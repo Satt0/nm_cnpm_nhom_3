@@ -73,6 +73,12 @@ export default function TaoHoKhau() {
   </Select>
 </FormControl>
       </form>
+  <div>
+  <Button onClick={()=>{
+    const test={...state,nhanKhau:nhanKhau.map(e=>e.forUploads)}
+    console.log(test);
+  }} variant="contained" color="primary">Tạo</Button>
+  </div>
       <h2 className={styles.center}>Đã thêm</h2>
       <Table className="mb-0">
       <TableHead>
@@ -80,11 +86,12 @@ export default function TaoHoKhau() {
         <TableCell> ID</TableCell>
         <TableCell> HoTen</TableCell>
         <TableCell> ngay sinh</TableCell>
+        <TableCell>quan hệ với chủ hộ</TableCell>
         <TableCell></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {nhanKhau?.map(({ ID,hoTen,namSinh}) => (
+        {nhanKhau?.map(({ ID,hoTen,namSinh,forUploads}) => (
           <TableRow key={ID}>
             <TableCell className="pl-3 fw-normal"><Link to={`/app/edit-nk/${ID}`}>
             {ID}
@@ -93,6 +100,9 @@ export default function TaoHoKhau() {
             {hoTen}
             </Link></TableCell>
             <TableCell>{moment(parseInt(namSinh)).format("DD-MM-YYYY")}</TableCell>
+            <TableCell>
+              <TextField value={state.idChuHo===ID?"Chủ hộ":forUploads.quanHeVoiChuHo}></TextField>
+            </TableCell>
             <TableCell>
               <Button onClick={deleteAdded(ID)} variant="contained" color="secondary">
                 Xóa

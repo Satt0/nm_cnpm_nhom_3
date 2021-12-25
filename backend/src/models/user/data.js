@@ -34,12 +34,13 @@ class UserManagement{
             `
             const values=[username,password]
             const {rows,rowCount}=await DB.query(text,values)
+            console.log(rows);
             if(rowCount>0){
                 return rows[0]
             }
             throw new Error("không tồn tại tài khoản!");
         }catch(e){
-
+            throw e
         }
     }
 }

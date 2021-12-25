@@ -25,8 +25,14 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { DANG_NHAP, DANG_KY } from "../../api/graphql/query/dang_nhap";
 function Login(props) {
   var classes = useStyles();
-  const [callLogin, loginData] = useLazyQuery(DANG_NHAP);
-  const [callSignUp, signUpData] = useMutation(DANG_KY);
+  const [
+    callLogin,
+    { error: errorLogin, loading: loadingLogin, data: dataLogin },
+  ] = useLazyQuery(DANG_NHAP, { fetchPolicy: "no-cache" });
+  const [
+    callSignUp,
+    { error: errorSignUp, loading: loadingSignUp, data: dataSignUp },
+  ] = useMutation(DANG_KY, { fetchPolicy: "no-cache" });
   // global
   var userDispatch = useUserDispatch();
 
@@ -37,40 +43,29 @@ function Login(props) {
   var [rePassword, setRepassword] = useState("");
   var [loginValue, setLoginValue] = useState("");
   var [passwordValue, setPasswordValue] = useState("");
-
+ 
   useEffect(() => {
-    const { loading, error, data } = loginData;
-  
-    if (loading) return setIsLoading(true);
-    if (error) {
+    console.log(errorLogin, loadingLogin, dataLogin);
+    if (loadingLogin) return setIsLoading(true);
+    if (errorLogin || !dataLogin) {
       setIsLoading(false);
       return setError(true);
     }
-    if (!data) return;
-    const { logIn } = data;
+    if (!dataLogin) return;
+    const { logIn } = dataLogin;
     loginUser(userDispatch, logIn, props.history, setIsLoading, setError);
-  }, [
-    loginData,
-    userDispatch,
-    props.history
-  ]);
+  }, [dataLogin, errorLogin, loadingLogin, userDispatch, props.history]);
 
   useEffect(() => {
-    const { loading, error, data } = signUpData;
-
-    if (loading) return setIsLoading(true);
-    if (error) {
+    if (loadingSignUp) return setIsLoading(true);
+    if (errorSignUp || !dataSignUp) {
       setIsLoading(false);
       return setError(true);
     }
-    if (!data) return;
-    const { signUp } = data;
+    if (!dataSignUp) return;
+    const { signUp } = dataSignUp;
     loginUser(userDispatch, signUp, props.history, setIsLoading, setError);
-  }, [
-    signUpData,
-    userDispatch,
-    props.history
-  ]);
+  }, [loadingSignUp, dataSignUp, errorSignUp, userDispatch, props.history]);
 
   return (
     <Grid container className={classes.container}>
@@ -150,6 +145,8 @@ function Login(props) {
                             password: passwordValue,
                           },
                         },
+                      }).catch((e) => {
+                        console.log(e.message);
                       });
                     }}
                     variant="contained"
@@ -241,6 +238,8 @@ function Login(props) {
                             role: 3,
                           },
                         },
+                      }).catch((e) => {
+                        setError(true);
                       });
                     }}
                     disabled={
