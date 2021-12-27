@@ -33,7 +33,9 @@ import Icons from "../../pages/icons";
 import Charts from "../../pages/charts";
 import CapNhatNhanKhau from "../../pages/sua-nhan-khau";
 import EditOne from "../../pages/sua-nhan-khau/subs/sua-nhan-khau";
-
+import TaoKhoanDongGop from "../../pages/dong-gop/tao/index";
+import DanhSachKhoanDong from "../../pages/dong-gop/danhsach/danhsach";
+import CapNhatKhoanDong from "../../pages/dong-gop/capnhat/capnhat";
 import TaoHoKhau from "../../pages/ho-khau/tao";
 // context
 import { useLayoutState } from "../../context/LayoutContext";
@@ -66,6 +68,9 @@ function Layout(props) {
               <Route exact path="/app/edit-nk" component={CapNhatNhanKhau} />
               <Route exact path="/app/edit-nk/:ID" component={EditOne} />
               <Route exact path="/app/create-hk" component={TaoHoKhau}/>
+              <Route exact path="/app/create-kdg" component={TaoKhoanDongGop}/>
+              <Route exact path="/app/table-kdg" component={DanhSachKhoanDong}/>
+              <Route exact path="/app/edit-kdg/:ID" component={CapNhatKhoanDong} />
             </Switch>
             <Box
               mt={5}

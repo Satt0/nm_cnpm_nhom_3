@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { gql } from "graphql";
+import { gql } from "@apollo/client";
 import { useLazyQuery } from "@apollo/client";
 
 const DANH_SACH_HO_KHAU = gql`

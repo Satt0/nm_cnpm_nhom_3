@@ -56,7 +56,7 @@ export default function EditOne() {
   const history = useHistory();
   const params = useParams();
   const id = Object.values(params)[0];
-  const { data: InforSearchedData, error: InforError, loading } = useQuery(
+  const { data: InforSearchedData, error: InforError, loading, refetch } = useQuery(
     THONG_TIN_NHAN_KHAU,
     {
       variables: {
@@ -524,6 +524,7 @@ export default function EditOne() {
         diaChiMoi,
         maNhanKhau,
       });
+      refetch()
       if(dinhDanh){
         setStateDC({...dinhDanh,ngayCap:moment(parseInt(dinhDanh.ngayCap)).format("YYYY-MM-DD"), idNhanKhau: parseInt(id)})
       }
@@ -592,6 +593,7 @@ export default function EditOne() {
           }).catch((e) => {
             console.log(e.message);
           });
+          refetch()
         }}
       >
         Tạo tiểu sử
@@ -605,6 +607,7 @@ export default function EditOne() {
             <TableCell> Địa chỉ</TableCell>
             <TableCell> Nghề nghiệp</TableCell>
             <TableCell> Nơi làm việc</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -620,6 +623,7 @@ export default function EditOne() {
                 <TableCell>{diaChi}</TableCell>
                 <TableCell>{ngheNghiep}</TableCell>
                 <TableCell>{noiLamViec}</TableCell>
+                <TableCell>
                 <Button
                   className="btn-update"
                   variant="contained"
@@ -633,10 +637,12 @@ export default function EditOne() {
                       console.log(e.message);
                     });
                     console.log();
+                    refetch()
                   }}
                 >
                   Xóa tiểu sử
                 </Button>
+                </TableCell>
               </TableRow>
             ),
           )}
