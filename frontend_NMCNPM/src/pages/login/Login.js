@@ -27,7 +27,7 @@ function Login(props) {
   var classes = useStyles();
   const [
     callLogin,
-    { error: errorLogin, loading: loadingLogin, data: dataLogin },
+    { error: errorLogin, loading: loadingLogin, data: dataLogin,called },
   ] = useLazyQuery(DANG_NHAP, { fetchPolicy: "no-cache" });
   const [
     callSignUp,
@@ -43,22 +43,30 @@ function Login(props) {
   var [rePassword, setRepassword] = useState("");
   var [loginValue, setLoginValue] = useState("");
   var [passwordValue, setPasswordValue] = useState("");
- 
+  useEffect(()=>{
+    setError(false)
+    setIsLoading(false)
+  },[rePassword,loginValue,passwordValue,activeTabId])
   useEffect(() => {
-    console.log(errorLogin, loadingLogin, dataLogin);
+    if(called===false) return;
     if (loadingLogin) return setIsLoading(true);
-    if (errorLogin || !dataLogin) {
+   
+     
+    
+    if (dataLogin){
+      const { logIn } = dataLogin;
+      loginUser(userDispatch, logIn, props.history, setIsLoading, setError)
+    }else{
       setIsLoading(false);
       return setError(true);
     }
-    if (!dataLogin) return;
-    const { logIn } = dataLogin;
-    loginUser(userDispatch, logIn, props.history, setIsLoading, setError);
-  }, [dataLogin, errorLogin, loadingLogin, userDispatch, props.history]);
+
+  }, [dataLogin, errorLogin,called, loadingLogin, userDispatch, props.history]);
 
   useEffect(() => {
+    
     if (loadingSignUp) return setIsLoading(true);
-    if (errorSignUp || !dataSignUp) {
+    if (errorSignUp) {
       setIsLoading(false);
       return setError(true);
     }
