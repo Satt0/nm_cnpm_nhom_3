@@ -9,11 +9,11 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import styles from "./style.module.css";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery,useMutation } from "@apollo/client";
 import { GOI_Y_NHAN_KHAU } from "../../api/graphql/query/goi_y_nhan_khau";
 import moment from "moment";
 export default function PickNhanKhau({ setNhanKhau, added }) {
-  const [callApi, { data, error, loading }] = useLazyQuery(GOI_Y_NHAN_KHAU);
+  const [callApi, { data, error, loading }] = useLazyQuery(GOI_Y_NHAN_KHAU,{fetchPolicy:"no-cache"});
   const [searchResult, setResult] = React.useState([]);
   const [name, setName] = React.useState("");
   const onSubmit = async (e) => {
@@ -38,15 +38,14 @@ export default function PickNhanKhau({ setNhanKhau, added }) {
         ...old.filter((e) => e.ID !== nk.ID),
         {
           ...nk,
-          forUploads: {
-            idNhanKhau: nk.ID,
-            idHoKhau: -1,
-            quanHeVoiChuHo: "quan hệ với chủ hộ",
-          },
+         
+            quanHeVoiChuHo: "quan hệ với chủ hộ"
+          
         },
       ];
     });
   };
+ 
   useEffect(() => {
     if (loading) return;
     if (data) {

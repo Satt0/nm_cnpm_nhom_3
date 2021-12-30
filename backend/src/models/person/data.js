@@ -139,23 +139,21 @@ class UserQuery {
     }
   }
   async getSuggestion({limit=500,offset=0,name=""}){
+
     try{
       const text=`
       select * from ${process.env.PG_NHAN_KHAU} nk
-      where lower(nk."hoTen") like $3 and nk."daXoa"=false
+      where lower(nk."hoTen") like $1 and nk."daXoa"=false
       
       EXCEPT
        
 
       select nk2.* from ${process.env.PG_NHAN_KHAU} nk2 
       join ${process.env.PG_THANH_VIEN_CUA_HO} tv
-      on tv."idNhanKhau"=nk2."ID"
-
-
-      limit $1
-      offset $2;
+      on tv."idNhanKhau"=nk2."ID" where nk2."daXoa"=false
+;
       `
-      const value = [limit, offset, `%${name.toLowerCase()}%`];
+      const value = [`%${name.toLowerCase()}%`];
       const { rows } = await DB.query(text, value);
 
       return rows;

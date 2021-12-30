@@ -12,12 +12,11 @@ import {
   MenuItem,
   Select,
 } from "@material-ui/core";
-import styles from "./styles.module.css";
+import styles from './style.module.css'
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/client";
-import { TAO_HO_KHAU } from "../../../api/graphql/mutation/tao_ho_khau";
-import PickNhanKhau from "../../../components/PickNhanKhau";
+import { TACH_HO_KHAU } from "../../../../api/graphql/mutation/tach_ho_khau";
 const inputs = [
   {
     name: "maHoKhau",
@@ -38,7 +37,7 @@ const inputs = [
     type: "text",
   },
 ];
-export default function TaoHoKhau() {
+export default function TachKhau({defaultNhanKhau=[],onClose,idHoKhau}) {
   const [state, setState] = useState({
     idChuHo: -1,
     maKhuVuc: "",
@@ -46,11 +45,11 @@ export default function TaoHoKhau() {
     ngayChuyenDi: "1111-11-11",
     maHoKhau: "",
   });
-  const [nhanKhau, setNhanKhau] = useState([]);
+  const [nhanKhau, setNhanKhau] = useState(defaultNhanKhau);
   const [
     createHoKhau,
     { data: responseHoKhau, loading: loadingHoKhau, error: errorHoKHau },
-  ] = useMutation(TAO_HO_KHAU);
+  ] = useMutation(TACH_HO_KHAU);
 
   const handleChange = (key) => {
     
@@ -59,16 +58,12 @@ export default function TaoHoKhau() {
        setState((old) => ({ ...old, [key]: text}));
     };
   };
-  const deleteAdded = (id) => {
-    return () => {
-      setNhanKhau((old) => old.filter((E) => E.ID !== id));
-    };
-  };
+
   const onCreate = () => {
     const input = {
       ...state,
       nhanKhau: nhanKhau.map((e) => ({
-        idHoKhau: -1,
+        idHoKhau: idHoKhau,
         idNhanKhau: e.ID,
         quanHeVoiChuHo: e.ID === state.idChuHo ? "Chủ hộ" : e.quanHeVoiChuHo,
       })),
@@ -81,13 +76,14 @@ export default function TaoHoKhau() {
     if(loadingHoKhau) return;
     if(errorHoKHau) return alert("không thể tạo hộ khẩu mới")
     if(responseHoKhau){
-      const {taoHoKhau}=responseHoKhau;
-      console.log(taoHoKhau.ID);
+      const {tachHoKhau}=responseHoKhau;
+      console.log(tachHoKhau.ID);
     }
 
   },[ responseHoKhau, loadingHoKhau, errorHoKHau])
   return (
-    <div>
+    <div className={styles.container}>
+       <Button onClick={onClose} variant="contained" color="secondary"> Close</Button>
       <form className={styles.form}>
         {inputs.map((i) => (
           <TextField
@@ -160,20 +156,12 @@ export default function TaoHoKhau() {
                 ></TextField>
               </TableCell>
               <TableCell>
-                <Button
-                  onClick={deleteAdded(ID)}
-                  variant="contained"
-                  color="secondary"
-                >
-                  Xóa
-                </Button>
+                
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <h2 className={styles.center}>Nhân khẩu</h2>
-      <PickNhanKhau setNhanKhau={setNhanKhau} added={nhanKhau} />
     </div>
   );
 }
