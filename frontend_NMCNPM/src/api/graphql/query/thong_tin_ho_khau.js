@@ -1,8 +1,6 @@
-import React, {useState} from "react";
-import { gql } from "graphql";
-import { useLazyQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 
-const THONG_TIN_HO_KHAU = gql`
+export const THONG_TIN_HO_KHAU = gql`
 query ThongTinHoKhau($input: Int!) {
   thongTinHoKhau(input: $input) {
     ID
@@ -25,83 +23,9 @@ query ThongTinHoKhau($input: Int!) {
       hoTen
       namSinh
       gioiTinh
+      quanHeVoiChuHo
     }
   }
 }
 `
 
-function ThongTinHoKhau(){
-    const [
-        fetchInfor,
-        { data: InforSearchedData, error: InforError },
-      ] = useLazyQuery(THONG_TIN_HO_KHAU);
-    const[id, setId] = useState("");  
-
-    return(
-        <div>
-            <input
-          type="text"
-          placeholder="Nhập ID"
-          onChange={(event) => {
-            setId(event.target.value);
-          }}
-        />
-        <button
-          onClick={() => {
-            fetchInfor({
-              variables: {
-                input: id,
-              },
-            });
-          }}
-        >
-          Thông tin hộ khẩu
-        </button>
-        <div>
-          {InforSearchedData && (
-            <div>
-              <h1>ID: {InforSearchedData.thongTinHoKhau.ID}</h1>
-              <h1>
-                Mã hộ khẩu: {InforSearchedData.thongTinHoKhau.maHoKhau}
-              </h1>
-              <h1>
-                  ID thành viên: {InforSearchedData.thongTinHoKhau.thanhVien.ID}
-              </h1>
-              <h1>
-                  Họ tên thành viên: {InforSearchedData.thongTinHoKhau.thanhVien.hoTen}
-              </h1>
-              <h1>
-                  Năm sinh thành viên: {InforSearchedData.thongTinHoKhau.thanhVien.namSinh}
-              </h1>
-              <h1>
-                  Giới tính thành viên: {InforSearchedData.thongTinHoKhau.thanhVien.gioiTinh}
-              </h1>
-              <h1>
-                  Mã khu vực: {InforSearchedData.thongTinHoKhau.maKhuVuc}
-              </h1>
-              <h1>
-                  Địa chỉ: {InforSearchedData.thongTinHoKhau.diaChi}
-              </h1>
-              <h1>
-                  Nguyên quán: {InforSearchedData.thongTinHoKhau.nguyenQuan}
-              </h1>
-              <h1>
-                  ID chủ hộ: {InforSearchedData.thongTinHoKhau.chuHo.ID}
-              </h1>
-              <h1>
-                  Họ tên chủ hộ: {InforSearchedData.thongTinHoKhau.chuHo.hoTen}
-              </h1>
-              <h1>
-                  Năm sinh chủ hộ: {InforSearchedData.thongTinHoKhau.chuHo.namSinh}
-              </h1>
-              <h1>
-                  Giới tính chủ hộ: {InforSearchedData.thongTinHoKhau.chuHo.gioiTinh}
-              </h1>
-            </div>
-          )}
-          {InforError && <h1> There was an error fetching the data</h1>}
-        </div>
-        </div>
-    )
-}
-export default ThongTinHoKhau

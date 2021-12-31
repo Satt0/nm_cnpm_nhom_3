@@ -37,6 +37,8 @@ import TaoKhoanDongGop from "../../pages/dong-gop/tao/index";
 import DanhSachKhoanDong from "../../pages/dong-gop/danhsach/danhsach";
 import CapNhatKhoanDong from "../../pages/dong-gop/capnhat/capnhat";
 import TaoHoKhau from "../../pages/ho-khau/tao";
+import DanhSachHoKhau from "../../pages/ho-khau/cap-nhat";
+import UpdateOneHoKHau from "../../pages/ho-khau/cap-nhat/subs";
 // context
 import { useLayoutState } from "../../context/LayoutContext";
 
@@ -71,6 +73,8 @@ function Layout(props) {
               <Route exact path="/app/create-kdg" component={TaoKhoanDongGop}/>
               <Route exact path="/app/table-kdg" component={DanhSachKhoanDong}/>
               <Route exact path="/app/edit-kdg/:ID" component={CapNhatKhoanDong} />
+              <Route exact path="/app/edit-hk" component={DanhSachHoKhau}/>
+              <Route exact path="/app/edit-hk/:ID" component={UpdateOneHoKHau}/>
             </Switch>
             <Box
               mt={5}

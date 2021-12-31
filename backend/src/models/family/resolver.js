@@ -79,15 +79,20 @@ const Mutation = {
     const worker = new QuanLyHoKhau();
     return await worker.xoaNhanKhau({ ...input, nguoiThayDoi });
   }),
-  capNhatThanhVien: authenticate(1, async (_, { input }) => {
-    // const hoKhau=new capNhatHoKhau(input)
-    // return await hoKhau.UPDATE({nguoiThayDoi})
+  capNhatThanhVien: authenticate(1, async (_, { input },context) => {
+    const nguoiThayDoi = context.user.ID;
+    const hoKhau=new QuanLyHoKhau()
+    return await hoKhau.capNhatNhanKhau({...input,nguoiThayDoi})
   }),
   tachHoKhau:authenticate(1, async (_, { input },context) => {
     const nguoiThayDoi=context.user.ID;
     const hoKhau=new taoHoKhau(input,type="exist")
     return await hoKhau.CREATE({nguoiThayDoi})
   }),
+  xoaHoKhau:authenticate(1, async (_, { input }) => {
+    const data=new QuanLyHoKhau();
+    return await data.xoaHoKHau(input)
+  })
 };
 
 module.exports = { root, Query, Mutation };

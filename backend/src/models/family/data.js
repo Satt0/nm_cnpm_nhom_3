@@ -144,7 +144,9 @@ class capNhatHoKhau {
       dinhChinh = [],
     } = hoKhauMoi;
     this.ID = ID;
-    this.hoKhauMoi = [idChuHo, maKhuVuc, diaChi, ngayChuyenDi, maHoKhau];
+
+    this.hoKhauMoi = [idChuHo>=0?idChuHo:null, maKhuVuc, diaChi, ngayChuyenDi, maHoKhau];
+    
     this.dinhChinh = dinhChinh;
     this.result = {};
   }
@@ -202,10 +204,10 @@ class capNhatHoKhau {
       this.ID,
       thongTinThayDoi,
       thayDoiTu+"",
-      doiThanh,
+      doiThanh ?? "null",
       this.nguoiThayDoi,
     ];
-    console.log(values);
+   
     const { rowCount } = await this.client.query(text, values);
 
     if (rowCount < 1) throw new Error();
@@ -329,10 +331,10 @@ class QuanLyHoKhau {
       await this.client.query("BEGIN");
 
       const text = `
-      UPDATE ${process.env.PG_THANH_VIEN_CUA_HO} tvch
-      SET  tvch."quanHeVoiChuHo"=$1
-      WHERE tvch."idNhanKhau"=$2 and tvch."idHoKhau"=$3
-      RETURING *;
+      UPDATE ${process.env.PG_THANH_VIEN_CUA_HO}
+      SET "quanHeVoiChuHo"=$1
+      WHERE "idNhanKhau"=$2 and "idHoKhau"=$3
+      RETURNING *;
       `;
       const values = [quanHeVoiChuHo, idNhanKhau, idHoKhau];
       const { rows, rowCount } = await this.client.query(text, values);
@@ -353,6 +355,20 @@ class QuanLyHoKhau {
       await this.client.query("ROLLBACK");
     } finally {
       await this.client.release();
+    }
+  }
+  async xoaHoKHau(ID){
+    try{
+      const text=`
+      DELETE from ${process.env.PG_HO_KHAU_TABLE} hk
+      where hk."ID"=$1 returning *;
+      `
+      const {rowCount}=await DB.query(text,[ID])
+
+      return rowCount>0
+
+    }catch(e){
+      console.log(e.message);
     }
   }
 }

@@ -20,7 +20,6 @@ import useStyles from "./styles";
 
 // components
 import SidebarLink from "./components/SidebarLink/SidebarLink";
-import Dot from "./components/Dot";
 
 // context
 import {
@@ -51,7 +50,7 @@ const structure = [
     icon: <UIElementsIcon />,
     children: [
       { label: "Tạo", link: "/app/create-hk" },
-      { label: "Cập nhật", link: "/app/edit-nk" }
+      { label: "Cập nhật", link: "/app/edit-hk" }
     ],
   },
   {
