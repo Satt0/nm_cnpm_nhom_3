@@ -3,6 +3,7 @@ import {TAO_KHOAN_DONG_GOP} from "../../../api/graphql/mutation/tao_khoan_dong_g
 import Form from "../../../components/Form";
 import { useMutation } from "@apollo/client";
 import { Button } from "@material-ui/core";
+import {Link} from 'react-router-dom'
 export const listInput=[
     {
     label:"Tên khoản đóng",
@@ -65,6 +66,7 @@ const TaoKhoanDongGop = () => {
     return (
         <div>
             <Form listInput={listInput} state={state}  handleChange={handleChange}/>
+            <Link to={`/app/table-kdg`}>
             <Button variant="contained" color="success" onClick={() => {
                 createDG({
                   variables: {
@@ -78,6 +80,7 @@ const TaoKhoanDongGop = () => {
                 console.log(state);
                
               }}>Tạo khoản đóng góp</Button>
+              </Link>
         </div>
     )
 }

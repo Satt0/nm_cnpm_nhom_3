@@ -124,7 +124,9 @@ const CapNhatKhoanDong = () => {
     theLoai,
     hoanThanh: false,
       });
-      
+      setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
+        return dadong1.daDong
+      }))
     }
   }, [loading, InforSearchedData]);
 
@@ -138,6 +140,16 @@ const CapNhatKhoanDong = () => {
   useEffect(() => {
     if (loadingUpdateKT) return;
   }, [loadingUpdateKT, dataKT]);
+  const [array, setArray] = useState([])
+  console.log(array)
+  function sumArray(array){
+    let sum = 0;
+    for (let i = 0; i < array.length; i++){
+        sum += array[i];
+    }
+     
+    return sum;
+}
     return (
         <div>
             <Form listInput={listInput} state={state} handleChange={handleChange} />
@@ -197,6 +209,11 @@ const CapNhatKhoanDong = () => {
           });
           // console.log(stateDT);
           refetch()
+          // setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
+          //   return dadong1.daDong
+          // }))
+          console.log(array)
+          
         }}
       >
         Đóng góp
@@ -239,6 +256,11 @@ const CapNhatKhoanDong = () => {
           });
           // console.log(stateDT);
           refetch()
+          // setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
+          //   return dadong1.daDong
+          // }))
+          console.log(array)
+          
         }}
       >
         Cập nhật khoản thu
@@ -271,6 +293,11 @@ const CapNhatKhoanDong = () => {
           // console.log(stateDT);
           console.log(InforSearchedData)
           refetch()
+          // setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
+          //   return dadong1.daDong
+          // }))
+          console.log(array)
+          
         }}
       >
         Xóa hộ đã đóng
@@ -301,7 +328,7 @@ const CapNhatKhoanDong = () => {
         ))}
       </TableBody>
     </Table>
-    
+    <h1>Tổng đã đóng: {sumArray(array)}</h1>
         </div>
     )
 }
