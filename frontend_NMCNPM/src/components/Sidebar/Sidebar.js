@@ -59,8 +59,8 @@ const structure = [
     link: "/app/dong-gop",
     icon: <UIElementsIcon />,
     children: [
-      { label: "Danh sách", link: "/app/create-nk" },
-      { label: "Tạo mới", link: "/app/edit-nk" }
+      { label: "Danh sách", link: "/app/table-kdg" },
+      { label: "Tạo mới", link: "/app/create-kdg" }
     ],
   },
   // { id: 5, type: "divider" },

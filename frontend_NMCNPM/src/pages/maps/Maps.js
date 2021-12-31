@@ -5,6 +5,7 @@ import { useMutation } from "@apollo/client";
 import moment from 'moment'
 import './Maps.css'
 import { Button } from "@material-ui/core";
+import {Link} from 'react-router-dom'
 export const listInput=[
   {
   label:"Họ Tên",
@@ -257,6 +258,7 @@ const [createUser,{loading,data}] = useMutation(TAO_NHAN_KHAU)
             <div className="input">
             <Form listInput={listInput} state={state}  handleChange={handleChange}/>
           </div>
+          <Link to={`/app/edit-nk`}>
             <Button variant="contained" color="success" onClick={() => {
                 createUser({
                   variables: {
@@ -270,6 +272,7 @@ const [createUser,{loading,data}] = useMutation(TAO_NHAN_KHAU)
                 console.log(state);
                
               }}>Tạo nhân khẩu</Button>
+              </Link>
           </div>
           </div>
   )

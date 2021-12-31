@@ -4,12 +4,14 @@ import { THONG_TIN_NHAN_KHAU } from "../../../api/graphql/query/thong_tin_nhan_k
 import { CAP_NHAT_NHAN_KHAU } from "../../../api/graphql/mutation/cap_nhat_nhan_khau";
 import { TAO_TIEU_SU } from "../../../api/graphql/mutation/tao_tieu_su";
 import { XOA_TIEU_SU } from "../../../api/graphql/mutation/xoa_tieu_su";
+import { TIM_NHAN_KHAU } from "../../../api/graphql/query/tim_nhan_khau";
 import { XOA_THE_DINH_DANH } from "../../../api/graphql/mutation/xoa_the_dinh_danh";
 import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
 import moment from "moment";
 import { Button } from "@material-ui/core";
 import { listInput } from "../../maps/Maps";
 import Form from "../../../components/Form";
+import NewForm from "../../../components/autoCompleteForm";
 import "./sua-nhan-khau.css";
 import {
   Table,
@@ -56,7 +58,7 @@ export default function EditOne() {
   const history = useHistory();
   const params = useParams();
   const id = Object.values(params)[0];
-  const { data: InforSearchedData, error: InforError, loading } = useQuery(
+  const { data: InforSearchedData, error: InforError, loading, refetch } = useQuery(
     THONG_TIN_NHAN_KHAU,
     {
       variables: {
@@ -294,20 +296,21 @@ export default function EditOne() {
       placeHolder: "nhập địa điểm",
     },
   ];
+  
   const listInputKT = [
     {
       label: "ID người khai",
       name: "idNguoiKhai",
       isRequired: true,
-      defaultValue: parseInt(id),
-      type: "text",
+      defaultValue: parseInt("2"),
       placeHolder: "nhập ID",
+      
     },
     {
       label: "ID người chết",
       name: "idNguoiChet",
       isRequired: true,
-      defaultValue: parseInt("2"),
+      defaultValue: parseInt(id),
       type: "text",
       placeHolder: "nhập ID",
     },
@@ -344,6 +347,9 @@ export default function EditOne() {
       placeHolder: "nhập địa điểm",
     },
   ];
+  const[limit] = useState(500);  
+  const[offset] = useState(0);
+  const[name, setName] = useState("")
 
   const [stateTS, setStateTS] = useState(() => {
     const nhanKhau = {};
@@ -380,6 +386,11 @@ export default function EditOne() {
     });
     return nhanKhau;
   });
+  const [fetchInfor,{ data: InforNK, error: InforErrorNK, loadingNK }] = useLazyQuery(
+    TIM_NHAN_KHAU,{fetchPolicy: "no-cache"}
+  );
+  console.log(InforNK)
+  // const option = InforNK.timNhanKhau.map((item)=> item.ID)
 
   const [state, setState] = useState(0);
   const [arrayData, setArrayData] = useState([]);
@@ -458,6 +469,12 @@ export default function EditOne() {
       console.log(ID);
     }
   }, [loadingKT, dataKT]);
+  // useEffect(() => {
+  //   if (loadingNK) return;
+  //   if (InforNK) {
+  //     const option = InforNK.timNhanKhau.map((item)=> item.ID)
+  //   }
+  // }, [loadingNK, InforNK]);
   useEffect(() => {
     if (loading) return;
     if (InforSearchedData) {
@@ -524,6 +541,7 @@ export default function EditOne() {
         diaChiMoi,
         maNhanKhau,
       });
+      refetch()
       if(dinhDanh){
         setStateDC({...dinhDanh,ngayCap:moment(parseInt(dinhDanh.ngayCap)).format("YYYY-MM-DD"), idNhanKhau: parseInt(id)})
       }
@@ -592,6 +610,7 @@ export default function EditOne() {
           }).catch((e) => {
             console.log(e.message);
           });
+          refetch()
         }}
       >
         Tạo tiểu sử
@@ -605,6 +624,7 @@ export default function EditOne() {
             <TableCell> Địa chỉ</TableCell>
             <TableCell> Nghề nghiệp</TableCell>
             <TableCell> Nơi làm việc</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -620,6 +640,7 @@ export default function EditOne() {
                 <TableCell>{diaChi}</TableCell>
                 <TableCell>{ngheNghiep}</TableCell>
                 <TableCell>{noiLamViec}</TableCell>
+                <TableCell>
                 <Button
                   className="btn-update"
                   variant="contained"
@@ -633,10 +654,12 @@ export default function EditOne() {
                       console.log(e.message);
                     });
                     console.log();
+                    refetch()
                   }}
                 >
                   Xóa tiểu sử
                 </Button>
+                </TableCell>
               </TableRow>
             ),
           )}
@@ -1023,6 +1046,50 @@ export default function EditOne() {
           state={stateKT}
           handleChange={handleChangeKT}
         />
+        <div>
+        <input
+          type="text"
+          placeholder="Nhập tên"
+          onChange={(event) => {
+            setName(event.target.value);
+          }}
+        />
+        <button
+          onClick={() => {
+            fetchInfor({
+              variables: {
+                input: {limit, offset, name}
+              },
+            });
+            console.log(InforNK)
+          }}
+        >
+          Tìm ID người khai
+        </button>
+        <Table className="mb-0">
+      <TableHead>
+        <TableRow>
+        <TableCell> ID</TableCell>
+        <TableCell> HoTen</TableCell>
+        <TableCell> ngay sinh</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {InforNK?.timNhanKhau?.map(({ ID,hoTen,namSinh}) => (
+          <TableRow key={ID}>
+            <TableCell className="pl-3 fw-normal">
+            {ID}
+            </TableCell>
+            <TableCell>
+            {hoTen}
+            </TableCell>
+            <TableCell>{moment(parseInt(namSinh)).format("DD-MM-YYYY")}</TableCell>
+            
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+        </div>
         <Button
           variant="contained"
           color="success"
@@ -1036,6 +1103,7 @@ export default function EditOne() {
               console.log(e.message);
             });
             console.log(InforSearchedData);
+            // console.log(option)
           }}
         >
           Khai tử

@@ -1,4 +1,6 @@
+
 import { gql } from "@apollo/client";
+
 
 export const DANH_SACH_HO_KHAU = gql`
 query DanhSachHoKhau($input: inputLocHoKhau!) {
