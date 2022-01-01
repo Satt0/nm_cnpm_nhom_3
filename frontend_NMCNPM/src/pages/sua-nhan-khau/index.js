@@ -3,6 +3,7 @@ import {useLazyQuery,useMutation} from '@apollo/client'
 import {Table,TableHead,TableRow,TableCell,TableBody,} from '@material-ui/core'
 import {TIM_NHAN_KHAU} from '../../api/graphql/query/tim_nhan_khau'
 import { XOA_NHAN_KHAU } from '../../api/graphql/mutation/xoa_nhan_khau'
+import "./index.css"
 import moment from 'moment'
 import {Link} from 'react-router-dom'
 import { Button } from '@material-ui/core'
@@ -33,13 +34,16 @@ export default function CapNhatNhanKhau() {
     return(
         <div>
         <input
+          className='input2'
           type="text"
           placeholder="Nhập tên"
           onChange={(event) => {
             setName(event.target.value);
           }}
         />
-        <button
+        <Button
+          variant="contained"
+          color="success"
           onClick={() => {
             fetchInfor({
               variables: {
@@ -50,7 +54,7 @@ export default function CapNhatNhanKhau() {
           }}
         >
           Tìm nhân khẩu
-        </button>
+        </Button>
 
         <div>
         
