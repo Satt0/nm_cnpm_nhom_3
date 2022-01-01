@@ -5,6 +5,7 @@ import {Table,TableHead,TableRow,TableCell,TableBody,} from '@material-ui/core'
 import { DANH_SACH_KHOAN_DONG } from '../../../api/graphql/query/danh_sach_khoan_dong'
 import { XOA_KHOAN_DONG_GOP } from '../../../api/graphql/mutation/xoa_khoan_dong_gop'
 import { Button } from "@material-ui/core";
+import"./danhsach.css"
 const DanhSachKhoanDong = () => {
     const [
         fetchInfor,
@@ -28,6 +29,7 @@ const DanhSachKhoanDong = () => {
     return (
         <div>
             <input
+            className='input3'
           type="text"
           placeholder="Nhập tên khoản đóng"
           onChange={(event) => {
@@ -35,13 +37,21 @@ const DanhSachKhoanDong = () => {
           }}
         />
         <input
+          className='input3'
           type="text"
+          list="id-theloai"
           placeholder="Nhập thể loại"
           onChange={(event) => {
             setTheLoai(event.target.value);
           }}
         />
-        <button
+        <datalist id="id-theloai">
+          <option value="hàng tháng"> hàng tháng</option>
+          <option value="hàng năm"> hàng năm</option>
+        </datalist>
+        <Button
+          variant="contained"
+          color="success"
           onClick={() => {
             fetchInfor({
               variables: {
@@ -52,7 +62,7 @@ const DanhSachKhoanDong = () => {
           }}
         >
           Danh sách khoản đóng
-        </button>
+        </Button>
         <Table className="mb-0">
       <TableHead>
         <TableRow>

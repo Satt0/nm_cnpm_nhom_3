@@ -1,9 +1,12 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {useLazyQuery,useMutation} from '@apollo/client'
 import {Table,TableHead,TableRow,TableCell,TableBody,} from '@material-ui/core'
 import {TIM_NHAN_KHAU} from '../../api/graphql/query/tim_nhan_khau'
+import { XOA_NHAN_KHAU } from '../../api/graphql/mutation/xoa_nhan_khau'
+import "./index.css"
 import moment from 'moment'
 import {Link} from 'react-router-dom'
+import { Button } from '@material-ui/core'
 export default function CapNhatNhanKhau() {
 
     // const nhanKhau=useQuery(TIM_NHAN_KHAU,{variables:{
@@ -13,22 +16,34 @@ export default function CapNhatNhanKhau() {
     // if(nhanKhau.loading) return <h1>loading</h1>
     const [
         fetchInfor,
-        { data: InforSearchedData, error: InforError },
+        { data: InforSearchedData, error: InforError, refetch },
       ] = useLazyQuery(TIM_NHAN_KHAU,{fetchPolicy: "no-cache"});
+      const [deleteNK,{loading,data}] = useMutation(XOA_NHAN_KHAU)  
     const[limit] = useState(500);  
     const[offset] = useState(0);
     const[name, setName] = useState("")
-
+    const [state, setState] = useState([])
+    useEffect(() => {
+      if (loading) return;
+      if (InforSearchedData) {
+        setState(InforSearchedData)
+        refetch()
+      }
+      
+    }, [loading, InforSearchedData]);
     return(
         <div>
         <input
+          className='input2'
           type="text"
           placeholder="Nhập tên"
           onChange={(event) => {
             setName(event.target.value);
           }}
         />
-        <button
+        <Button
+          variant="contained"
+          color="success"
           onClick={() => {
             fetchInfor({
               variables: {
@@ -39,7 +54,7 @@ export default function CapNhatNhanKhau() {
           }}
         >
           Tìm nhân khẩu
-        </button>
+        </Button>
 
         <div>
         
@@ -47,8 +62,9 @@ export default function CapNhatNhanKhau() {
       <TableHead>
         <TableRow>
         <TableCell> ID</TableCell>
-        <TableCell> HoTen</TableCell>
-        <TableCell> ngay sinh</TableCell>
+        <TableCell> Họ tên</TableCell>
+        <TableCell> Ngày sinh</TableCell>
+        <TableCell></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -61,7 +77,29 @@ export default function CapNhatNhanKhau() {
             {hoTen}
             </Link></TableCell>
             <TableCell>{moment(parseInt(namSinh)).format("DD-MM-YYYY")}</TableCell>
-            
+            <TableCell>
+            <Button
+        className="btn-TS"
+        variant="contained"
+        color="success"
+        onClick={() => {
+          deleteNK({
+            variables: {
+              input: parseInt(ID),
+            },
+          }).catch((e) => {
+            console.log(e.message);
+          });
+          // setState(old=>{
+          //   return old.filter(e=>e.ID!==ID)
+          //   })
+          setState(InforSearchedData.timNhanKhau.filter(e=> e.ID !== ID))  
+          refetch()
+        }}
+      >
+        Xóa
+      </Button>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

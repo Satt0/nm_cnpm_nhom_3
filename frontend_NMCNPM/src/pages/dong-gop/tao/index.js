@@ -4,6 +4,7 @@ import Form from "../../../components/Form";
 import { useMutation } from "@apollo/client";
 import { Button } from "@material-ui/core";
 import {Link} from 'react-router-dom'
+import NewForm from '../../../components/autoCompleteForm';
 export const listInput=[
     {
     label:"Tên khoản đóng",
@@ -18,7 +19,7 @@ export const listInput=[
       label:"Số tiền",
       name:"soTien",
       isRequired:true,
-      type:"text",
+      type:"number",
       defaultValue:"",
       placeholder:'điền biệt danh',
     },
@@ -28,6 +29,9 @@ export const listInput=[
       isRequired:true,
       defaultValue:'',
       placeholder:'điền năm sinh',
+      type: "date",
+      options: ["theo hộ", "theo người"],
+      id: "a"
     },
     {
       label:"Thể loại",
@@ -36,6 +40,9 @@ export const listInput=[
       type:"text",
       defaultValue:"",
       placeholder:'điền giới tính',
+      type:"date",
+      options: ["hàng tháng", "hàng năm"],
+      id: "b"
     }
     ];
 const TaoKhoanDongGop = () => {
@@ -46,6 +53,7 @@ const TaoKhoanDongGop = () => {
         })
          return nhanKhau;
       })
+      console.log(state);
     const handleChange=(key)=>{
       return (e)=>{
         const value=e.target.value;
@@ -65,7 +73,7 @@ const TaoKhoanDongGop = () => {
      },[loading,data])
     return (
         <div>
-            <Form listInput={listInput} state={state}  handleChange={handleChange}/>
+            <NewForm listInput={listInput} state={state}  handleChange={handleChange}/>
             <Link to={`/app/table-kdg`}>
             <Button variant="contained" color="success" onClick={() => {
                 createDG({

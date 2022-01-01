@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 // import DropdownInput from "react-dropdown-input";
-
+import "./autoComplete.css"
 import React,{useEffect,useState} from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import moment from 'moment'
@@ -151,24 +151,50 @@ const option = [{label: "2", year: "a"}, {ID: "3"}]
 
 const NewForm = ({ listInput, handleChange, state }) => {
   const classes = useStyles();
+  const [input, setInput] = useState("");
+  // const onInputChange = (e) => {
+  //   let value;
+  //   try {
+  //     value = JSON.parse(e.target.value);
+  //   } catch {
+  //     value = e.target.value;
+  //   }
+
+  //   if (typeof value === "object") {
+  //     setInput({ ...value, suggest: false });
+  //   } else if (typeof value === "string") {
+  //     setInput((old) => ({ ...old, text: value, suggest: true }));
+  //   }
+
+  //   console.log(value);
+  // };
+  // useEffect(() => {
+  //   let a;
+  //   if (input.suggest) {
+  //     a = setTimeout(() => {
+  //       const mock = [1, 2, 3, 4].map((e) => ({
+  //         ID: e,
+  //         text: `${input.text}-${e}`
+  //       }));
+  //       setSuggest(mock);
+  //     }, 200);
+  //   }
+  //   return () => {
+  //     clearTimeout(a);
+  //   };
+  // }, [input]);
+  // const [suggest, setSuggest] = useState([]);
+  
   return (
     <form className="form">
       {listInput.filter(target=>state[target.name]!==null && !target.hidden).map((item) => (
         <div>
-          {item.type==="date"?<TextField
-          id="standard-select-currency"
-          // select
-          label="Select"
-          value={state[item.name]}
-          onChange={handleChange(item.name)}
-          // helperText="Please select your currency"
-        >
-          {item.options.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>:
+          {item.type==="date"?<div><input className="input" list={`dropdown-input-${item.name}`} placeholder={item.label}  value={state[item.name]} onChange={handleChange(item.name)} />
+      <datalist id={`dropdown-input-${item.name}`}>
+        {item.options.map((e) => (
+          <option value={e}>{e}</option>
+        ))}
+      </datalist></div>:
           <TextInput {...item} value={state[item.name]} handleChange={handleChange(item.name)} />
           
         
@@ -201,26 +227,26 @@ const TextInput=({options,name,isRequired,label,value,handleChange,type})=>{
 
 // if(typeof options === 'object' && options.length>0){
 
-//   return <Autocomplete
-//   freeSolo
-//   options={options.map((e) => ({ title: e })) }
-//   getOptionLabel={(option) => option?.title?.toString()}
-//   type={type}
+  // return <Autocomplete
+  // freeSolo
+  // options={options.map((e) => ({ title: e })) }
+  // getOptionLabel={(option) => option?.title?.toString()}
+  // type={type}
   
-//   isRequired={isRequired}
-//   value={value}
-//   onChange={handleChange}
-//   renderInput={(params) => (
-//     <TextField
-//     {...params}
-//       label={label}
-//       variant="outlined"
-//       InputLabelProps={{
-//         shrink:true
-//       }}
-//     />
-//     )}
-//     />
+  // isRequired={isRequired}
+  // value={value}
+  // onChange={handleChange}
+  // renderInput={(params) => (
+  //   <TextField
+  //   {...params}
+  //     label={label}
+  //     variant="outlined"
+  //     InputLabelProps={{
+  //       shrink:true
+  //     }}
+  //   />
+  //   )}
+  //   />
 //   }
 
 

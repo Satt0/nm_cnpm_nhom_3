@@ -9,6 +9,15 @@ query ThongTinKhoanDong($input: Int!) {
     donVi
     theLoai
     hoanThanh
+    chuaDong {
+      ID
+      chuHo {
+        ID
+        hoTen
+        namSinh
+      }
+      diaChi
+    }
     khoanThu {
       daDong
       ngayDong
