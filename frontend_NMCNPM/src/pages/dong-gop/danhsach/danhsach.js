@@ -36,11 +36,16 @@ const DanhSachKhoanDong = () => {
         />
         <input
           type="text"
+          list="id-theloai"
           placeholder="Nhập thể loại"
           onChange={(event) => {
             setTheLoai(event.target.value);
           }}
         />
+        <datalist id="id-theloai">
+          <option value="hàng tháng"> hàng tháng</option>
+          <option value="hàng năm"> hàng năm</option>
+        </datalist>
         <button
           onClick={() => {
             fetchInfor({

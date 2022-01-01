@@ -8,6 +8,7 @@ import { CAP_NHAT_KHOAN_THU } from "../../../api/graphql/mutation/cap_nhat_khoan
 import { listInput } from '../tao'
 import { Button } from "@material-ui/core";
 import Form from "../../../components/Form";
+import NewForm from "../../../components/autoCompleteForm";
 import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import { TextField } from "@material-ui/core";
@@ -127,6 +128,10 @@ const CapNhatKhoanDong = () => {
       setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
         return dadong1.daDong
       }))
+
+      setArrayCD(InforSearchedData.thongTinKhoanDong.chuaDong.map((chuadong)=>{
+        return chuadong.ID
+      }))
     }
   }, [loading, InforSearchedData]);
 
@@ -140,8 +145,10 @@ const CapNhatKhoanDong = () => {
   useEffect(() => {
     if (loadingUpdateKT) return;
   }, [loadingUpdateKT, dataKT]);
+  const [arrayCD, setArrayCD] = useState([])
   const [array, setArray] = useState([])
   console.log(array)
+  console.log(arrayCD)
   function sumArray(array){
     let sum = 0;
     for (let i = 0; i < array.length; i++){
@@ -152,9 +159,9 @@ const CapNhatKhoanDong = () => {
 }
     return (
         <div>
-            <Form listInput={listInput} state={state} handleChange={handleChange} />
+            <NewForm listInput={listInput} state={state} handleChange={handleChange} />
             <Button
-        className="btn-update"
+        className="btn-update1"
         variant="contained"
         color="success"
         onClick={() => {
@@ -171,18 +178,24 @@ const CapNhatKhoanDong = () => {
       >
         Cập nhật khoản đóng góp
       </Button>
-      <div>
-        <TextField
-        className="input"
-          required
-          id="outlined-required"
-          label="Required"
-          defaultValue=""
+      <div className="flex">
+      <div className="flex1">
+        <div>
+      <input
+          className="input1"
+          type="text"
+          list="id-theloai"
           placeholder="Nhập ID"
           onChange={(event) => {
             setIdHoKhau(parseInt(event.target.value));
           }}
         />
+        <datalist id="id-theloai">
+          {arrayCD.map((item)=>
+          <option value={parseInt(item)}>a</option>
+          )}
+          
+        </datalist>
         <TextField
         className="input"
           required
@@ -218,7 +231,9 @@ const CapNhatKhoanDong = () => {
       >
         Đóng góp
       </Button>
-      <div>
+      </div>
+      <div className="flex2">
+        <div>
         <TextField
         className="input"
           required
@@ -265,7 +280,9 @@ const CapNhatKhoanDong = () => {
       >
         Cập nhật khoản thu
       </Button>
-      <div>
+      </div>
+      <div className="flex3">
+        <div>
         <TextField
         className="input"
           required
@@ -302,10 +319,40 @@ const CapNhatKhoanDong = () => {
       >
         Xóa hộ đã đóng
       </Button>
+      </div>
+      </div>
+      <Table className="mb-0">
+      <TableHead>
+        <TableRow>
+        <TableCell> ID hộ khẩu chưa đóng</TableCell>
+        <TableCell>Tên chủ hộ</TableCell>
+        <TableCell> ID chủ hộ</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {InforSearchedData?.thongTinKhoanDong?.chuaDong?.map(({ ID, chuHo}) => (
+          <TableRow key={ID}>
+            <TableCell className="pl-3 fw-normal">
+            {ID}
+            </TableCell>
+            <TableCell>
+            {chuHo.hoTen}
+            </TableCell>
+            <TableCell>
+            {chuHo.ID}
+            </TableCell>
+            <TableCell>
+              
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
         <Table className="mb-0">
       <TableHead>
         <TableRow>
         <TableCell> ID hộ khẩu đã đóng</TableCell>
+        <TableCell>Tên chủ hộ</TableCell>
         <TableCell> Đã đóng</TableCell>
         <TableCell> Ngày đóng</TableCell>
         <TableCell></TableCell>
@@ -316,6 +363,9 @@ const CapNhatKhoanDong = () => {
           <TableRow key={hoKhau.ID}>
             <TableCell className="pl-3 fw-normal">
             {hoKhau.ID}
+            </TableCell>
+            <TableCell>
+            {hoKhau.chuHo.hoTen}
             </TableCell>
             <TableCell>
             {daDong}
