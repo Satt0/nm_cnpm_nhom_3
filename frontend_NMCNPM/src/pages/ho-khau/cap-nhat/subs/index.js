@@ -10,7 +10,7 @@ import { XOA_THANH_VIEN } from "../../../../api/graphql/mutation/xoa_thanh_vien"
 import {
   TextField,
   Table,
-  Checkbox ,
+  Checkbox,
   TableRow,
   TableBody,
   TableHead,
@@ -59,12 +59,12 @@ export default function UpdateOneHoKHau({
   const idHoKhau = ID;
   const [nhanKhau, setNhanKhau] = useState([]);
   const [dinhChinh, setDinhChinh] = useState([]);
-  const [showTachKhau,setShowTachKhau]=useState(false)
+  const [showTachKhau, setShowTachKhau] = useState(false);
   const [
     updateHoKhau,
     { data: dataUpdate, error: errorUpdate, loading: loadingUpdate },
-  ] = useMutation(CAP_NHAT_HO_KHAU,{fetchPolicy:"no-cache"});
-  const [deleteNK]=useMutation(XOA_THANH_VIEN,{fetchPolicy:"no-cache"})
+  ] = useMutation(CAP_NHAT_HO_KHAU, { fetchPolicy: "no-cache" });
+  const [deleteNK] = useMutation(XOA_THANH_VIEN, { fetchPolicy: "no-cache" });
   const { data, loading, error } = useQuery(THONG_TIN_HO_KHAU, {
     variables: { input: parseInt(ID) },
     fetchPolicy: "no-cache",
@@ -107,47 +107,51 @@ export default function UpdateOneHoKHau({
     };
   };
 
-  const onNhapKhau=(thanhVien)=>{
-    setNhanKhau(old=>[...old,thanhVien])
-  }
-  const onXoaKhau=async({idNhanKhau})=>{
-    try{
-      await deleteNK({variables:{
-        input:{
-          idNhanKhau:parseInt(idNhanKhau),
-          idHoKhau:parseInt(idHoKhau)
-        }
-      }})
-    setNhanKhau(old=>old.filter(e=>e.ID!==idNhanKhau))      
-      }catch(e){
+  const onNhapKhau = (thanhVien) => {
+    setNhanKhau((old) => [...old, thanhVien]);
+  };
+  const onXoaKhau = async ({ idNhanKhau }) => {
+    try {
+      await deleteNK({
+        variables: {
+          input: {
+            idNhanKhau: parseInt(idNhanKhau),
+            idHoKhau: parseInt(idHoKhau),
+          },
+        },
+      });
+      setNhanKhau((old) => old.filter((e) => e.ID !== idNhanKhau));
+    } catch (e) {
       console.log(e.message);
     }
-  }
-  const onCheckTachKhau=(ID)=>{
-    return (e)=>{
-      const isChecked=e.target.checked
-      setNhanKhau(old=>old.map(e=>{
-        if(e.ID===ID){
-          return {...e,isChecked}
-        }
-        return e
-      }))
+  };
+  const onCheckTachKhau = (ID) => {
+    return (e) => {
+      const isChecked = e.target.checked;
+      setNhanKhau((old) =>
+        old.map((e) => {
+          if (e.ID === ID) {
+            return { ...e, isChecked };
+          }
+          return e;
+        }),
+      );
+    };
+  };
+  useEffect(() => {
+    if (loadingUpdate) return;
+    if (errorUpdate) return alert("không thể cập nhật hộ khẩu.");
+    if (dataUpdate) {
+      return alert("cập nhật thành công!");
     }
-  }
-  useEffect(()=>{
-    if(loadingUpdate) return;
-    if(errorUpdate) return alert("không thể cập nhật hộ khẩu.")
-    if(dataUpdate){
-      return alert("cập nhật thành công!")
-    }
-  },[dataUpdate,errorUpdate,loadingUpdate])
+  }, [dataUpdate, errorUpdate, loadingUpdate]);
 
   if (loading) return <h1>please wait</h1>;
 
   if (error) return <Redirect to={"/app/edit-hk"} />;
   if (state) {
     return (
-      <div style={{position:"relative"}}>
+      <div style={{ position: "relative" }}>
         <form
           style={{
             display: "grid",
@@ -191,7 +195,12 @@ export default function UpdateOneHoKHau({
           <Table className="mb-0">
             <TableHead>
               <TableRow>
-              <TableCell> <span style={{color:"gray",fontSize:".9em"}}>chọn tách khẩu</span></TableCell>
+                <TableCell>
+                  {" "}
+                  <span style={{ color: "gray", fontSize: ".9em" }}>
+                    chọn tách khẩu
+                  </span>
+                </TableCell>
                 <TableCell> ID</TableCell>
                 <TableCell> Tên nhân khẩu</TableCell>
                 <TableCell> Quan hệ với chủ hộ</TableCell>
@@ -199,45 +208,110 @@ export default function UpdateOneHoKHau({
               </TableRow>
             </TableHead>
             <TableBody>
-              {nhanKhau.map(({ ID, hoTen, quanHeVoiChuHo ,isChecked=false}) => (
-                <TableRow key={ID}>
-                   <TableCell className="pl-3 fw-normal">
-
-                    {ID!==state.idChuHo&&  <Checkbox
-                     checked={isChecked}
-                     onChange={onCheckTachKhau(ID)}
-                     />}
-                   </TableCell>
-                  <TableCell className="pl-3 fw-normal">{ID}</TableCell>
-                  <TableCell className="pl-3 fw-normal">{hoTen}</TableCell>
-                  <TableCell className="pl-3 fw-normal">
-                    <UpdateThanhVien
-                      idNhanKhau={parseInt(ID)}
-                      idHoKhau={parseInt(idHoKhau)}
-                      isChuHo={ID === state.idChuHo}
-                      text={ID === state.idChuHo ? "Chủ hộ" : quanHeVoiChuHo}
-                    />
-                  </TableCell>
-                  <TableCell className="pl-3 fw-normal">
-                    <Button
-                      disabled={ID === state.idChuHo}
-                      onClick={()=>{onXoaKhau({idNhanKhau:ID})}}
-                      variant="contained"
-                      color="secondary"
-                    >
-                      Xóa Khẩu
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {nhanKhau.map(
+                ({ ID, hoTen, quanHeVoiChuHo, isChecked = false }) => (
+                  <TableRow key={ID}>
+                    <TableCell className="pl-3 fw-normal">
+                      {ID !== state.idChuHo && (
+                        <Checkbox
+                          checked={isChecked}
+                          onChange={onCheckTachKhau(ID)}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell className="pl-3 fw-normal">{ID}</TableCell>
+                    <TableCell className="pl-3 fw-normal">{hoTen}</TableCell>
+                    <TableCell className="pl-3 fw-normal">
+                      <UpdateThanhVien
+                        idNhanKhau={parseInt(ID)}
+                        idHoKhau={parseInt(idHoKhau)}
+                        isChuHo={ID === state.idChuHo}
+                        text={ID === state.idChuHo ? "Chủ hộ" : quanHeVoiChuHo}
+                      />
+                    </TableCell>
+                    <TableCell className="pl-3 fw-normal">
+                      <Button
+                        disabled={ID === state.idChuHo}
+                        onClick={() => {
+                          onXoaKhau({ idNhanKhau: ID });
+                        }}
+                        variant="contained"
+                        color="secondary"
+                      >
+                        Xóa Khẩu
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ),
+              )}
             </TableBody>
           </Table>
         </div>
-        <div style={{display:"flex",justifyContent:"flex-start",margin:10}}>
-          <Button disabled={!nhanKhau.some(e=>e.isChecked)} onClick={()=>{setShowTachKhau(true)}} variant="contained" color="primary">Tách khẩu</Button>
-         {showTachKhau&& <TachKhau idHoKhau={parseInt(idHoKhau)} onClose={()=>{setShowTachKhau(false)}} defaultNhanKhau={nhanKhau.filter(e=>e.isChecked)}/>}
+        <div
+          style={{ display: "flex", justifyContent: "flex-start", margin: 10 }}
+        >
+          <Button
+            disabled={!nhanKhau.some((e) => e.isChecked)}
+            onClick={() => {
+              setShowTachKhau(true);
+            }}
+            variant="contained"
+            color="primary"
+          >
+            Tách khẩu
+          </Button>
+          {showTachKhau && (
+            <TachKhau
+              idHoKhau={parseInt(idHoKhau)}
+              onClose={() => {
+                setShowTachKhau(false);
+              }}
+              defaultNhanKhau={nhanKhau.filter((e) => e.isChecked)}
+            />
+          )}
         </div>
-        <NhapKhau idHoKhau={idHoKhau} onSelected={onNhapKhau}/>
+        <NhapKhau idHoKhau={idHoKhau} onSelected={onNhapKhau} />
+        <div>
+          <h1>Đính chính</h1>
+          <Table className="mb-0">
+            <TableHead>
+              <TableRow>
+                
+                <TableCell> Thông tin thay đổi</TableCell>
+                <TableCell>Thay đổi từ</TableCell>
+                <TableCell>Thay đổi thành</TableCell>
+                <TableCell>Ngày thay đổi</TableCell>
+                <TableCell>người thay đổi</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {dinhChinh.map(
+                ({
+                  ID,
+                  thongTinThayDoi,
+                  thayDoiTu,
+                  doiThanh,
+                  ngayThayDoi,
+                  nguoiThayDoi,
+                }) => (
+                  <TableRow key={ID}>
+                    <TableCell className="pl-3 fw-normal">
+                      {thongTinThayDoi}
+                    </TableCell>
+                    <TableCell className="pl-3 fw-normal">{thayDoiTu}</TableCell>
+                    <TableCell className="pl-3 fw-normal">{doiThanh}</TableCell>
+                    <TableCell className="pl-3 fw-normal">
+                      {moment(parseInt(ngayThayDoi)).format("YYYY-MM-DD")}
+                    </TableCell>
+                    <TableCell className="pl-3 fw-normal">
+                      {nguoiThayDoi?.username}
+                    </TableCell>
+                  </TableRow>
+                ),
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     );
   }
@@ -311,7 +385,7 @@ const UpdateThanhVien = ({ isChuHo = false, text, idNhanKhau, idHoKhau }) => {
     </div>
   );
 };
-const NhapKhau = ({ onSelected ,idHoKhau}) => {
+const NhapKhau = ({ onSelected, idHoKhau }) => {
   const [search, { data }] = useLazyQuery(GOI_Y_NHAN_KHAU, {
     fetchPolicy: "no-cache",
   });
@@ -330,16 +404,20 @@ const NhapKhau = ({ onSelected ,idHoKhau}) => {
       );
     }
   }, [data]);
-  useEffect(()=>{
-    if(dataNhapKhau){
-      const {nhapKhau}=dataNhapKhau;
-      onSelected({...nhapKhau.nhanKhau,quanHeVoiChuHo:nhapKhau.quanHeVoiChuHo});
-      setResults(old=>old.filter(e=>e.ID!==nhapKhau.nhanKhau.ID))
+  useEffect(() => {
+    if (dataNhapKhau) {
+      const { nhapKhau } = dataNhapKhau;
+      onSelected({
+        ...nhapKhau.nhanKhau,
+        quanHeVoiChuHo: nhapKhau.quanHeVoiChuHo,
+      });
+      setResults((old) => old.filter((e) => e.ID !== nhapKhau.nhanKhau.ID));
     }
-  },[dataNhapKhau])
+  }, [dataNhapKhau]);
   const onNhapKhau = async ({ idNhanKhau, quanHeVoiChuHo }) => {
     try {
-      if(quanHeVoiChuHo.trim()==="") return alert("quan hệ với chủ hộ không được rỗng");
+      if (quanHeVoiChuHo.trim() === "")
+        return alert("quan hệ với chủ hộ không được rỗng");
 
       nhapKhau({
         variables: {
@@ -369,10 +447,10 @@ const NhapKhau = ({ onSelected ,idHoKhau}) => {
   };
   return (
     <div>
-      <div style={{display:'flex',justifyContent:"flex-end"}}>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <TextField
-        variant="outlined"
-        style={{marginRight:5}}
+          variant="outlined"
+          style={{ marginRight: 5 }}
           onChange={(e) => {
             setInput(e.target.value);
           }}
@@ -380,8 +458,8 @@ const NhapKhau = ({ onSelected ,idHoKhau}) => {
           placeholder="tên nhân khẩu"
         ></TextField>
         <Button
-        variant="outlined"
-        color="secondary"
+          variant="outlined"
+          color="secondary"
           onClick={() => {
             search({
               variables: {
@@ -423,7 +501,13 @@ const NhapKhau = ({ onSelected ,idHoKhau}) => {
                 />
               </TableCell>
               <TableCell className="pl-3 fw-normal">
-                <Button  onClick={()=>{onNhapKhau({idNhanKhau:ID,quanHeVoiChuHo})}} variant="contained" color="secondary">
+                <Button
+                  onClick={() => {
+                    onNhapKhau({ idNhanKhau: ID, quanHeVoiChuHo });
+                  }}
+                  variant="contained"
+                  color="secondary"
+                >
                   nhập khẩu
                 </Button>
               </TableCell>

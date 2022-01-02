@@ -17,6 +17,12 @@ query ThongTinHoKhau($input: Int!) {
     dinhChinh {
       ID
       thongTinThayDoi
+      thayDoiTu
+      doiThanh
+      ngayThayDoi
+      nguoiThayDoi {
+        username
+      }
     }
     thanhVien {
       ID
