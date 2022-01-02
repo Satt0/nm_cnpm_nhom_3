@@ -1,0 +1,23 @@
+
+.container{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 15px;
+}
+.item{
+    border: 1px solid rgba(123, 123, 231, 0.322);
+    border-radius: 15px;
+    padding: 15px;
+}
+.links{
+    display: flex;
+    flex-direction: column;
+    border-left: 10px solid blue;
+    padding-left: 5px;
+    
+}
+.links a{
+        color:gray;
+        text-decoration: none;
+    
+}

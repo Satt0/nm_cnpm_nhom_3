@@ -63,7 +63,7 @@ export default function UpdateOneHoKHau({
   const [
     updateHoKhau,
     { data: dataUpdate, error: errorUpdate, loading: loadingUpdate },
-  ] = useMutation(CAP_NHAT_HO_KHAU);
+  ] = useMutation(CAP_NHAT_HO_KHAU,{fetchPolicy:"no-cache"});
   const [deleteNK]=useMutation(XOA_THANH_VIEN,{fetchPolicy:"no-cache"})
   const { data, loading, error } = useQuery(THONG_TIN_HO_KHAU, {
     variables: { input: parseInt(ID) },
@@ -191,7 +191,7 @@ export default function UpdateOneHoKHau({
           <Table className="mb-0">
             <TableHead>
               <TableRow>
-              <TableCell></TableCell>
+              <TableCell> <span style={{color:"gray",fontSize:".9em"}}>chọn tách khẩu</span></TableCell>
                 <TableCell> ID</TableCell>
                 <TableCell> Tên nhân khẩu</TableCell>
                 <TableCell> Quan hệ với chủ hộ</TableCell>
@@ -233,8 +233,8 @@ export default function UpdateOneHoKHau({
             </TableBody>
           </Table>
         </div>
-        <div >
-          <Button onClick={()=>{setShowTachKhau(true)}} variant="contained" color="primary">Tách khẩu</Button>
+        <div style={{display:"flex",justifyContent:"flex-start",margin:10}}>
+          <Button disabled={!nhanKhau.some(e=>e.isChecked)} onClick={()=>{setShowTachKhau(true)}} variant="contained" color="primary">Tách khẩu</Button>
          {showTachKhau&& <TachKhau idHoKhau={parseInt(idHoKhau)} onClose={()=>{setShowTachKhau(false)}} defaultNhanKhau={nhanKhau.filter(e=>e.isChecked)}/>}
         </div>
         <NhapKhau idHoKhau={idHoKhau} onSelected={onNhapKhau}/>
@@ -369,8 +369,10 @@ const NhapKhau = ({ onSelected ,idHoKhau}) => {
   };
   return (
     <div>
-      <div>
+      <div style={{display:'flex',justifyContent:"flex-end"}}>
         <TextField
+        variant="outlined"
+        style={{marginRight:5}}
           onChange={(e) => {
             setInput(e.target.value);
           }}
@@ -378,6 +380,8 @@ const NhapKhau = ({ onSelected ,idHoKhau}) => {
           placeholder="tên nhân khẩu"
         ></TextField>
         <Button
+        variant="outlined"
+        color="secondary"
           onClick={() => {
             search({
               variables: {

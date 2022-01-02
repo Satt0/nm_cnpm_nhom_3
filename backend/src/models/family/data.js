@@ -35,8 +35,10 @@ class timHoKhau {
     try {
       const text = `
             SELECT * FROM ${process.env.PG_HO_KHAU_TABLE} hk
+            ORDER BY "ID" DESC
             LIMIT $1
-            OFFSET $2;
+            OFFSET $2
+            ;
             `;
       const { rows } = await DB.query(text, [limit, offset]);
       return rows;
