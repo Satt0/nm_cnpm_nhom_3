@@ -23,6 +23,8 @@ import useStyles from "./styles";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 
+// home
+import HomePage from "../../pages/homepage/home";
 // pages
 import Dashboard from "../../pages/dashboard";
 import Typography from "../../pages/typography";
@@ -60,7 +62,7 @@ function Layout(props) {
           >
             <div className={classes.fakeToolbar} />
             <Switch>
-              <Route path="/app/dashboard" component={Dashboard} />
+              <Route path="/app/dashboard" component={HomePage} />
   
               {/* <Route path="/app/tables" component={Tables} /> */}
               <Route path="/app/notifications" component={Notifications} />

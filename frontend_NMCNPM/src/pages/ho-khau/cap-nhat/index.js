@@ -9,7 +9,7 @@ export default function DanhSachHoKhau() {
   const [xoaHoKhau]=useMutation(XOA_HO_KHAU)
     if(loading) return <h1>Please Wait</h1>
     if(error)  return <Redirect  to={"/app/dashboard"}/>;
-    console.log(data);
+
     if(data){
 
 

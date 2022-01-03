@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import styles from "./styles.module.css";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { TAO_HO_KHAU } from "../../../api/graphql/mutation/tao_ho_khau";
 import PickNhanKhau from "../../../components/PickNhanKhau";
@@ -39,6 +39,7 @@ const inputs = [
   },
 ];
 export default function TaoHoKhau() {
+  const redirect=useHistory();
   const [state, setState] = useState({
     idChuHo: -1,
     maKhuVuc: "",
@@ -65,6 +66,8 @@ export default function TaoHoKhau() {
     };
   };
   const onCreate = () => {
+    if(nhanKhau.length===0) return alert("không có nhân khẩu để tạo!");
+   
     const input = {
       ...state,
       nhanKhau: nhanKhau.map((e) => ({
@@ -82,7 +85,8 @@ export default function TaoHoKhau() {
     if(errorHoKHau) return alert("không thể tạo hộ khẩu mới")
     if(responseHoKhau){
       const {taoHoKhau}=responseHoKhau;
-      console.log(taoHoKhau.ID);
+      
+      redirect.push(`/app/edit-hk/${taoHoKhau.ID}`)
     }
 
   },[ responseHoKhau, loadingHoKhau, errorHoKHau])
@@ -92,6 +96,7 @@ export default function TaoHoKhau() {
         {inputs.map((i) => (
           <TextField
             {...i}
+         
             value={state[i.name]}
             onChange={handleChange(i.name)}
             InputLabelProps={{ shrink: true }}
@@ -114,7 +119,7 @@ export default function TaoHoKhau() {
           </Select>
         </FormControl>
       </form>
-      <div>
+      <div style={{display:'flex',justifyContent:"center"}}>
         <Button onClick={onCreate} variant="contained" color="primary">
           Tạo
         </Button>
