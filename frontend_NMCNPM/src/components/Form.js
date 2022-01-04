@@ -90,8 +90,12 @@ return <TextField
       label={label}
       isRequired={isRequired}
       value={value}
+
+     defaultValue="Không có"
+
       error={message.error}
       helperText={message.message}
+
       required
       onFocus={()=>{
         setMessage({error:false,message:""})
