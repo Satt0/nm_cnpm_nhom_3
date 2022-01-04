@@ -84,7 +84,7 @@ return <TextField
       label={label}
       isRequired={isRequired}
       value={value}
-     
+     defaultValue="Không có"
       required
       
     />
