@@ -51,7 +51,7 @@ function Login(props) {
   useEffect(() => {
     if(called===false) return;
     if (loadingLogin) return setIsLoading(true);
-   
+    
      
     
     if (dataLogin){
@@ -59,8 +59,8 @@ function Login(props) {
       loginUser(userDispatch, logIn, props.history, setIsLoading, setError)
     }else{
       setIsLoading(false);
-      toast("khong the dang nhap")
-      return setError(true);
+      toast("không thể đăng nhập")
+      return 
     }
 
   }, [dataLogin, errorLogin,called, loadingLogin, userDispatch, props.history]);
@@ -71,7 +71,7 @@ function Login(props) {
     if (errorSignUp) {
       setIsLoading(false);
       toast(errorSignUp.message)
-      return setError(true);
+      return 
     }
     if (!dataSignUp) return;
     const { signUp } = dataSignUp;
@@ -80,7 +80,7 @@ function Login(props) {
 
   return (
     <Grid container className={classes.container}>
-      <ToastContainer />
+     
       <div className={classes.logotypeContainer}>
         <img src={admin} alt="logo" className={classes.logotypeImage} />
         <Typography className={classes.logotypeText}>
@@ -106,11 +106,7 @@ function Login(props) {
                 Chào mừng bạn
               </Typography>
 
-              <Fade in={error}>
-                <Typography color="secondary" className={classes.errorMessage}>
-                  Something is wrong with your login or password :(
-                </Typography>
-              </Fade>
+              
               <TextField
                 id="email"
                 InputProps={{
@@ -179,11 +175,7 @@ function Login(props) {
               <Typography variant="h2" className={classes.subGreeting}>
                 Tạo tài khoản
               </Typography>
-              <Fade in={error}>
-                <Typography color="secondary" className={classes.errorMessage}>
-                  Something is wrong with your login or password :(
-                </Typography>
-              </Fade>
+            
 
               <TextField
                 id="email"
@@ -272,9 +264,7 @@ function Login(props) {
             </React.Fragment>
           )}
         </div>
-        {/* <Typography color="primary" className={classes.copyright}>
-        © 2014-{new Date().getFullYear()} <a style={{ textDecoration: 'none', color: 'inherit' }} href="https://flatlogic.com" rel="noopener noreferrer" target="_blank">Flatlogic</a>, LLC. All rights reserved.
-        </Typography> */}
+       
       </div>
     </Grid>
   );

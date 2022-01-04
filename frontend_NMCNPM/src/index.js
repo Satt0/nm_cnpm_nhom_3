@@ -8,7 +8,7 @@ import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 import { LayoutProvider } from "./context/LayoutContext";
 import { UserProvider } from "./context/UserContext";
-
+import { ToastContainer } from "react-toastify";
 // Apollo client setup
 import { ApolloClient, createHttpLink, InMemoryCache ,ApolloProvider,} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
@@ -51,7 +51,7 @@ ReactDOM.render(
       <ThemeProvider theme={Themes.default}>
         <CssBaseline />
         <ApolloProvider client={client}>
-
+        <ToastContainer/>
         <App />
         </ApolloProvider>
       </ThemeProvider>
