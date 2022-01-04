@@ -59,7 +59,8 @@ export default function TachKhau({defaultNhanKhau=[],onClose,idHoKhau}) {
     };
   };
 
-  const onCreate = () => {
+  const onCreate = (e) => {
+    e.preventDefault();
     if(nhanKhau.length===0) return alert("không có nhân khẩu để tách!");
 
     const input = {
@@ -89,10 +90,11 @@ export default function TachKhau({defaultNhanKhau=[],onClose,idHoKhau}) {
 
        <Button onClick={onClose} variant="contained" color="secondary"> Close</Button>
       </div>
-      <form className={styles.form}>
+      <form onSubmit={onCreate} className={styles.form}>
         {inputs.map((i) => (
           <TextField
             {...i}
+            required
             value={state[i.name]}
             onChange={handleChange(i.name)}
             InputLabelProps={{ shrink: true }}
@@ -114,12 +116,12 @@ export default function TachKhau({defaultNhanKhau=[],onClose,idHoKhau}) {
             ))}
           </Select>
         </FormControl>
-      </form>
       <div style={{display:"flex",justifyContent:"center"}}>
-        <Button onClick={onCreate} variant="contained" color="primary">
+        <Button type="submit"  variant="contained" color="primary">
           Tách khẩu
         </Button>
       </div>
+      </form>
       <h2 style={{textAlign:'center'}}>Đã thêm</h2>
       <Table className="mb-0">
         <TableHead>

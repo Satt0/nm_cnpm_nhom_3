@@ -6,7 +6,8 @@ import {
   withRouter,
 } from "react-router-dom";
 import classnames from "classnames";
-import {Box, IconButton, Link} from '@material-ui/core'
+import {Box, IconButton, Link,Button} from '@material-ui/core'
+import {useHistory} from 'react-router-dom'
 import Icon from '@mdi/react'
 
 //icons
@@ -46,7 +47,7 @@ import { useLayoutState } from "../../context/LayoutContext";
 
 function Layout(props) {
   var classes = useStyles();
-
+  const url=useHistory()
   // global
   var layoutState = useLayoutState();
 
@@ -61,6 +62,9 @@ function Layout(props) {
             })}
           >
             <div className={classes.fakeToolbar} />
+            <div style={{marginBottom:15}}><Button onClick={()=>{
+              url.goBack()
+            }} variant="contained" color="primary" >Back</Button></div>
             <Switch>
               <Route path="/app/dashboard" component={HomePage} />
   
@@ -86,71 +90,7 @@ function Layout(props) {
               justifyContent="space-between"
             >
               <div>
-                <Link
-                  color={'primary'}
-                  href={'https://flatlogic.com/'}
-                  target={'_blank'}
-                  className={classes.link}
-                >
-                  Flatlogic
-                </Link>
-                <Link
-                  color={'primary'}
-                  href={'https://flatlogic.com/about'}
-                  target={'_blank'}
-                  className={classes.link}
-                >
-                  About Us
-                </Link>
-                <Link
-                  color={'primary'}
-                  href={'https://flatlogic.com/blog'}
-                  target={'_blank'}
-                  className={classes.link}
-                >
-                  Blog
-                </Link>
-              </div>
-              <div>
-                <Link
-                  href={'https://www.facebook.com/flatlogic'}
-                  target={'_blank'}
-                >
-                  <IconButton aria-label="facebook">
-                    <Icon
-                      path={FacebookIcon}
-                      size={1}
-                      color="#6E6E6E99"
-                    />
-                  </IconButton>
-                </Link>
-                <Link
-                  href={'https://twitter.com/flatlogic'}
-                  target={'_blank'}
-                >
-                  <IconButton aria-label="twitter">
-                    <Icon
-                      path={TwitterIcon}
-                      size={1}
-                      color="#6E6E6E99"
-                    />
-                  </IconButton>
-                </Link>
-                <Link
-                  href={'https://github.com/flatlogic'}
-                  target={'_blank'}
-                >
-                  <IconButton
-                    aria-label="github"
-                    style={{marginRight: -12}}
-                  >
-                    <Icon
-                      path={GithubIcon}
-                      size={1}
-                      color="#6E6E6E99"
-                    />
-                  </IconButton>
-                </Link>
+                
               </div>
             </Box>
           </div>

@@ -181,10 +181,10 @@ class UserQuery {
       where "idNhanKhau"=$1;
 
       `;
-      const { rows, rowCount } = await DB.query(text, [ID]);
+      const { rows } = await DB.query(text, [ID]);
 
-      if (rowCount < 1) return null;
-      return rows[0];
+     
+      return rows;
     } catch (e) {
       console.log(e.message);
       throw new Error("loi khi query tam vang");
@@ -197,10 +197,10 @@ class UserQuery {
     	FROM ${process.env.PG_TAM_TRU}
       where "idNhanKhau"=$1;
       `;
-      const { rows, rowCount } = await DB.query(text, [ID]);
+      const { rows } = await DB.query(text, [ID]);
 
-      if (rowCount < 1) return null;
-      return rows[0];
+     
+      return rows;
     } catch (e) {
       console.log(e.message);
       throw new Error("loi khi query tam tru");

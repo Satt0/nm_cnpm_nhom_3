@@ -30,13 +30,13 @@ export default function DanhSachHoKhau() {
             {data.danhSachHoKhau.map(({ ID,maHoKhau,diaChi,chuHo}) => (
               <TableRow key={ID}>
                 <TableCell className="pl-3 fw-normal">
-                <Link to={`/app/edit-hk/${ID}`}>{ID}</Link>
+               {ID}
                </TableCell>
                <TableCell className="pl-3 fw-normal">
-                <Link to={`/app/edit-hk/${ID}`}>
+               
                 {maHoKhau}
                     
-                </Link>
+               
                </TableCell>
                <TableCell>
                    {diaChi}
@@ -44,7 +44,10 @@ export default function DanhSachHoKhau() {
                <TableCell>
                    {chuHo?.hoTen || "không có"}
                </TableCell>
+              
+              
                <TableCell>
+               <Link to={`/app/edit-hk/${ID}`}><Button style={{marginRight:5}}  variant='contained' color="primary">Edit</Button></Link>
                    <Button onClick={async()=>{
                      try{
                       await xoaHoKhau({variables:{input:parseInt(ID)}})
