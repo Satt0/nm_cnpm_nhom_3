@@ -36,7 +36,7 @@ const structure = [
   {
     id: 4,
     label: "Quản lý nhân khẩu",
-    link: "/app/ui",
+    link: "/app/create-nk",
     icon: <UIElementsIcon />,
     children: [
       { label: "Tạo", link: "/app/create-nk" },
@@ -46,7 +46,7 @@ const structure = [
   {
     id: 3,
     label: "Quản lý hộ khẩu",
-    link: "/app/ui",
+    link: "/app/create-hk",
     icon: <UIElementsIcon />,
     children: [
       { label: "Tạo", link: "/app/create-hk" },
@@ -56,7 +56,7 @@ const structure = [
   {
     id: 6,
     label: "Quản lý đóng góp",
-    link: "/app/dong-gop",
+    link: "/app/table-kdg",
     icon: <UIElementsIcon />,
     children: [
       { label: "Danh sách", link: "/app/table-kdg" },

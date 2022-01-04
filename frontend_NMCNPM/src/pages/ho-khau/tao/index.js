@@ -12,6 +12,7 @@ import {
   MenuItem,
   Select,
 } from "@material-ui/core";
+import {toast} from 'react-toastify'
 import styles from "./styles.module.css";
 import moment from "moment";
 import { Link,useHistory } from "react-router-dom";
@@ -65,9 +66,11 @@ export default function TaoHoKhau() {
       setNhanKhau((old) => old.filter((E) => E.ID !== id));
     };
   };
-  const onCreate = () => {
-    if(nhanKhau.length===0) return alert("không có nhân khẩu để tạo!");
-   
+  const onCreate = (e) => {
+    e.preventDefault()
+  
+    if(nhanKhau.length===0) return toast("không có nhân khẩu để tạo!",{style:{backgroundColor:"red",color:"white"}});
+    if(state.idChuHo<0) return toast("không có chủ hộ",{style:{backgroundColor:"red",color:"white"}})
     const input = {
       ...state,
       nhanKhau: nhanKhau.map((e) => ({
@@ -82,21 +85,21 @@ export default function TaoHoKhau() {
   };
   useEffect(()=>{
     if(loadingHoKhau) return;
-    if(errorHoKHau) return alert("không thể tạo hộ khẩu mới")
+    if(errorHoKHau) return toast("không thể tạo hộ khẩu mới",{style:{backgroundColor:"red",color:"white"}})
     if(responseHoKhau){
       const {taoHoKhau}=responseHoKhau;
-      
       redirect.push(`/app/edit-hk/${taoHoKhau.ID}`)
     }
 
   },[ responseHoKhau, loadingHoKhau, errorHoKHau])
   return (
     <div>
-      <form className={styles.form}>
+      <form onSubmit={onCreate} className={styles.form}>
         {inputs.map((i) => (
           <TextField
             {...i}
-         
+           
+            required={true}
             value={state[i.name]}
             onChange={handleChange(i.name)}
             InputLabelProps={{ shrink: true }}
@@ -118,12 +121,12 @@ export default function TaoHoKhau() {
             ))}
           </Select>
         </FormControl>
-      </form>
       <div style={{display:'flex',justifyContent:"center"}}>
-        <Button onClick={onCreate} variant="contained" color="primary">
+        <Button type="submit" variant="contained" color="primary">
           Tạo
         </Button>
       </div>
+      </form>
       <h2 className={styles.center}>Đã thêm</h2>
       <Table className="mb-0">
         <TableHead>

@@ -41,8 +41,8 @@ type NhanKhau{
     quanHeVoiChuHo:String
     
     # optional
-    tamVang:TamVang
-    tamTru:TamTru
+    tamVang:[TamVang!]!
+    tamTru:[TamTru!]!
     dinhDanh:DinhDanh
     khaiTu:KhaiTu
 

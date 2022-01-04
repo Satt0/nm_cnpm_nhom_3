@@ -151,7 +151,17 @@ export default function UpdateOneHoKHau({
   if (error) return <Redirect to={"/app/edit-hk"} />;
   if (state) {
     return (
-      <div style={{ position: "relative" }}>
+        showTachKhau ? <div style={{ position: "relative" }}>
+        
+        <TachKhau
+              idHoKhau={parseInt(idHoKhau)}
+              onClose={() => {
+                setShowTachKhau(false);
+              }}
+              defaultNhanKhau={nhanKhau.filter((e) => e.isChecked)}
+            />
+        
+        </div>:      <div style={{ position: "relative" }}>
         <form
           style={{
             display: "grid",
@@ -260,15 +270,7 @@ export default function UpdateOneHoKHau({
           >
             Tách khẩu
           </Button>
-          {showTachKhau && (
-            <TachKhau
-              idHoKhau={parseInt(idHoKhau)}
-              onClose={() => {
-                setShowTachKhau(false);
-              }}
-              defaultNhanKhau={nhanKhau.filter((e) => e.isChecked)}
-            />
-          )}
+         
         </div>
         <NhapKhau idHoKhau={idHoKhau} onSelected={onNhapKhau} />
         <div>
@@ -312,6 +314,9 @@ export default function UpdateOneHoKHau({
             </TableBody>
           </Table>
         </div>
+
+
+        
       </div>
     );
   }
