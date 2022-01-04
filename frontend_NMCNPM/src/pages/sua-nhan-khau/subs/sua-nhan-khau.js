@@ -12,6 +12,7 @@ import { Button } from "@material-ui/core";
 import { listInput } from "../../maps/Maps";
 import Form from "../../../components/Form";
 import NewForm from "../../../components/autoCompleteForm";
+import { Link } from "react-router-dom";
 import "./sua-nhan-khau.css";
 import {
   Table,
@@ -117,7 +118,7 @@ export default function EditOne() {
       label: "Từ ngày",
       name: "tuNgay",
       isRequired: true,
-      type: "text",
+      type: "date",
       defaultValue: "",
       placeHolder: "nhập ngày",
     },
@@ -125,7 +126,7 @@ export default function EditOne() {
       label: "Đến ngày",
       name: "denNgay",
       isRequired: true,
-      type: "text",
+      type: "date",
       defaultValue: "",
       placeHolder: "nhập ngày",
     },
@@ -175,7 +176,7 @@ export default function EditOne() {
       label: "Ngày cấp",
       name: "ngayCap",
       isRequired: true,
-      type: "text",
+      type: "date",
       defaultValue: "",
       placeHolder: "nhập ngày",
     },
@@ -209,7 +210,7 @@ export default function EditOne() {
       label: "Từ ngày",
       name: "tuNgay",
       isRequired: true,
-      type: "text",
+      type: "date",
       defaultValue: "",
       placeHolder: "nhập ngày",
     },
@@ -217,7 +218,7 @@ export default function EditOne() {
       label: "Đến ngày",
       name: "denNgay",
       isRequired: true,
-      type: "text",
+      type: "date",
       defaultValue: "",
       placeHolder: "nhập ngày",
     },
@@ -259,7 +260,7 @@ export default function EditOne() {
       label: "Từ ngày",
       name: "tuNgay",
       isRequired: true,
-      type: "text",
+      type: "date",
       defaultValue: "",
       placeHolder: "nhập ngày",
     },
@@ -267,7 +268,7 @@ export default function EditOne() {
       label: "Đến ngày",
       name: "denNgay",
       isRequired: true,
-      type: "text",
+      type: "date",
       defaultValue: "",
       placeHolder: "nhập ngày",
     },
@@ -318,7 +319,7 @@ export default function EditOne() {
       label: "Ngày chết",
       name: "ngayChet",
       isRequired: true,
-      type: "text",
+      type: "date",
       defaultValue: "",
       placeHolder: "nhập ngày",
     },
@@ -326,7 +327,7 @@ export default function EditOne() {
       label: "Ngày khai",
       name: "ngayKhai",
       isRequired: true,
-      type: "text",
+      type: "date",
       defaultValue: "",
       placeHolder: "nhập ngày",
     },
@@ -593,6 +594,10 @@ export default function EditOne() {
       >
         Cập nhật nhân khẩu
       </Button>
+      <Link to="/app/dashboard">
+              <Button variant="contained" color="secondary">Hủy</Button>
+              </Link>
+      <h1>Tiểu sử</h1>
       <Form
         listInput={listInputTS}
         state={stateTS}
@@ -665,6 +670,7 @@ export default function EditOne() {
           )}
         </TableBody>
       </Table>
+      <h1>Định danh</h1>
       <Form
         listInput={listInputDC}
         state={stateDC}
@@ -781,6 +787,7 @@ export default function EditOne() {
         >
           Xóa thẻ định danh
         </Button>
+        <h1>Tạm vắng</h1>
         <Form
           listInput={listInputTV}
           state={stateTV}
@@ -911,6 +918,7 @@ export default function EditOne() {
         >
           Xóa tạm vắng
         </Button>
+        <h1>Tạm trú</h1>
         <Form
           listInput={listInputTT}
           state={stateTT}
@@ -1041,6 +1049,7 @@ export default function EditOne() {
         >
           Xóa tạm trú
         </Button>
+        <h1>Khai tử</h1>
         <Form
           listInput={listInputKT}
           state={stateKT}

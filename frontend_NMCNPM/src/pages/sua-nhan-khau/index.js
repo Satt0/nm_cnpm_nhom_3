@@ -31,6 +31,14 @@ export default function CapNhatNhanKhau() {
       }
       
     }, [loading, InforSearchedData]);
+    useEffect(() => {
+      fetchInfor({
+        variables: {
+          input: {limit, offset, name}
+        },
+      });
+      
+    }, []);
     return(
         <div>
         <input
@@ -55,7 +63,15 @@ export default function CapNhatNhanKhau() {
         >
           Tìm nhân khẩu
         </Button>
-
+        <Link to="/app/create-nk">
+        <Button
+          variant="contained"
+          color="success"
+          
+        >
+         Tạo nhân khẩu
+        </Button>
+        </Link>
         <div>
         
 <Table className="mb-0">

@@ -40,7 +40,7 @@ const structure = [
     icon: <UIElementsIcon />,
     children: [
       { label: "Tạo", link: "/app/create-nk" },
-      { label: "Cập nhật", link: "/app/edit-nk" }
+      { label: "Danh sách", link: "/app/edit-nk" }
     ],
   },
   {
@@ -50,7 +50,7 @@ const structure = [
     icon: <UIElementsIcon />,
     children: [
       { label: "Tạo", link: "/app/create-hk" },
-      { label: "Cập nhật", link: "/app/edit-hk" }
+      { label: "Danh sách", link: "/app/edit-hk" }
     ],
   },
   {
