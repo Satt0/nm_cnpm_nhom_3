@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 const Form = ({ listInput, handleChange, state }) => {
   const classes = useStyles();
   return (
-    <form className="form">
+    <div className="form">
       {listInput.filter(target=>state[target.name]!==null && !target.hidden).map((item) => (
         <div>
           {item.type==="date"?<DateInput label={item.label} name={item.name}  defaultValue={state[item.name]}
@@ -38,7 +38,7 @@ const Form = ({ listInput, handleChange, state }) => {
           }
         </div>
       ))}
-    </form>
+    </div>
   );
 };
 
@@ -97,6 +97,11 @@ return <TextField
       label={label}
       isRequired={isRequired}
       value={value}
+      // id="outlined-required"
+      // required
+      // id="outlined-disabled"
+      required
+      
     />
 }
 export default Form;

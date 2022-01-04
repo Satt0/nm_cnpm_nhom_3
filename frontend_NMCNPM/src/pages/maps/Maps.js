@@ -6,6 +6,16 @@ import moment from 'moment'
 import './Maps.css'
 import { Button } from "@material-ui/core";
 import {Link} from 'react-router-dom'
+// import { makeStyles } from '@material-ui/core/styles';
+// import Alert from '@material-ui/lab/Alert';
+// const useStyles = makeStyles((theme) => ({
+//   root: {
+//     width: '100%',
+//     '& > * + *': {
+//       marginTop: theme.spacing(2),
+//     },
+//   },
+// }));
 export const listInput=[
   {
   label:"Họ Tên",
@@ -225,7 +235,7 @@ export const listInput=[
   },
   ];
 function TaoNhanKhau(){
-  
+  // const classes = useStyles();
 
   const [state,setState]=useState(()=>{
     const nhanKhau={};
@@ -248,18 +258,21 @@ const [createUser,{loading,data}] = useMutation(TAO_NHAN_KHAU)
  {
   const {ID}=data.taoNhanKhau
   console.log(ID);
+  // <div className={classes.root}>
+  // <Alert severity="success">This is a success alert — check it out!</Alert>
+  // </div>
  }
  
  },[loading,data])
  
     return (
         <div>
-          <div className="res">
-            <div className="input">
+          
             <Form listInput={listInput} state={state}  handleChange={handleChange}/>
-          </div>
-          <Link to={`/app/edit-nk`}>
-            <Button variant="contained" color="success" onClick={() => {
+          
+          
+            <Button variant="contained" color="success" type="submit" onClick={(event) => {
+                event.preventDefault()
                 createUser({
                   variables: {
                     input: 
@@ -269,12 +282,17 @@ const [createUser,{loading,data}] = useMutation(TAO_NHAN_KHAU)
                 }).catch(e=>{
                   console.log(e.message)
                 });
+                
                 console.log(state);
                
-              }}>Tạo nhân khẩu</Button>
+              }} >Tạo nhân khẩu</Button>
+            
+              
+              <Link to="/app/dashboard">
+              <Button variant="contained" color="secondary">Hủy</Button>
               </Link>
           </div>
-          </div>
+          
   )
             }
  

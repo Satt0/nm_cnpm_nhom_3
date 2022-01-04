@@ -15,36 +15,118 @@ import { TextField } from "@material-ui/core";
 import {Table,TableHead,TableRow,TableCell,TableBody,} from '@material-ui/core'
 import moment from "moment"
 import "./capnhat.css"
+
+
+const UpdateTien = ({text, idDongGop, idHoKhau }) => {
+  function sumArray(array){
+    let sum = 0;
+    for (let i = 0; i < array.length; i++){
+        sum += array[i];
+    }
+     
+    return sum;
+}
+
+  const [array, setArray] = useState([])
+  const params = useParams();
+  const id = Object.values(params)[0];
+  const [status, setStatus] = useState(false);
+  const [value, setValue] = useState(text);
+  const [updateUser, { loading: loadingUpdate, data }] = useMutation(
+    CAP_NHAT_KHOAN_THU
+  );
+  const { data: InforSearchedData, error: InforError, loading, refetch } = useQuery(
+    THONG_TIN_KHOAN_DONG,
+    {
+      variables: {
+        input: parseInt(id),
+      },
+      fetchPolicy: "no-cache",
+    },
+  );
+  useEffect(() => {
+    if (loadingUpdate) return;
+    if (data) {
+      const { daDong } = data.capNhatKhoanThu;
+      setValue(daDong);
+      setStatus(false);
+    }
+  }, [data, loadingUpdate]);
+  useEffect(() => {
+    if (loading) return;
+    if (InforSearchedData) {
+      
+      setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
+        return dadong1.daDong
+      }))
+
+      
+    }
+  }, [loading, InforSearchedData]);
+  if (status === false) {
+    return (
+      <p>
+        {value}{" "}
+        { (
+          <button
+            onClick={() => {
+              setStatus(true);
+            }}
+          >
+            edit
+          </button>
+        )}
+      </p>
+    );
+  }
+
+  return (
+    <div>
+      <TextField
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+      ></TextField>
+      <button
+        disabled={text === value}
+        onClick={async() => {
+          await  updateUser({
+            variables: {
+              input: {
+                daDong: parseInt(value),
+                idDongGop,
+                idHoKhau,
+              },
+            },
+          }).catch((e) => {
+            console.log(e.message);
+          });
+          refetch()
+          setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
+            return dadong1.daDong
+          }))
+          console.log(sumArray(array))
+        }}
+      >
+        save
+      </button>
+      <button
+        onClick={() => {
+          setStatus(false);
+        }}
+      >
+        cancel
+      </button>
+    </div>
+  );
+};
+
+
 const CapNhatKhoanDong = () => {
     const params = useParams();
   const id = Object.values(params)[0];
   const history = useHistory();
-  // const listInputDT=[
-  //   {
-  //   label:"ID đóng góp",
-  //   name:"idDongGop",
-  //   isRequired:true,
-  //   defaultValue:parseInt(id),
-  //   type:"text",
-  //   placeHolder:'enter your name',
-    
-  //   },
-  //   {
-  //     label:"ID hộ khẩu",
-  //     name:"idHoKhau",
-  //     isRequired:true,
-  //     type:"text",
-  //     defaultValue:"",
-  //     placeholder:'điền biệt danh',
-  //   },
-  //   {
-  //     label:"Đã đóng",
-  //     name:"daDong",
-  //     isRequired:true,
-  //     defaultValue:parseInt(0),
-  //     placeholder:'điền năm sinh',
-  //   },
-  //   ];
     const [idDongGop, setIdDongGop] = useState(parseInt(id))
     const [idHoKhau, setIdHoKhau] = useState("")
     const [daDong, setDaDong] = useState(parseInt(0))
@@ -232,7 +314,7 @@ const CapNhatKhoanDong = () => {
         Đóng góp
       </Button>
       </div>
-      <div className="flex2">
+      {/* <div className="flex2">
         <div>
         <TextField
         className="input"
@@ -280,46 +362,8 @@ const CapNhatKhoanDong = () => {
       >
         Cập nhật khoản thu
       </Button>
-      </div>
-      <div className="flex3">
-        <div>
-        <TextField
-        className="input"
-          required
-          id="outlined-required"
-          label="Required"
-          defaultValue=""
-          placeholder="Nhập ID"
-          onChange={(event) => {
-            setIdHoKhau(parseInt(event.target.value));
-          }}
-        />
-        </div>
-        <Button
-        className="btn-update"
-        variant="contained"
-        color="success"
-        onClick={() => {
-          deleteHo({
-            variables: {
-              input: {idDongGop, idHoKhau} ,
-            },
-          }).catch((e) => {
-            console.log(e.message);
-          });
-          // console.log(stateDT);
-          console.log(InforSearchedData)
-          refetch()
-          // setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
-          //   return dadong1.daDong
-          // }))
-          console.log(array)
-          
-        }}
-      >
-        Xóa hộ đã đóng
-      </Button>
-      </div>
+      </div> */}
+      
       </div>
       <Table className="mb-0">
       <TableHead>
@@ -368,19 +412,49 @@ const CapNhatKhoanDong = () => {
             {hoKhau.chuHo.hoTen}
             </TableCell>
             <TableCell>
-            {daDong}
+            {/* {daDong} */}
+            <UpdateTien
+                      idDongGop={parseInt(id)}
+                      idHoKhau={parseInt(hoKhau.ID)}
+                      
+                      text={daDong}
+                    />
             </TableCell>
             <TableCell>{moment(parseInt(ngayDong)).format("DD-MM-YYYY")}</TableCell>
             <TableCell>
-              
+            <Button
+        className="btn-update"
+        variant="contained"
+        color="success"
+        onClick={() => {
+          deleteHo({
+            variables: {
+              input: {idDongGop, idHoKhau: hoKhau.ID} ,
+            },
+          }).catch((e) => {
+            console.log(e.message);
+          });
+          // console.log(stateDT);
+          console.log(InforSearchedData)
+          refetch()
+          // setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
+          //   return dadong1.daDong
+          // }))
+          console.log(array)
+          
+        }}
+      >
+        Xóa 
+      </Button>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
-    <h1>Tổng đã đóng: {sumArray(array)}</h1>
+    <h1>Tổng đã đóng: {sumArray(array)} USD</h1>
         </div>
     )
 }
+
 
 export default CapNhatKhoanDong
