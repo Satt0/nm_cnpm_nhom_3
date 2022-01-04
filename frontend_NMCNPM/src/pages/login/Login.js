@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast,ToastContainer  } from "react-toastify";
 import {
   Grid,
   CircularProgress,
@@ -58,6 +59,7 @@ function Login(props) {
       loginUser(userDispatch, logIn, props.history, setIsLoading, setError)
     }else{
       setIsLoading(false);
+      toast("khong the dang nhap")
       return setError(true);
     }
 
@@ -68,6 +70,7 @@ function Login(props) {
     if (loadingSignUp) return setIsLoading(true);
     if (errorSignUp) {
       setIsLoading(false);
+      toast(errorSignUp.message)
       return setError(true);
     }
     if (!dataSignUp) return;
@@ -77,6 +80,7 @@ function Login(props) {
 
   return (
     <Grid container className={classes.container}>
+      <ToastContainer />
       <div className={classes.logotypeContainer}>
         <img src={admin} alt="logo" className={classes.logotypeImage} />
         <Typography className={classes.logotypeText}>
