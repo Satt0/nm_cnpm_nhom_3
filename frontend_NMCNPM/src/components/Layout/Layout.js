@@ -62,9 +62,9 @@ function Layout(props) {
             })}
           >
             <div className={classes.fakeToolbar} />
-            <div style={{marginBottom:15}}><Button onClick={()=>{
+            {/* <div style={{marginBottom:15}}><Button onClick={()=>{
               url.goBack()
-            }} variant="contained" color="primary" >Back</Button></div>
+            }} variant="contained" color="primary" >Back</Button></div> */}
             <Switch>
               <Route path="/app/dashboard" component={HomePage} />
   
@@ -89,9 +89,7 @@ function Layout(props) {
               alignItems={"center"}
               justifyContent="space-between"
             >
-              <div>
-                
-              </div>
+              
             </Box>
           </div>
         </>

@@ -19,6 +19,7 @@ import { Link,useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { TAO_HO_KHAU } from "../../../api/graphql/mutation/tao_ho_khau";
 import PickNhanKhau from "../../../components/PickNhanKhau";
+import TaoNhanKhauShort from "../shared/TaoNhanKhau";
 const inputs = [
   {
     name: "maHoKhau",
@@ -49,6 +50,7 @@ export default function TaoHoKhau() {
     maHoKhau: "",
   });
   const [nhanKhau, setNhanKhau] = useState([]);
+  const [nkShort,setNKShort]=useState(false)
   const [
     createHoKhau,
     { data: responseHoKhau, loading: loadingHoKhau, error: errorHoKHau },
@@ -83,6 +85,13 @@ export default function TaoHoKhau() {
       console.log(e.message);
     })
   };
+  
+  const onTaoNhanKhauCompolete=(result)=>{
+    setNhanKhau(old=>[...old,{
+      ...result,quanHeVoiChuHo:"quan hệ với chủ hộ"
+    }])
+    setNKShort(false)
+  }
   useEffect(()=>{
     if(loadingHoKhau) return;
     if(errorHoKHau) return toast("không thể tạo hộ khẩu mới",{style:{backgroundColor:"red",color:"white"}})
@@ -93,7 +102,9 @@ export default function TaoHoKhau() {
 
   },[ responseHoKhau, loadingHoKhau, errorHoKHau])
   return (
-    <div>
+    <div style={{position:"relative"}}>
+     {!nkShort&& <div>
+       
       <form onSubmit={onCreate} className={styles.form}>
         {inputs.map((i) => (
           <TextField
@@ -182,6 +193,21 @@ export default function TaoHoKhau() {
       </Table>
       <h2 className={styles.center}>Nhân khẩu</h2>
       <PickNhanKhau setNhanKhau={setNhanKhau} added={nhanKhau} />
+      <div style={{marginTop:10}}>
+        <Button onClick={()=>{setNKShort(true)}} variant="contained" color="primary">Tạo Nhân Khẩu mới</Button>
+        
+      </div>
+       
+       </div>}
+
+
+
+      {nkShort&&<TaoNhanKhauShort onComplete={onTaoNhanKhauCompolete}  
+        onClose={()=>{
+          setNKShort(false)
+        }}
+        
+        />}
     </div>
   );
 }

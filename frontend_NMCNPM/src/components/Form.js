@@ -61,29 +61,16 @@ const DateInput=({defaultValue,onChange,name,label})=>{
 }
 const TextInput=({options,name,isRequired,label,value,handleChange,type})=>{
 
-// if(typeof options === 'object' && options.length>0){
+if(typeof options === 'object' && options.length>0){
 
-//   return <Autocomplete
-//   freeSolo
-//   options={options.map((e) => ({ title: e })) }
-//   getOptionLabel={(option) => option?.title?.toString()}
-//   type={type}
-  
-//   isRequired={isRequired}
-//   value={value}
-//   onChange={handleChange}
-//   renderInput={(params) => (
-//     <TextField
-//     {...params}
-//       label={label}
-//       variant="outlined"
-//       InputLabelProps={{
-//         shrink:true
-//       }}
-//     />
-//     )}
-//     />
-//   }
+  return <div>
+    <label style={{marginRight:5}}>{label}</label>
+    <input value={value} onChange={handleChange} style={{backgroundColor:"white",border:"none",height:40,minHeight:"auto"}}  list={`suggest-input-${label}`}/>
+    <datalist id={`suggest-input-${label}`}>
+    {options.map(e=><option value={e}>{e}</option>)}
+    </datalist>
+  </div>
+  }
 
 
 return <TextField
@@ -97,9 +84,7 @@ return <TextField
       label={label}
       isRequired={isRequired}
       value={value}
-      // id="outlined-required"
-      // required
-      // id="outlined-disabled"
+     
       required
       
     />

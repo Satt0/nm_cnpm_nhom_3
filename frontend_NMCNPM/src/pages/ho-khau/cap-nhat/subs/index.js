@@ -232,12 +232,12 @@ export default function UpdateOneHoKHau({
                     <TableCell className="pl-3 fw-normal">{ID}</TableCell>
                     <TableCell className="pl-3 fw-normal">{hoTen}</TableCell>
                     <TableCell className="pl-3 fw-normal">
-                      <UpdateThanhVien
+                      {ID===state.idChuHo?<p>Chủ Hộ</p>:<UpdateThanhVien
                         idNhanKhau={parseInt(ID)}
                         idHoKhau={parseInt(idHoKhau)}
                         isChuHo={ID === state.idChuHo}
-                        text={ID === state.idChuHo ? "Chủ hộ" : quanHeVoiChuHo}
-                      />
+                        text={ID ===  quanHeVoiChuHo}
+                      />}
                     </TableCell>
                     <TableCell className="pl-3 fw-normal">
                       <Button

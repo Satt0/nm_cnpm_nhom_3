@@ -1,10 +1,15 @@
 import React from 'react'
 import TaoNhanKhau from '../../maps/Maps' 
-export default function TaoNhanKhauShort({onComplete}) {
-    
+import styles from './style.module.css'
+import {Button} from '@material-ui/core'
+export default function TaoNhanKhauShort({onComplete,onClose}) {
+
     return (
-        <div>
-            <TaoNhanKhau />
+        <div className={styles.container}>
+            <div onClick={onClose} style={{marginBottom:25}}>
+                <Button variant="contained" color="primary">Back</Button>
+            </div>
+            <TaoNhanKhau onComplete={onComplete}/>
         </div>
     )
 }
