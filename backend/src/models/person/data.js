@@ -121,15 +121,15 @@ class UserQuery {
       throw new Error("Không tìm thấy nhân khẩu!");
     }
   }
-  async getManyPerson({ limit = 20, offset = 0, name = "" }) {
+  async getManyPerson({ limit = 20, offset = 0, name = "" ,daXoa=false}) {
     try {
       const text = `
       select * from ${process.env.PG_NHAN_KHAU} nk
-      where lower(nk."hoTen") like $3 and nk."daXoa"=false
+      where lower(nk."hoTen") like $3 and nk."daXoa"=$4
       limit $1
       offset $2;
       `;
-      const value = [limit, offset, `%${name.toLowerCase()}%`];
+      const value = [limit, offset, `%${name.toLowerCase()}%`,daXoa];
       const { rows } = await DB.query(text, value);
 
       return rows;

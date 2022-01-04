@@ -166,6 +166,7 @@ input inputTimNhanKhau{
     limit:Int!
     offset:Int!
     name:String!
+    daXoa:Boolean!
 }
 extend type Query {
     thongTinNhanKhau(input:Int!):NhanKhau!
