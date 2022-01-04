@@ -570,7 +570,7 @@ class QuanLyNhanKhau {
     try {
       const text = `
       delete from ${process.env.PG_TAM_VANG} tv
-      where tv."idNhanKhau"=$1 returning *;
+      where tv."ID"=$1 returning *;
       `;
       const { rowCount } = await DB.query(text, [ID]);
 
@@ -584,7 +584,7 @@ class QuanLyNhanKhau {
     try {
       const text = `
       delete from ${process.env.PG_TAM_TRU} tt
-      where tt."idNhanKhau"=$1 returning *;
+      where tt."ID"=$1 returning *;
       `;
       const { rowCount } = await DB.query(text, [ID]);
 
