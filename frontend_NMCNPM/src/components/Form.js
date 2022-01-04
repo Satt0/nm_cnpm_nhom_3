@@ -11,7 +11,7 @@ import React,{useEffect,useState} from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import moment from 'moment'
 import "react-datepicker/dist/react-datepicker.css";
-
+import styles from './style.module.css'
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 const Form = ({ listInput, handleChange, state }) => {
   const classes = useStyles();
   return (
-    <div className="form">
+    <div className={styles.form} style={{gridGap:"30px 15px"}}>
       {listInput.filter(target=>state[target.name]!==null && !target.hidden).map((item) => (
         <div>
           {item.type==="date"?<DateInput label={item.label} name={item.name}  defaultValue={state[item.name]}
@@ -53,7 +53,7 @@ const DateInput=({defaultValue,onChange,name,label})=>{
    
 
   }
-   return   <div>
+   return   <div style={{display:"flex",flexDirection:"column",maxWidth:170}}>
      <label>{label}</label>
      <input type="date" value={defaultValue} onChange={handleChange}/>
    </div>
@@ -61,11 +61,17 @@ const DateInput=({defaultValue,onChange,name,label})=>{
 }
 const TextInput=({options,name,isRequired,label,value,handleChange,type})=>{
 
+  const [message,setMessage]=useState({
+    error:false,
+    message:""
+  })
 if(typeof options === 'object' && options.length>0){
 
   return <div>
     <label style={{marginRight:5}}>{label}</label>
-    <input value={value} onChange={handleChange} style={{backgroundColor:"white",border:"none",height:40,minHeight:"auto"}}  list={`suggest-input-${label}`}/>
+    <input 
+    
+    value={value} onChange={handleChange} style={{backgroundColor:"white",border:"none",height:40,minHeight:"auto"}}  list={`suggest-input-${label}`}/>
     <datalist id={`suggest-input-${label}`}>
     {options.map(e=><option value={e}>{e}</option>)}
     </datalist>
@@ -84,8 +90,22 @@ return <TextField
       label={label}
       isRequired={isRequired}
       value={value}
-     
+      error={message.error}
+      helperText={message.message}
       required
+      onFocus={()=>{
+        setMessage({error:false,message:""})
+      }}
+      onInvalid={(e)=>{
+        e.preventDefault()
+        const isValid=(e.target?.validity?.valid );
+        if(!isValid){
+          setMessage({
+            error:true,
+            message:"Vui lòng điền đủ trường thông tin"
+          })
+        }
+      }}
       
     />
 }
