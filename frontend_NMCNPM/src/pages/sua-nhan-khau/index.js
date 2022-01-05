@@ -80,11 +80,13 @@ export default function CapNhatNhanKhau() {
         <TableCell> ID</TableCell>
         <TableCell> Họ tên</TableCell>
         <TableCell> Ngày sinh</TableCell>
+        <TableCell> Quốc tịch</TableCell>
+        <TableCell> Mã nhân khẩu</TableCell>
         <TableCell></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {InforSearchedData?.timNhanKhau?.map(({ ID,hoTen,namSinh}) => (
+        {InforSearchedData?.timNhanKhau?.map(({ ID,hoTen,namSinh, quocTich, maNhanKhau}) => (
           <TableRow key={ID}>
             <TableCell className="pl-3 fw-normal"><Link to={`/app/edit-nk/${ID}`}>
             {ID}
@@ -93,6 +95,8 @@ export default function CapNhatNhanKhau() {
             {hoTen}
             </Link></TableCell>
             <TableCell>{moment(parseInt(namSinh)).format("DD-MM-YYYY")}</TableCell>
+            <TableCell>{quocTich}</TableCell>
+            <TableCell>{maNhanKhau}</TableCell>
             <TableCell>
             <Button
         className="btn-TS"

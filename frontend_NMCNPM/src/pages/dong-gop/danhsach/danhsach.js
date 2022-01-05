@@ -16,7 +16,7 @@ const DanhSachKhoanDong = () => {
       const[offset] = useState(0);
       const[hoanThanh] = useState(false)
       const[tenKhoanDong, setTenKhoanDong] = useState("")
-      const[theLoai, setTheLoai] = useState("")  
+      const[theLoai, setTheLoai] = useState("hàng tháng")  
       const [state, setState] = useState([])
       useEffect(() => {
         if (loadingDG) return;
@@ -41,6 +41,7 @@ const DanhSachKhoanDong = () => {
           type="text"
           list="id-theloai"
           placeholder="Nhập thể loại"
+          defaultValue="hàng tháng"
           onChange={(event) => {
             setTheLoai(event.target.value);
           }}
