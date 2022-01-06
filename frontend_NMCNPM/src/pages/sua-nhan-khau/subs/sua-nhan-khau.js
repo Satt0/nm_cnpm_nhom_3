@@ -74,7 +74,7 @@ export default function EditOne() {
   const [updateUser, { loading: loadingUpdate, data }] = useMutation(
     CAP_NHAT_NHAN_KHAU,
   );
-  const [createTS, { loading: loadingTS, data: dataTS }] = useMutation(
+  const [createTS, { loading: loadingTS, data: dataTS ,error:errorTS}] = useMutation(
     TAO_TIEU_SU,
   );
   const [deleteTS, { loading: loadingDel, data: dataDel }] = useMutation(
@@ -84,7 +84,7 @@ export default function EditOne() {
     TAO_THE_DINH_DANH,
   );
   const [deleteDC, { loading: loadingDelDC, data: dataDelDC }] = useMutation(
-    XOA_TIEU_SU,
+    XOA_THE_DINH_DANH,
   );
   const [createTV, { loading: loadingTV, data: dataTV }] = useMutation(
     KHAI_BAO_TAM_VANG,
@@ -115,7 +115,9 @@ export default function EditOne() {
       isRequired: true,
       defaultValue: parseInt(id),
       type: "text",
+      disabled:true,
       placeHolder: "nhập ID",
+      hidden:true
     },
     {
       label: "Từ ngày",
@@ -166,6 +168,7 @@ export default function EditOne() {
       defaultValue: parseInt(id),
       type: "text",
       placeHolder: "nhập ID",
+      hidden:true
     },
     {
       label: "Số định danh",
@@ -208,6 +211,7 @@ export default function EditOne() {
       defaultValue: parseInt(id),
       type: "text",
       placeHolder: "nhập ID",
+      hidden:true
     },
     {
       label: "Từ ngày",
@@ -258,6 +262,7 @@ export default function EditOne() {
       defaultValue: parseInt(id),
       type: "text",
       placeHolder: "nhập ID",
+      hidden:true
     },
     {
       label: "Từ ngày",
@@ -309,6 +314,7 @@ export default function EditOne() {
       defaultValue: parseInt("2"),
       placeHolder: "nhập ID",
       
+      
     },
     {
       label: "ID người chết",
@@ -317,6 +323,7 @@ export default function EditOne() {
       defaultValue: parseInt(id),
       type: "text",
       placeHolder: "nhập ID",
+      hidden:true
     },
     {
       label: "Ngày chết",
@@ -438,14 +445,17 @@ export default function EditOne() {
   };
   useEffect(() => {
     if (loadingDC) return;
+    if(error) return toast(error.message)
     if (dataDC) {
       const { ID } = dataDC.taoTheDinhDanh;
       console.log(ID);
+      refetch();
     }
   }, [loadingDC, dataDC]);
 
   useEffect(() => {
     if (loadingTV) return;
+    if(error) return toast(error.message)
     if (dataTV) {
       const { idNhanKhau, tuNgay, denNgay, maGiayTamVang, noiTamTru, lyDo } = dataTV.khaiBaoTamVang;
       // 
@@ -463,6 +473,7 @@ export default function EditOne() {
 
   useEffect(() => {
     if (loadingTT) return;
+    if(error) return toast(error.message)
     if (dataTT) {
       const { idNhanKhau, tuNgay, denNgay, lyDo, maGiayTamTru, soDienThoaiNguoiDangKy } = dataTT.khaiBaoTamTru;
       // console.log(ID);
@@ -480,17 +491,19 @@ export default function EditOne() {
 
   useEffect(() => {
     if (loadingTS) return;
+    if(errorTS) return toast(error.message)
     if (dataTS) {
       const { ID } = dataTS.taoTieuSu;
       console.log(ID);
     }
-  }, [loadingTS, dataTS]);
+  }, [loadingTS, dataTS,errorTS]);
 
   useEffect(() => {
     if (loadingKT) return;
     if (dataKT) {
       const { ID } = dataKT.khaiTu;
       console.log(ID);
+      refetch();
     }
   }, [loadingKT, dataKT]);
   // useEffect(() => {
@@ -568,18 +581,7 @@ export default function EditOne() {
         maNhanKhau,
       });
       refetch()
-      if(dinhDanh){
-        setStateDC({...dinhDanh,ngayCap:moment(parseInt(dinhDanh.ngayCap)).format("YYYY-MM-DD"), idNhanKhau: parseInt(id)})
-      }
-      // if(tamTru){
-      //   setStateTT({...tamTru,tuNgay:moment(parseInt(tamTru.tuNgay)).format("YYYY-MM-DD"), denNgay:moment(parseInt(tamTru.denNgay)).format("YYYY-MM-DD"), idNhanKhau: parseInt(id)})
-      // }
-      // if(tamVang){
-      //   setStateTV({...tamVang, tuNgay:moment(parseInt(tamVang.tuNgay)).format("YYYY-MM-DD"), denNgay:moment(parseInt(tamVang.denNgay)).format("YYYY-MM-DD"), idNhanKhau: parseInt(id)})
-      // }
-      if(khaiTu){
-        setStateKT({...khaiTu, ngayKhai: moment(parseInt(khaiTu.ngayKhai)).format("YYYY-MM-DD"), ngayChet: moment(parseInt(khaiTu.ngayChet)).format("YYYY-MM-DD") })
-      }
+      
     }
   }, [loading, InforSearchedData]);
 
@@ -611,12 +613,9 @@ export default function EditOne() {
 
   return (
     <div>
-      <Form listInput={listInput} state={state} handleChange={handleChange} />
-      <Button
-        className="btn-update"
-        variant="contained"
-        color="success"
-        onClick={() => {
+      <form onSubmit={(e)=>{
+          e.preventDefault();
+          console.log('test');
           updateUser({
             variables: {
               input: state,
@@ -624,10 +623,17 @@ export default function EditOne() {
           }).catch((e) => {
             console.log(e.message);
           });
-          console.log(state);
+         
           // history.push("/app/edit-nk");
           // toast("Cập nhật thành công")
-        }}
+        
+      }}>
+      <Form listInput={listInput} state={state} handleChange={handleChange} />
+      <Button
+        className="btn-update"
+        variant="contained"
+        color="success"
+        type="submit"
       >
         Cập nhật nhân khẩu
       </Button>
@@ -635,6 +641,8 @@ export default function EditOne() {
               <Button variant="contained" color="secondary">Hủy</Button>
               </Link>
       <h1>Tiểu sử</h1>
+      </form>
+      
       <Form
         listInput={listInputTS}
         state={stateTS}
@@ -708,7 +716,9 @@ export default function EditOne() {
         </TableBody>
       </Table>
       <h1>Định danh</h1>
-      <Form
+      {!InforSearchedData?.thongTinNhanKhau?.dinhDanh?.ngayCap && <>
+      
+        <Form
         listInput={listInputDC}
         state={stateDC}
         handleChange={handleChangeDC}
@@ -716,23 +726,23 @@ export default function EditOne() {
       <Button
         variant="contained"
         color="success"
-        onClick={() => {
-          createDC({
+        onClick={async () => {
+         await createDC({
             variables: {
               input: stateDC,
             },
           }).catch((e) => {
             console.log(e.message);
           });
-          console.log(stateDC);
-          console.log(dataDC);
-          console.log(error);
+         await refetch()
         }}
       >
         Tạo thẻ định danh
       </Button>
+      
+      </>}
       <div>
-        {InforSearchedData && (
+        {InforSearchedData?.thongTinNhanKhau?.dinhDanh && (
           <div>
             <Accordion expanded={expanded === 'panel1'} onChange={handleChanged('panel1')}>
         <AccordionSummary
@@ -741,7 +751,7 @@ export default function EditOne() {
           id="panel1bh-header"
         >
           <Typography className={classes.heading}>Số định danh</Typography>
-          <Typography className={classes.secondaryHeading}>{stateDC.soDinhDanh}</Typography>
+          <Typography className={classes.secondaryHeading}>{InforSearchedData?.thongTinNhanKhau?.dinhDanh?.soDinhDanh}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -757,7 +767,7 @@ export default function EditOne() {
         >
           <Typography className={classes.heading}>Ngày cấp</Typography>
           <Typography className={classes.secondaryHeading}>
-          {stateDC.ngayCap}
+          {moment(parseInt(InforSearchedData?.thongTinNhanKhau?.dinhDanh?.ngayCap)).format("DD-MM-YYYY")}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -775,7 +785,7 @@ export default function EditOne() {
         >
           <Typography className={classes.heading}>Nơi cấp</Typography>
           <Typography className={classes.secondaryHeading}>
-            {stateDC.noiCap}
+            {InforSearchedData?.thongTinNhanKhau?.dinhDanh?.noiCap}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -793,25 +803,21 @@ export default function EditOne() {
         >
           <Typography className={classes.heading}>Type</Typography>
           <Typography className={classes.secondaryHeading}>
-            {stateDC.type}
+            {InforSearchedData?.thongTinNhanKhau?.dinhDanh?.type}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
-            vitae egestas augue. Duis vel est augue. */}
+          
           </Typography>
         </AccordionDetails>
       </Accordion>
-          </div>
-        )}
-        {InforError && <h1> There was an error fetching the data</h1>}
-        <Button
+      <Button
           className="btn-update"
           variant="contained"
           color="success"
-          onClick={() => {
-            deleteDC({
+          onClick={async() => {
+          await  deleteDC({
               variables: {
                 input: parseInt(id),
               },
@@ -819,11 +825,15 @@ export default function EditOne() {
               console.log(e.message);
             });
             console.log(loadingDC);
-            setStateDC("")
+          await  refetch()
           }}
         >
           Xóa thẻ định danh
         </Button>
+          </div>
+        )}
+       
+       
         <h1>Tạm vắng</h1>
         <Button color="secondary" onClick={() => setOpen(!open)}>Khai báo</Button>
         <div className="" style={{display:open?"block":"none"}}>
@@ -1049,22 +1059,21 @@ export default function EditOne() {
         <Button
           variant="contained"
           color="success"
-          onClick={() => {
-            createKT({
+          onClick={async () => {
+            await createKT({
               variables: {
                 input: {...stateKT,idNguoiKhai:parseInt(stateKT.idNguoiKhai),
-                idNguoiChet:parseInt(stateKT.idNguoiChet)},
+                idNguoiChet:parseInt(id)},
               },
             }).catch((e) => {
               console.log(e.message);
             });
-            console.log(InforSearchedData);
-            // console.log(option)
+           await refetch()
           }}
         >
           Khai tử
         </Button>
-        {InforSearchedData && (
+        {InforSearchedData?.thongTinNhanKhau?.khaiTu && (
             <div>
               <Accordion expanded={expanded === 'panel1'} onChange={handleChanged('panel1')}>
         <AccordionSummary
@@ -1073,7 +1082,7 @@ export default function EditOne() {
           id="panel1bh-header"
         >
           <Typography className={classes.heading}>Số giấy khai tử</Typography>
-          <Typography className={classes.secondaryHeading}>{stateKT.soGiayKhaiTu}</Typography>
+          <Typography className={classes.secondaryHeading}>{InforSearchedData?.thongTinNhanKhau?.khaiTu?.soGiayKhaiTu}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
@@ -1089,13 +1098,12 @@ export default function EditOne() {
         >
           <Typography className={classes.heading}>Ngày khai</Typography>
           <Typography className={classes.secondaryHeading}>
-          {stateKT.ngayKhai}
+          {moment(parseInt(InforSearchedData?.thongTinNhanKhau?.khaiTu?.ngayKhai)).format("DD-MM-YYYY")}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            {/* Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
-            diam eros in elit. Pellentesque convallis laoreet laoreet. */}
+           
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -1107,13 +1115,12 @@ export default function EditOne() {
         >
           <Typography className={classes.heading}>Ngày chết</Typography>
           <Typography className={classes.secondaryHeading}>
-            {stateKT.ngayChet}
+         { moment(parseInt(InforSearchedData?.thongTinNhanKhau?.khaiTu?.ngayChet)).format("DD-MM-YYYY")}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            {/* Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
-            vitae egestas augue. Duis vel est augue. */}
+           
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -1125,7 +1132,7 @@ export default function EditOne() {
         >
           <Typography className={classes.heading}>Lý do chết</Typography>
           <Typography className={classes.secondaryHeading}>
-            {stateKT.lyDoChet}
+            {InforSearchedData?.thongTinNhanKhau?.khaiTu?.lyDoChet}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -1135,26 +1142,30 @@ export default function EditOne() {
           </Typography>
         </AccordionDetails>
       </Accordion>
-            </div>
-          )}  
-          {InforError && <h1> There was an error fetching the data</h1>}    
-          <Button
+
+      <Button
           className="btn-update"
           variant="contained"
           color="success"
-          onClick={() => {
-            deleteKT({
+          onClick={async() => {
+            await deleteKT({
               variables: {
                 input: parseInt(id),
               },
             }).catch((e) => {
               console.log(e.message);
             });
-            // console.log(loadingTV)
+           await refetch();
           }}
         >
           Xóa khai tử
-        </Button>    
+        </Button>
+
+            </div>
+            
+          )}  
+          {InforError && <h1> There was an error fetching the data</h1>}    
+              
         
       </div>
     </div>

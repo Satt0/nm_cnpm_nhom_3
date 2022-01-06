@@ -39,6 +39,7 @@ const inputs = [
   {
     name: "ngayChuyenDi",
     label: "Ngày chuyển đi",
+    helperText:"nếu hộ đã chuyển đi.",
     isRequired: true,
     type: "date",
   },

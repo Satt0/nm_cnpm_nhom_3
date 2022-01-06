@@ -22,15 +22,7 @@ export default function CapNhatNhanKhau() {
     const[limit] = useState(500);  
     const[offset] = useState(0);
     const[name, setName] = useState("")
-    const [state, setState] = useState([])
-    useEffect(() => {
-      if (loading) return;
-      if (InforSearchedData) {
-        setState(InforSearchedData)
-        refetch()
-      }
-      
-    }, [loading, InforSearchedData]);
+  
     useEffect(() => {
       fetchInfor({
         variables: {
@@ -51,7 +43,7 @@ export default function CapNhatNhanKhau() {
         />
         <Button
           variant="contained"
-          color="success"
+          color="primary"
           onClick={() => {
             fetchInfor({
               variables: {
@@ -66,7 +58,7 @@ export default function CapNhatNhanKhau() {
         <Link to="/app/create-nk">
         <Button
           variant="contained"
-          color="success"
+          color="secondary"
           
         >
          Tạo nhân khẩu
@@ -101,20 +93,18 @@ export default function CapNhatNhanKhau() {
             <Button
         className="btn-TS"
         variant="contained"
-        color="success"
-        onClick={() => {
-          deleteNK({
+        color="secondary"
+        onClick={async () => {
+          await deleteNK({
             variables: {
               input: parseInt(ID),
             },
           }).catch((e) => {
             console.log(e.message);
           });
-          // setState(old=>{
-          //   return old.filter(e=>e.ID!==ID)
-          //   })
-          setState(InforSearchedData.timNhanKhau.filter(e=> e.ID !== ID))  
-          refetch()
+          await refetch()
+          
+         // setState(InforSearchedData.timNhanKhau.filter(e=> e.ID !== ID))  
         }}
       >
         Xóa

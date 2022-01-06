@@ -167,7 +167,7 @@ class UserQuery {
    select * from nm_ccnpm.thanh_vien_cua_ho tv
    join nm_ccnpm.nhan_khau nk
    on nk."ID"=tv."idNhanKhau"
-   where tv."idHoKhau"=$1;
+   where tv."idHoKhau"=$1 and nk."daXoa"=false;
     `;
     const values = [idHoKhau];
     const { rows } = await DB.query(text, values);

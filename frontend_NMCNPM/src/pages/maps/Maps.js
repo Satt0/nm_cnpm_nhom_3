@@ -21,7 +21,7 @@ export const listInput = [
     name: "bietDanh",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền biệt danh",
   },
   {
@@ -79,7 +79,7 @@ export const listInput = [
     name: "soHoChieu",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền số hộ chiếu",
   },
   {
@@ -128,7 +128,7 @@ export const listInput = [
     name: "bietTiengDanToc",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền tiếng dân tộc",
   },
   {
@@ -144,7 +144,7 @@ export const listInput = [
     name: "lyDoChuyenDen",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền lý do chuyển đến",
   },
   {
@@ -152,7 +152,7 @@ export const listInput = [
     name: "lyDoChuyenDi",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền lý do chuyển đi",
   },
   {
@@ -185,7 +185,7 @@ export const listInput = [
     name: "noiLamViec",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền nơi làm việc",
   },
   {
@@ -193,7 +193,7 @@ export const listInput = [
     name: "tienAn",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền tiền án",
   },
 
@@ -202,7 +202,7 @@ export const listInput = [
     name: "trinhDoChuyenMon",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền trình độ",
   },
   {
@@ -210,7 +210,7 @@ export const listInput = [
     name: "trinhDoHocVan",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền trình độ",
   },
   {
@@ -218,7 +218,7 @@ export const listInput = [
     name: "trinhDoNgoaiNgu",
     isRequired: true,
     type: "text",
-    defaultValue: "",
+    defaultValue: "không có",
     placeholder: "điền trình độ",
   },
 ];

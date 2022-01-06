@@ -378,16 +378,16 @@ const CapNhatKhoanDong = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {InforSearchedData?.thongTinKhoanDong?.chuaDong?.map(({ ID, chuHo}) => (
+        {InforSearchedData?.thongTinKhoanDong?.chuaDong?.map(({ ID, chuHo={}}) => (
           <TableRow key={ID}>
             <TableCell className="pl-3 fw-normal">
             {ID}
             </TableCell>
             <TableCell>
-            {chuHo.hoTen}
+            {chuHo?.hoTen}
             </TableCell>
             <TableCell>
-            {chuHo.ID}
+            {chuHo?.ID}
             </TableCell>
             <TableCell>
               
@@ -407,13 +407,13 @@ const CapNhatKhoanDong = () => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {InforSearchedData?.thongTinKhoanDong?.khoanThu?.map(({ daDong,ngayDong,hoKhau}) => (
-          <TableRow key={hoKhau.ID}>
+        {InforSearchedData?.thongTinKhoanDong?.khoanThu?.map(({ daDong,ngayDong,hoKhau},index) => (
+          <TableRow key={index}>
             <TableCell className="pl-3 fw-normal">
-            {hoKhau.ID}
+            {hoKhau?.ID}
             </TableCell>
             <TableCell>
-            {hoKhau.chuHo.hoTen}
+            {hoKhau?.chuHo?.hoTen}
             </TableCell>
             <TableCell>
             {/* {daDong} */}
