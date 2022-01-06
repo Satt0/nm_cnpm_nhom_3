@@ -94,7 +94,7 @@ export default function TaoHoKhau() {
   }
   useEffect(()=>{
     if(loadingHoKhau) return;
-    if(errorHoKHau) return toast("không thể tạo hộ khẩu mới",{style:{backgroundColor:"red",color:"white"}})
+    if(errorHoKHau) return toast("không thể tạo hộ khẩu mới, kiểm tra lại mã hộ khẩu.",{style:{backgroundColor:"red",color:"white"}})
     if(responseHoKhau){
       const {taoHoKhau}=responseHoKhau;
       redirect.push(`/app/edit-hk/${taoHoKhau.ID}`)

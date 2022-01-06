@@ -21,6 +21,7 @@ import {
   MenuItem,
   Select,
 } from "@material-ui/core";
+import { toast } from "react-toastify";
 import moment from "moment";
 import TachKhau from "./tachKhau";
 const inputs = [
@@ -141,7 +142,7 @@ export default function UpdateOneHoKHau({
   };
   useEffect(() => {
     if (loadingUpdate) return;
-    if (errorUpdate) return alert("không thể cập nhật hộ khẩu.");
+    if (errorUpdate) return toast("không thể cập nhật hộ khẩu, kiểm tra lại mã hộ khẩu");
     if (dataUpdate) {
       return alert("cập nhật thành công!");
     }
