@@ -185,6 +185,7 @@ const CapNhatKhoanDong = () => {
   }
   
   },[loadingUpdateKT,dataKT])
+  const [state1, setState1] = useState("")
   useEffect(() => {
     if (loading) return;
     if (InforSearchedData) {
@@ -197,16 +198,17 @@ const CapNhatKhoanDong = () => {
     hoanThanh,
     khoanThu
       } = InforSearchedData.thongTinKhoanDong;
-
-      
+      setState1(soTien)
+     
       setState({
         ID,
     tenKhoanDong,
-    soTien,
+    soTien: parseInt(soTien),
     donVi,
     theLoai,
     hoanThanh: false,
       });
+      
       setArray(InforSearchedData.thongTinKhoanDong.khoanThu.map((dadong1)=>{
         return dadong1.daDong
       }))
@@ -216,7 +218,7 @@ const CapNhatKhoanDong = () => {
       }))
     }
   }, [loading, InforSearchedData]);
-
+  
   useEffect(() => {
     if (loadingUpdate) return;
     if (data) {
@@ -239,6 +241,7 @@ const CapNhatKhoanDong = () => {
      
     return sum;
 }
+
     return (
         <div>
             <NewForm listInput={listInput} state={state} handleChange={handleChange} />
@@ -249,7 +252,7 @@ const CapNhatKhoanDong = () => {
         onClick={() => {
           updateUser({
             variables: {
-              input: state,
+              input: {...state, soTien: parseInt(state.soTien)},
             },
           }).catch((e) => {
             console.log(e.message);
@@ -280,10 +283,11 @@ const CapNhatKhoanDong = () => {
         </datalist>
         <TextField
         className="input"
-          required
+          // required
           id="outlined-required"
           label="Required"
-          defaultValue=""
+          defaultValue={100000}
+          type="number"
           placeholder="Đã đóng"
           onChange={(event) => {
             setDaDong(parseInt(event.target.value));
@@ -308,7 +312,7 @@ const CapNhatKhoanDong = () => {
           //   return dadong1.daDong
           // }))
           console.log(array)
-          
+          console.log(state1)
         }}
       >
         Đóng góp

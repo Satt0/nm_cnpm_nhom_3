@@ -5,6 +5,7 @@ import { useMutation } from "@apollo/client";
 import { Button } from "@material-ui/core";
 import {Link} from 'react-router-dom'
 import NewForm from '../../../components/autoCompleteForm';
+import { toast } from 'react-toastify';
 export const listInput=[
     {
     label:"Tên khoản đóng",
@@ -68,14 +69,13 @@ const TaoKhoanDongGop = () => {
      {
       // const {tenKhoanDong}=data.TaoKhoanDongGop
       // console.log(tenKhoanDong);
+      toast("Tạo khoản đóng thành công")
      }
      
      },[loading,data])
     return (
         <div>
-            <NewForm listInput={listInput} state={state}  handleChange={handleChange}/>
-            <Link to={`/app/table-kdg`}>
-            <Button variant="contained" color="success" onClick={() => {
+          <form onSubmit={() => {
                 createDG({
                   variables: {
                     input: 
@@ -87,8 +87,12 @@ const TaoKhoanDongGop = () => {
                 });
                 console.log(state);
                
-              }}>Tạo khoản đóng góp</Button>
-              </Link>
+              }}>
+            <NewForm listInput={listInput} state={state}  handleChange={handleChange}/>
+            {/* <Link to={`/app/table-kdg`}> */}
+            <Button variant="contained" color="success" type="submit">Tạo khoản đóng góp</Button>
+              {/* </Link> */}
+              </form>
         </div>
     )
 }

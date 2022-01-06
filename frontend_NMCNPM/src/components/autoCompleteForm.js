@@ -186,10 +186,10 @@ const NewForm = ({ listInput, handleChange, state }) => {
   // const [suggest, setSuggest] = useState([]);
   
   return (
-    <form className="form">
+    <div className="form">
       {listInput.filter(target=>state[target.name]!==null && !target.hidden).map((item) => (
         <div>
-          {item.type==="date"?<div><input className="input" list={`dropdown-input-${item.name}`} placeholder={item.label}  value={state[item.name]} onChange={handleChange(item.name)} />
+          {item.type==="date"?<div><input className="input" list={`dropdown-input-${item.name}`} placeholder={item.label} required="required"  value={state[item.name]} onChange={handleChange(item.name)} />
       <datalist id={`dropdown-input-${item.name}`}>
         {item.options.map((e) => (
           <option value={e}>{e}</option>
@@ -202,7 +202,7 @@ const NewForm = ({ listInput, handleChange, state }) => {
           }
         </div>
       ))}
-    </form>
+    </div>
   );
 };
 
@@ -261,6 +261,7 @@ return <TextField
       label={label}
       isRequired={isRequired}
       value={value}
+      required
     />
 }
 export default NewForm;

@@ -819,6 +819,7 @@ export default function EditOne() {
               console.log(e.message);
             });
             console.log(loadingDC);
+            setStateDC("")
           }}
         >
           Xóa thẻ định danh
