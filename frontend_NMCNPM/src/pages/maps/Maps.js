@@ -200,7 +200,7 @@ export const listInput = [
   {
     label: "Trình độ chuyên môn",
     name: "trinhDoChuyenMon",
-    isRequired: true,
+    isRequired: false,
     type: "text",
     defaultValue: "không có",
     placeholder: "điền trình độ",
