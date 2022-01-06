@@ -72,5 +72,6 @@ module.exports=gql`
     extend type Query{
         danhSachKhoanDong(input:inputLocKhoanDong!):[DongGop!]!
         thongTinKhoanDong(input:Int!):DongGop!
+        countAll:String!
     }
 `

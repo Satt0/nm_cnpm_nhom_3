@@ -182,6 +182,21 @@ class TruyVanDongGop {
       throw new Error("khong the tim");
     }
   }
+  async countAll(){
+    try {
+      const text = `
+              SELECT count(*) FROM ${process.env.PG_DONG_GOP}
+             ;
+              `;
+      
+      const { rows } = await DB.query(text);
+     
+      return rows[0].count;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error("không có khoản đóng góp!");
+    }
+  }
 }
 
 module.exports = { QuanLyDongGop, TruyVanDongGop };

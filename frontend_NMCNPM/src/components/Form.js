@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const Form = ({ listInput, handleChange, state }) => {
   const classes = useStyles();
+  console.log(listInput);
   return (
     <div className={styles.form} style={{ gridGap: "30px 15px" }}>
       {listInput

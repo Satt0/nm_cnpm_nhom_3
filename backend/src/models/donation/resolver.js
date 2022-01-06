@@ -29,6 +29,10 @@ const Query = {
     const data = new TruyVanDongGop();
     return await data.thongTinDongGop({ ID: input });
   },
+  countAll:async()=>{
+    const data = new TruyVanDongGop();
+    return await data.countAll()
+  }
 
 };
 const Mutation = {
