@@ -56,7 +56,7 @@ export const listInput = [
     type: "text",
     defaultValue: "",
     placeholder: "điền dân tộc",
-    options: ["Kinh", "Thai"],
+  //  options: ["Kinh", "Thai"],
   },
   {
     label: "Tôn giáo",

@@ -238,7 +238,7 @@ export default function UpdateOneHoKHau({
                         idNhanKhau={parseInt(ID)}
                         idHoKhau={parseInt(idHoKhau)}
                         isChuHo={ID === state.idChuHo}
-                        text={ID ===  quanHeVoiChuHo}
+                        text={quanHeVoiChuHo}
                       />}
                     </TableCell>
                     <TableCell className="pl-3 fw-normal">
@@ -403,6 +403,7 @@ const NhapKhau = ({ onSelected, idHoKhau }) => {
   const [searchResults, setResults] = useState([]);
   useEffect(() => {
     if (data) {
+      
       setResults(
         data.goiYNhanKhau.map((e) => ({
           ...e,
@@ -418,7 +419,6 @@ const NhapKhau = ({ onSelected, idHoKhau }) => {
         ...nhapKhau.nhanKhau,
         quanHeVoiChuHo: nhapKhau.quanHeVoiChuHo,
       });
-      setResults((old) => old.filter((e) => e.ID !== nhapKhau.nhanKhau.ID));
     }
   }, [dataNhapKhau]);
   const onNhapKhau = async ({ idNhanKhau, quanHeVoiChuHo }) => {
@@ -493,7 +493,7 @@ const NhapKhau = ({ onSelected, idHoKhau }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {searchResults.map(({ ID, hoTen, namSinh, quanHeVoiChuHo }) => (
+          {searchResults.filter(e=>!e?.khaiTu).map(({ ID, hoTen, namSinh, quanHeVoiChuHo }) => (
             <TableRow key={ID}>
               <TableCell className="pl-3 fw-normal">{ID}</TableCell>
               <TableCell className="pl-3 fw-normal">{hoTen}</TableCell>
@@ -509,8 +509,10 @@ const NhapKhau = ({ onSelected, idHoKhau }) => {
               </TableCell>
               <TableCell className="pl-3 fw-normal">
                 <Button
-                  onClick={() => {
-                    onNhapKhau({ idNhanKhau: ID, quanHeVoiChuHo });
+                  onClick={async () => {
+                    await onNhapKhau({ idNhanKhau: ID, quanHeVoiChuHo });
+                    setResults((old) => old.filter((e) => e.ID !== ID));
+
                   }}
                   variant="contained"
                   color="secondary"

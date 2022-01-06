@@ -21,6 +21,34 @@ query timNhanKhau($input: inputTimNhanKhau!){
     noiLamViec
     noiSinh
     maNhanKhau
+    tamVang {
+      ID
+      maGiayTamVang
+      tuNgay
+      noiTamTru
+      denNgay
+      lyDo
+    }
+    tamTru {
+      ID
+      maGiayTamTru
+      soDienThoaiNguoiDangKy
+      tuNgay
+      denNgay
+      lyDo
+    }
+    khaiTu {
+      ID
+      soGiayKhaiTu
+      nguoiKhai {
+        ID
+        hoTen
+        namSinh
+      }
+      ngayKhai
+      ngayChet
+      lyDoChet
+    }
   }
 }
 `

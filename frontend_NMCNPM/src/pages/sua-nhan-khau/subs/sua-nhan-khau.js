@@ -459,14 +459,7 @@ export default function EditOne() {
     if (dataTV) {
       const { idNhanKhau, tuNgay, denNgay, maGiayTamVang, noiTamTru, lyDo } = dataTV.khaiBaoTamVang;
       // 
-      setStateTV({
-        idNhanKhau,
-        tuNgay,
-        denNgay,
-        lyDo,
-        maGiayTamVang,
-        noiTamTru
-      })
+      
       toast("Khai báo thành công")
     }
   }, [loadingTV, dataTV]);
@@ -477,14 +470,7 @@ export default function EditOne() {
     if (dataTT) {
       const { idNhanKhau, tuNgay, denNgay, lyDo, maGiayTamTru, soDienThoaiNguoiDangKy } = dataTT.khaiBaoTamTru;
       // console.log(ID);
-      setStateTT({
-        idNhanKhau,
-        tuNgay,
-        denNgay,
-        lyDo,
-        maGiayTamTru,
-        soDienThoaiNguoiDangKy
-      })
+     
       toast("Khai báo thành công")
     }
   }, [loadingTT, dataTT]);
@@ -890,8 +876,8 @@ export default function EditOne() {
           className="btn-update"
           variant="contained"
           color="success"
-          onClick={() => {
-            deleteTV({
+          onClick={async () => {
+           await deleteTV({
               variables: {
                 input: ID, 
               },
@@ -899,7 +885,7 @@ export default function EditOne() {
               console.log(e.message);
             });
             // console.log(loadingTV)
-            refetch();
+          await  refetch();
           }}
         >
           Xóa tạm vắng
@@ -931,9 +917,6 @@ export default function EditOne() {
             }).catch((e) => {
               console.log(e.message);
             });
-            console.log(stateTT)
-            console.log(arrayDataTT)
-            console.log(dataTT)
             refetch();
           }}
         >
@@ -969,8 +952,8 @@ export default function EditOne() {
           className="btn-update"
           variant="contained"
           color="success"
-          onClick={() => {
-            deleteTT({
+          onClick={async () => {
+          await  deleteTT({
               variables: {
                 input: ID,
               },
@@ -978,7 +961,7 @@ export default function EditOne() {
               console.log(e.message);
             });
             // console.log(loadingTV)
-            refetch();
+          await  refetch();
           }}
         >
           Xóa tạm trú

@@ -143,9 +143,9 @@ export default function TaoHoKhau() {
         <TableHead>
           <TableRow>
             <TableCell> ID</TableCell>
-            <TableCell> HoTen</TableCell>
-            <TableCell> ngay sinh</TableCell>
-            <TableCell>quan hệ với chủ hộ</TableCell>
+            <TableCell> Họ tên</TableCell>
+            <TableCell> Ngày sinh</TableCell>
+            <TableCell>Quan hệ với chủ hộ</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>

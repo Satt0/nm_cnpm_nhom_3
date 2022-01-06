@@ -19,3 +19,8 @@ query DanhSachKhoanDong($input: inputLocKhoanDong!) {
   }
 }
 `
+export const COUNT_ALL=gql`
+query {
+  countAll
+}
+`
